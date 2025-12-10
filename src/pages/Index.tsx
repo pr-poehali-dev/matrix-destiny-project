@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
-import { createPayment, checkPaymentStatus, createSubscription, checkSubscription } from '@/lib/api';
+import { createPayment, checkPaymentStatus, createSubscription, checkSubscription, generateReport, downloadPDF, shareReport } from '@/lib/api';
 
 const calculateDestinyMatrix = (birthDate: string, name: string) => {
   const date = new Date(birthDate);
@@ -199,6 +199,7 @@ export default function Index() {
   const [showPricing, setShowPricing] = useState(false);
   const [hasAccess, setHasAccess] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -306,6 +307,77 @@ export default function Index() {
       toast({
         title: 'Ошибка создания платежа',
         description: 'Попробуйте позже или свяжитесь с поддержкой',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!result || !hasAccess) {
+      toast({
+        title: 'Доступ ограничен',
+        description: 'Оплатите подписку для скачивания отчета',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      setIsGeneratingPDF(true);
+      const reportData = await generateReport({
+        name: result.name,
+        birth_date: birthDate,
+        personal: result.personal,
+        destiny: result.destiny,
+        social: result.social,
+        spiritual: result.spiritual,
+      });
+
+      downloadPDF(reportData.pdf, reportData.filename);
+      
+      toast({
+        title: '✅ PDF готов!',
+        description: 'Отчет успешно скачан',
+      });
+    } catch (error) {
+      toast({
+        title: 'Ошибка генерации PDF',
+        description: 'Попробуйте позже',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
+  const handleShare = async () => {
+    if (!result) return;
+
+    try {
+      const shareResult = await shareReport({
+        name: result.name,
+        birth_date: birthDate,
+        personal: result.personal,
+        destiny: result.destiny,
+        social: result.social,
+        spiritual: result.spiritual,
+      });
+
+      if (shareResult === 'shared') {
+        toast({
+          title: '✅ Поделились!',
+          description: 'Отчет успешно отправлен',
+        });
+      } else {
+        toast({
+          title: '✅ Ссылка скопирована',
+          description: 'Отправьте её через любой мессенджер',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось поделиться отчетом',
         variant: 'destructive',
       });
     }
@@ -454,12 +526,39 @@ export default function Index() {
           <div className="space-y-8 animate-fade-in">
             <Card className="shadow-xl border-2 border-primary/20">
               <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10">
-                <CardTitle className="text-3xl">
-                  Матрица для {result.name}
-                </CardTitle>
-                <CardDescription className="text-base">
-                  Базовый расчет основных энергий
-                </CardDescription>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-3xl">
+                      Матрица для {result.name}
+                    </CardTitle>
+                    <CardDescription className="text-base">
+                      Базовый расчет основных энергий
+                    </CardDescription>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleShare}
+                      className="hover-scale"
+                    >
+                      <Icon name="Share2" className="mr-2" size={16} />
+                      Поделиться
+                    </Button>
+                    {hasAccess && (
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={handleDownloadPDF}
+                        disabled={isGeneratingPDF}
+                        className="hover-scale"
+                      >
+                        <Icon name="Download" className="mr-2" size={16} />
+                        {isGeneratingPDF ? 'Генерация...' : 'Скачать PDF'}
+                      </Button>
+                    )}
+                  </div>
+                </div>
               </CardHeader>
               <CardContent className="pt-6">
                 <div className="grid md:grid-cols-2 gap-6">

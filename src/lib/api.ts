@@ -2,6 +2,7 @@ import func2url from '../../backend/func2url.json';
 
 const PAYMENT_URL = func2url.payment;
 const SUBSCRIPTION_URL = func2url.subscription;
+const REPORT_URL = func2url.report;
 
 export interface PaymentRequest {
   subscription_type: 'single' | 'month' | 'half_year' | 'year';
@@ -81,4 +82,66 @@ export const checkSubscription = async (email: string): Promise<SubscriptionChec
   }
 
   return response.json();
+};
+
+export interface ReportRequest {
+  name: string;
+  birth_date: string;
+  personal: number;
+  destiny: number;
+  social: number;
+  spiritual: number;
+}
+
+export interface ReportResponse {
+  pdf: string;
+  filename: string;
+}
+
+export const generateReport = async (data: ReportRequest): Promise<ReportResponse> => {
+  const response = await fetch(REPORT_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to generate report');
+  }
+
+  return response.json();
+};
+
+export const downloadPDF = (base64Data: string, filename: string) => {
+  const linkSource = `data:application/pdf;base64,${base64Data}`;
+  const downloadLink = document.createElement('a');
+  downloadLink.href = linkSource;
+  downloadLink.download = filename;
+  downloadLink.click();
+};
+
+export const shareReport = async (data: ReportRequest): Promise<string> => {
+  const reportUrl = `${window.location.origin}${window.location.pathname}?share=true&name=${encodeURIComponent(
+    data.name
+  )}&birth_date=${encodeURIComponent(data.birth_date)}&personal=${data.personal}&destiny=${data.destiny}&social=${
+    data.social
+  }&spiritual=${data.spiritual}`;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'Моя Матрица Судьбы',
+        text: `Расшифровка матрицы судьбы для ${data.name}`,
+        url: reportUrl,
+      });
+      return 'shared';
+    } catch (error) {
+      console.error('Share failed:', error);
+    }
+  }
+
+  await navigator.clipboard.writeText(reportUrl);
+  return 'copied';
 };
