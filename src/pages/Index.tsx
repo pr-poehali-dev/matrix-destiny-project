@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
+import { createPayment, checkPaymentStatus, createSubscription, checkSubscription } from '@/lib/api';
 
 const calculateDestinyMatrix = (birthDate: string, name: string) => {
   const date = new Date(birthDate);
@@ -191,15 +193,121 @@ const energyDescriptions: Record<number, { title: string; description: string; h
 
 export default function Index() {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [result, setResult] = useState<ReturnType<typeof calculateDestinyMatrix> | null>(null);
   const [showPricing, setShowPricing] = useState(false);
+  const [hasAccess, setHasAccess] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const { toast } = useToast();
 
-  const handleCalculate = () => {
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentId = urlParams.get('payment_id');
+    const subscriptionType = urlParams.get('subscription_type');
+    const userEmail = urlParams.get('email');
+    const userName = urlParams.get('name');
+
+    if (paymentId && subscriptionType && userEmail && userName) {
+      handlePaymentReturn(paymentId, subscriptionType, userEmail, userName);
+    }
+  }, []);
+
+  const handlePaymentReturn = async (
+    paymentId: string,
+    subscriptionType: string,
+    userEmail: string,
+    userName: string
+  ) => {
+    try {
+      setIsProcessingPayment(true);
+      const paymentStatus = await checkPaymentStatus(paymentId);
+
+      if (paymentStatus.paid) {
+        const priceMap: Record<string, number> = {
+          single: 200,
+          month: 1000,
+          half_year: 5000,
+          year: 10000,
+        };
+
+        await createSubscription({
+          email: userEmail,
+          name: userName,
+          subscription_type: subscriptionType,
+          payment_id: paymentId,
+          amount: priceMap[subscriptionType] || 0,
+        });
+
+        setEmail(userEmail);
+        setName(userName);
+        setHasAccess(true);
+        
+        toast({
+          title: '✅ Оплата прошла успешно!',
+          description: 'Теперь у вас есть полный доступ к расшифровкам',
+        });
+
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+    } catch (error) {
+      toast({
+        title: 'Ошибка обработки платежа',
+        description: 'Пожалуйста, свяжитесь с поддержкой',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsProcessingPayment(false);
+    }
+  };
+
+  const handleCalculate = async () => {
     if (name && birthDate) {
       const matrix = calculateDestinyMatrix(birthDate, name);
       setResult(matrix);
       setShowPricing(true);
+
+      if (email) {
+        try {
+          const subscription = await checkSubscription(email);
+          setHasAccess(subscription.has_access);
+        } catch (error) {
+          console.error('Failed to check subscription:', error);
+        }
+      }
+    }
+  };
+
+  const handlePayment = async (subscriptionType: string) => {
+    if (!email || !name) {
+      toast({
+        title: 'Требуется email',
+        description: 'Пожалуйста, укажите email для оформления подписки',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      const currentUrl = window.location.origin + window.location.pathname;
+      const returnUrl = `${currentUrl}?payment_id={payment_id}&subscription_type=${subscriptionType}&email=${encodeURIComponent(
+        email
+      )}&name=${encodeURIComponent(name)}`;
+
+      const payment = await createPayment({
+        subscription_type: subscriptionType as any,
+        email,
+        name,
+        return_url: returnUrl,
+      });
+
+      window.location.href = payment.confirmation_url;
+    } catch (error) {
+      toast({
+        title: 'Ошибка создания платежа',
+        description: 'Попробуйте позже или свяжитесь с поддержкой',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -207,6 +315,7 @@ export default function Index() {
     {
       name: 'Разовый доступ',
       price: '200₽',
+      type: 'single',
       description: 'Получите полный разбор вашей матрицы один раз',
       features: ['Полная расшифровка энергий', 'Анализ предназначения', 'Рекомендации по здоровью', 'PDF-отчет'],
       icon: 'FileText'
@@ -214,6 +323,7 @@ export default function Index() {
     {
       name: 'Месяц',
       price: '1000₽',
+      type: 'month',
       description: 'Для психологов и специалистов',
       features: ['Неограниченные расчеты', 'Все разделы анализа', 'Сохранение клиентов', 'Поддержка 24/7'],
       icon: 'Calendar',
@@ -222,6 +332,7 @@ export default function Index() {
     {
       name: 'Полгода',
       price: '5000₽',
+      type: 'half_year',
       description: 'Экономия 17%',
       features: ['Все из месячной подписки', 'Расширенная аналитика', 'Приоритетная поддержка', 'Обновления методики'],
       icon: 'TrendingUp'
@@ -229,6 +340,7 @@ export default function Index() {
     {
       name: 'Год',
       price: '10000₽',
+      type: 'year',
       description: 'Экономия 30%',
       features: ['Все из полугодовой подписки', 'Индивидуальные консультации', 'Доступ к закрытому сообществу', 'Сертификат специалиста'],
       icon: 'Award'
@@ -269,6 +381,16 @@ export default function Index() {
                 />
               </div>
               <div className="space-y-2">
+                <label className="text-sm font-medium">Email</label>
+                <Input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="text-lg"
+                />
+              </div>
+              <div className="space-y-2">
                 <label className="text-sm font-medium">Дата рождения</label>
                 <Input
                   type="date"
@@ -281,9 +403,10 @@ export default function Index() {
                 onClick={handleCalculate}
                 className="w-full text-lg py-6 hover-scale"
                 size="lg"
+                disabled={isProcessingPayment}
               >
                 <Icon name="Sparkles" className="mr-2" />
-                Рассчитать матрицу
+                {isProcessingPayment ? 'Обработка платежа...' : 'Рассчитать матрицу'}
               </Button>
             </CardContent>
           </Card>
@@ -397,49 +520,97 @@ export default function Index() {
                   </div>
                 </div>
 
-                <div className="mt-8 p-6 bg-muted/50 rounded-xl border-2 border-dashed border-primary/30">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Icon name="Lock" className="text-primary" size={32} />
-                    <div>
-                      <h3 className="text-xl font-semibold">Полная расшифровка доступна после оплаты</h3>
-                      <p className="text-muted-foreground">
-                        Получите детальный анализ всех аспектов жизни
-                      </p>
+                {hasAccess ? (
+                  <div className="mt-8 p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border-2 border-green-200">
+                    <div className="flex items-center gap-3 mb-6">
+                      <Icon name="CheckCircle" className="text-green-600" size={32} />
+                      <div>
+                        <h3 className="text-xl font-semibold text-green-900">У вас есть доступ!</h3>
+                        <p className="text-green-700">
+                          Полная расшифровка вашей матрицы судьбы
+                        </p>
+                      </div>
                     </div>
+                    <Tabs defaultValue="preview" className="mt-6">
+                      <TabsList className="grid w-full grid-cols-4">
+                        <TabsTrigger value="preview">Предназначение</TabsTrigger>
+                        <TabsTrigger value="health">Здоровье</TabsTrigger>
+                        <TabsTrigger value="relationships">Отношения</TabsTrigger>
+                        <TabsTrigger value="finance">Финансы</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="preview" className="mt-4 p-6 bg-white rounded-lg shadow-sm">
+                        <h4 className="font-semibold text-lg mb-3 text-primary">
+                          {energyDescriptions[result.personal]?.title}
+                        </h4>
+                        <p className="text-foreground leading-relaxed">
+                          {energyDescriptions[result.personal]?.description}
+                        </p>
+                      </TabsContent>
+                      <TabsContent value="health" className="mt-4 p-6 bg-white rounded-lg shadow-sm">
+                        <h4 className="font-semibold text-lg mb-3 text-primary">Здоровье</h4>
+                        <p className="text-foreground leading-relaxed">
+                          {energyDescriptions[result.personal]?.health}
+                        </p>
+                      </TabsContent>
+                      <TabsContent value="relationships" className="mt-4 p-6 bg-white rounded-lg shadow-sm">
+                        <h4 className="font-semibold text-lg mb-3 text-primary">Отношения</h4>
+                        <p className="text-foreground leading-relaxed">
+                          {energyDescriptions[result.personal]?.relationships}
+                        </p>
+                      </TabsContent>
+                      <TabsContent value="finance" className="mt-4 p-6 bg-white rounded-lg shadow-sm">
+                        <h4 className="font-semibold text-lg mb-3 text-primary">Финансы</h4>
+                        <p className="text-foreground leading-relaxed">
+                          {energyDescriptions[result.personal]?.finance}
+                        </p>
+                      </TabsContent>
+                    </Tabs>
                   </div>
-                  <Tabs defaultValue="preview" className="mt-6">
-                    <TabsList className="grid w-full grid-cols-4">
-                      <TabsTrigger value="preview">Предназначение</TabsTrigger>
-                      <TabsTrigger value="health">Здоровье</TabsTrigger>
-                      <TabsTrigger value="relationships">Отношения</TabsTrigger>
-                      <TabsTrigger value="finance">Финансы</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="preview" className="mt-4 p-4 bg-card rounded-lg">
-                      <p className="text-muted-foreground italic">
-                        {energyDescriptions[result.personal]?.description.substring(0, 100)}...
-                      </p>
-                      <p className="text-sm text-primary mt-2">🔒 Полный текст доступен после оплаты</p>
-                    </TabsContent>
-                    <TabsContent value="health" className="mt-4 p-4 bg-card rounded-lg">
-                      <p className="text-muted-foreground italic">
-                        {energyDescriptions[result.personal]?.health.substring(0, 80)}...
-                      </p>
-                      <p className="text-sm text-primary mt-2">🔒 Полный анализ здоровья доступен после оплаты</p>
-                    </TabsContent>
-                    <TabsContent value="relationships" className="mt-4 p-4 bg-card rounded-lg">
-                      <p className="text-muted-foreground italic">
-                        {energyDescriptions[result.personal]?.relationships.substring(0, 80)}...
-                      </p>
-                      <p className="text-sm text-primary mt-2">🔒 Полный анализ отношений доступен после оплаты</p>
-                    </TabsContent>
-                    <TabsContent value="finance" className="mt-4 p-4 bg-card rounded-lg">
-                      <p className="text-muted-foreground italic">
-                        {energyDescriptions[result.personal]?.finance.substring(0, 80)}...
-                      </p>
-                      <p className="text-sm text-primary mt-2">🔒 Полный финансовый анализ доступен после оплаты</p>
-                    </TabsContent>
-                  </Tabs>
-                </div>
+                ) : (
+                  <div className="mt-8 p-6 bg-muted/50 rounded-xl border-2 border-dashed border-primary/30">
+                    <div className="flex items-center gap-3 mb-4">
+                      <Icon name="Lock" className="text-primary" size={32} />
+                      <div>
+                        <h3 className="text-xl font-semibold">Полная расшифровка доступна после оплаты</h3>
+                        <p className="text-muted-foreground">
+                          Получите детальный анализ всех аспектов жизни
+                        </p>
+                      </div>
+                    </div>
+                    <Tabs defaultValue="preview" className="mt-6">
+                      <TabsList className="grid w-full grid-cols-4">
+                        <TabsTrigger value="preview">Предназначение</TabsTrigger>
+                        <TabsTrigger value="health">Здоровье</TabsTrigger>
+                        <TabsTrigger value="relationships">Отношения</TabsTrigger>
+                        <TabsTrigger value="finance">Финансы</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="preview" className="mt-4 p-4 bg-card rounded-lg">
+                        <p className="text-muted-foreground italic">
+                          {energyDescriptions[result.personal]?.description.substring(0, 100)}...
+                        </p>
+                        <p className="text-sm text-primary mt-2">🔒 Полный текст доступен после оплаты</p>
+                      </TabsContent>
+                      <TabsContent value="health" className="mt-4 p-4 bg-card rounded-lg">
+                        <p className="text-muted-foreground italic">
+                          {energyDescriptions[result.personal]?.health.substring(0, 80)}...
+                        </p>
+                        <p className="text-sm text-primary mt-2">🔒 Полный анализ здоровья доступен после оплаты</p>
+                      </TabsContent>
+                      <TabsContent value="relationships" className="mt-4 p-4 bg-card rounded-lg">
+                        <p className="text-muted-foreground italic">
+                          {energyDescriptions[result.personal]?.relationships.substring(0, 80)}...
+                        </p>
+                        <p className="text-sm text-primary mt-2">🔒 Полный анализ отношений доступен после оплаты</p>
+                      </TabsContent>
+                      <TabsContent value="finance" className="mt-4 p-4 bg-card rounded-lg">
+                        <p className="text-muted-foreground italic">
+                          {energyDescriptions[result.personal]?.finance.substring(0, 80)}...
+                        </p>
+                        <p className="text-sm text-primary mt-2">🔒 Полный финансовый анализ доступен после оплаты</p>
+                      </TabsContent>
+                    </Tabs>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -478,8 +649,13 @@ export default function Index() {
                             </li>
                           ))}
                         </ul>
-                        <Button className="w-full hover-scale" size="lg">
-                          Выбрать тариф
+                        <Button 
+                          className="w-full hover-scale" 
+                          size="lg"
+                          onClick={() => handlePayment(plan.type)}
+                          disabled={hasAccess}
+                        >
+                          {hasAccess ? 'Уже оплачено' : 'Выбрать тариф'}
                         </Button>
                       </CardContent>
                     </Card>
