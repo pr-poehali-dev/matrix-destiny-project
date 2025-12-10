@@ -1,14 +1,528 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Icon from '@/components/ui/icon';
 
-const Index = () => {
+const calculateDestinyMatrix = (birthDate: string, name: string) => {
+  const date = new Date(birthDate);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  
+  const sumDigits = (num: number): number => {
+    while (num > 22) {
+      num = num.toString().split('').reduce((a, b) => a + parseInt(b), 0);
+    }
+    return num;
+  };
+
+  const personalNumber = sumDigits(day + month + year);
+  const destinyNumber = sumDigits(day + month);
+  const socialNumber = sumDigits(month + year);
+  const spiritualNumber = sumDigits(day + year);
+  
+  return {
+    personal: personalNumber,
+    destiny: destinyNumber,
+    social: socialNumber,
+    spiritual: spiritualNumber,
+    name: name
+  };
+};
+
+const energyDescriptions: Record<number, { title: string; description: string; health: string; relationships: string; finance: string }> = {
+  1: {
+    title: 'Маг',
+    description: 'Вы пришли в этот мир, чтобы создавать и трансформировать реальность. Ваше предназначение — быть проводником энергии созидания.',
+    health: 'Важно работать с горловой чакрой. Проблемы с щитовидной железой могут возникать при непроявленности.',
+    relationships: 'Вам нужен партнер, который принимает вашу силу и индивидуальность.',
+    finance: 'Деньги приходят через творчество и уникальные проекты.'
+  },
+  2: {
+    title: 'Жрица',
+    description: 'Ваше предназначение — быть мудрым наставником, хранителем знаний и духовным учителем.',
+    health: 'Проблемы с женской энергией, гормональные сбои при блокировках.',
+    relationships: 'Нужен глубокий эмоциональный контакт и духовная связь.',
+    finance: 'Деньги приходят через обучение, консультации, работу с людьми.'
+  },
+  3: {
+    title: 'Императрица',
+    description: 'Вы — источник изобилия, заботы и материнской энергии. Предназначение — создавать и взращивать.',
+    health: 'Репродуктивная система требует внимания. Проблемы с весом при дисбалансе.',
+    relationships: 'Вам важно проявлять заботу, но не растворяться в партнере.',
+    finance: 'Изобилие приходит через щедрость и создание красоты.'
+  },
+  4: {
+    title: 'Император',
+    description: 'Ваше предназначение — строить структуры, быть лидером и опорой для других.',
+    health: 'Проблемы с позвоночником и костями при непринятии ответственности.',
+    relationships: 'Вам нужен равный партнер, с которым можно строить империю.',
+    finance: 'Деньги приходят через системный подход и управление.'
+  },
+  5: {
+    title: 'Иерофант',
+    description: 'Вы — учитель и хранитель традиций. Предназначение — передавать мудрость.',
+    health: 'Проблемы со слухом и горлом при неумении слышать истину.',
+    relationships: 'Важны общие ценности и духовное развитие.',
+    finance: 'Доход через образование, консультации, наставничество.'
+  },
+  6: {
+    title: 'Влюбленные',
+    description: 'Ваше предназначение — учиться делать выбор и строить гармоничные отношения.',
+    health: 'Сердечно-сосудистая система требует внимания при блокировках.',
+    relationships: 'Необходимо проработать страх выбора и зависимости.',
+    finance: 'Деньги через партнерство и совместные проекты.'
+  },
+  7: {
+    title: 'Колесница',
+    description: 'Вы — воин и победитель. Предназначение — двигаться вперед, преодолевая препятствия.',
+    health: 'Проблемы с ногами и суставами при отсутствии движения вперед.',
+    relationships: 'Нужен партнер, который поддержит ваши амбиции.',
+    finance: 'Деньги приходят через активные действия и достижения.'
+  },
+  8: {
+    title: 'Справедливость',
+    description: 'Ваше предназначение — восстанавливать баланс и справедливость в мире.',
+    health: 'Проблемы с почками и мочевыделительной системой при дисбалансе.',
+    relationships: 'Важны честность и равноправие в отношениях.',
+    finance: 'Доход через юридическую сферу, консалтинг, восстановление справедливости.'
+  },
+  9: {
+    title: 'Отшельник',
+    description: 'Вы пришли обрести мудрость через одиночество и самопознание.',
+    health: 'Проблемы со зрением и нервной системой при избегании уединения.',
+    relationships: 'Вам нужно время наедине с собой, партнер должен это понимать.',
+    finance: 'Деньги через экспертность, консультации, индивидуальную работу.'
+  },
+  10: {
+    title: 'Колесо Фортуны',
+    description: 'Ваша жизнь полна циклов и изменений. Предназначение — принять изменчивость.',
+    health: 'Нестабильное здоровье, зависит от жизненных циклов.',
+    relationships: 'Отношения проходят через трансформации и обновления.',
+    finance: 'Финансовые циклы — взлеты и падения, важно создавать подушку безопасности.'
+  },
+  11: {
+    title: 'Сила',
+    description: 'Ваше предназначение — укрощать внутренних демонов и проявлять истинную силу.',
+    health: 'Проблемы с мышцами и физической силой при подавлении энергии.',
+    relationships: 'Важно не подавлять партнера своей силой.',
+    finance: 'Деньги через волевые усилия и преодоление страхов.'
+  },
+  12: {
+    title: 'Повешенный',
+    description: 'Вы пришли научиться жертвенности и смотреть на мир под другим углом.',
+    health: 'Проблемы с кровообращением и варикоз при застревании в ситуациях.',
+    relationships: 'Необходимо проработать жертвенность и созависимость.',
+    finance: 'Деньги могут приходить неожиданными путями, важно отпустить контроль.'
+  },
+  13: {
+    title: 'Смерть',
+    description: 'Ваше предназначение — трансформация и освобождение от старого.',
+    health: 'Глубокие кризисы здоровья как точки трансформации.',
+    relationships: 'Отношения проходят через кардинальные трансформации.',
+    finance: 'Финансовые перерождения, важно отпускать старые источники дохода.'
+  },
+  14: {
+    title: 'Умеренность',
+    description: 'Вы — алхимик, соединяющий противоположности. Предназначение — баланс.',
+    health: 'Проблемы с обменом веществ и печенью при дисбалансе.',
+    relationships: 'Важно найти баланс между отдаванием и принятием.',
+    finance: 'Деньги через умеренность и разумное распределение ресурсов.'
+  },
+  15: {
+    title: 'Дьявол',
+    description: 'Ваша задача — освободиться от зависимостей и материальных иллюзий.',
+    health: 'Склонность к зависимостям, важно работать с удовольствиями.',
+    relationships: 'Проработка созависимости и токсичных паттернов.',
+    finance: 'Деньги через трансформацию теневых сторон в силу.'
+  },
+  16: {
+    title: 'Башня',
+    description: 'Вы — разрушитель старых структур. Предназначение — создавать через разрушение.',
+    health: 'Внезапные острые заболевания как сигналы к изменениям.',
+    relationships: 'Отношения могут резко меняться, важна гибкость.',
+    finance: 'Финансовые потрясения ведут к новым возможностям.'
+  },
+  17: {
+    title: 'Звезда',
+    description: 'Вы — источник надежды и вдохновения. Предназначение — светить другим.',
+    health: 'Проблемы с лимфатической системой при блокировке вдохновения.',
+    relationships: 'Вам нужен партнер, который верит в ваши мечты.',
+    finance: 'Деньги через творчество, искусство, вдохновляющую деятельность.'
+  },
+  18: {
+    title: 'Луна',
+    description: 'Ваше предназначение — познать глубины подсознания и работать с интуицией.',
+    health: 'Психосоматические заболевания, важна работа с подсознанием.',
+    relationships: 'Глубокие эмоциональные связи, возможны иллюзии.',
+    finance: 'Деньги через интуитивную деятельность, творчество, психологию.'
+  },
+  19: {
+    title: 'Солнце',
+    description: 'Вы — источник света и радости. Предназначение — дарить тепло миру.',
+    health: 'Витальная энергия высокая, но может выгорать при чрезмерной отдаче.',
+    relationships: 'Открытые, радостные отношения, важна искренность.',
+    finance: 'Изобилие приходит естественно через самореализацию.'
+  },
+  20: {
+    title: 'Суд',
+    description: 'Ваша задача — пробуждать и трансформировать. Предназначение — возрождение.',
+    health: 'Кризисные состояния ведут к обновлению и исцелению.',
+    relationships: 'Кармические связи, важно проработать прошлое.',
+    finance: 'Деньги через работу с прошлым, исцеление, трансформацию.'
+  },
+  21: {
+    title: 'Мир',
+    description: 'Вы пришли достичь целостности и гармонии. Предназначение — завершение циклов.',
+    health: 'Гармоничное здоровье при проработанности всех аспектов.',
+    relationships: 'Целостные, зрелые отношения.',
+    finance: 'Финансовое изобилие через целостность и завершение проектов.'
+  },
+  22: {
+    title: 'Шут',
+    description: 'Ваше предназначение — начинать заново, быть свободным и спонтанным.',
+    health: 'Травмы и несчастные случаи при недостатке осознанности.',
+    relationships: 'Свободные отношения, важна независимость.',
+    finance: 'Деньги через риск, новые начинания, необычные проекты.'
+  }
+};
+
+export default function Index() {
+  const [name, setName] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+  const [result, setResult] = useState<ReturnType<typeof calculateDestinyMatrix> | null>(null);
+  const [showPricing, setShowPricing] = useState(false);
+
+  const handleCalculate = () => {
+    if (name && birthDate) {
+      const matrix = calculateDestinyMatrix(birthDate, name);
+      setResult(matrix);
+      setShowPricing(true);
+    }
+  };
+
+  const pricingPlans = [
+    {
+      name: 'Разовый доступ',
+      price: '200₽',
+      description: 'Получите полный разбор вашей матрицы один раз',
+      features: ['Полная расшифровка энергий', 'Анализ предназначения', 'Рекомендации по здоровью', 'PDF-отчет'],
+      icon: 'FileText'
+    },
+    {
+      name: 'Месяц',
+      price: '1000₽',
+      description: 'Для психологов и специалистов',
+      features: ['Неограниченные расчеты', 'Все разделы анализа', 'Сохранение клиентов', 'Поддержка 24/7'],
+      icon: 'Calendar',
+      popular: true
+    },
+    {
+      name: 'Полгода',
+      price: '5000₽',
+      description: 'Экономия 17%',
+      features: ['Все из месячной подписки', 'Расширенная аналитика', 'Приоритетная поддержка', 'Обновления методики'],
+      icon: 'TrendingUp'
+    },
+    {
+      name: 'Год',
+      price: '10000₽',
+      description: 'Экономия 30%',
+      features: ['Все из полугодовой подписки', 'Индивидуальные консультации', 'Доступ к закрытому сообществу', 'Сертификат специалиста'],
+      icon: 'Award'
+    }
+  ];
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4 color-black text-black">Добро пожаловать!</h1>
-        <p className="text-xl text-gray-600">тут будет отображаться ваш проект</p>
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <header className="text-center mb-12 animate-fade-in">
+          <h1 className="text-5xl md:text-6xl font-bold text-primary mb-4 tracking-tight">
+            Матрица Судьбы
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Профессиональный инструмент для психологов и специалистов помогающих профессий
+          </p>
+        </header>
+
+        <div className="grid lg:grid-cols-2 gap-8 mb-12">
+          <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader>
+              <CardTitle className="text-3xl flex items-center gap-2">
+                <Icon name="Calculator" className="text-primary" />
+                Рассчитать матрицу
+              </CardTitle>
+              <CardDescription className="text-base">
+                Введите данные для получения полного разбора
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Имя</label>
+                <Input
+                  placeholder="Введите имя"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="text-lg"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Дата рождения</label>
+                <Input
+                  type="date"
+                  value={birthDate}
+                  onChange={(e) => setBirthDate(e.target.value)}
+                  className="text-lg"
+                />
+              </div>
+              <Button
+                onClick={handleCalculate}
+                className="w-full text-lg py-6 hover-scale"
+                size="lg"
+              >
+                <Icon name="Sparkles" className="mr-2" />
+                Рассчитать матрицу
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-lg bg-gradient-to-br from-primary/5 to-accent/5">
+            <CardHeader>
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <Icon name="Target" className="text-accent" />
+                Для кого эта система?
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-start gap-3 p-4 bg-card rounded-lg">
+                <Icon name="Users" className="text-primary mt-1 flex-shrink-0" size={24} />
+                <div>
+                  <h3 className="font-semibold text-lg mb-1">Для психологов</h3>
+                  <p className="text-muted-foreground">
+                    Ускорьте диагностику клиента в 3 раза, сразу увидите корневые проблемы
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-card rounded-lg">
+                <Icon name="Heart" className="text-accent mt-1 flex-shrink-0" size={24} />
+                <div>
+                  <h3 className="font-semibold text-lg mb-1">Для специалистов</h3>
+                  <p className="text-muted-foreground">
+                    Коучи, тарологи, нумерологи — получите глубинное понимание клиента
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-card rounded-lg">
+                <Icon name="User" className="text-primary mt-1 flex-shrink-0" size={24} />
+                <div>
+                  <h3 className="font-semibold text-lg mb-1">Для самопознания</h3>
+                  <p className="text-muted-foreground">
+                    Поймите причины проблем с деньгами, здоровьем, отношениями
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {result && (
+          <div className="space-y-8 animate-fade-in">
+            <Card className="shadow-xl border-2 border-primary/20">
+              <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10">
+                <CardTitle className="text-3xl">
+                  Матрица для {result.name}
+                </CardTitle>
+                <CardDescription className="text-base">
+                  Базовый расчет основных энергий
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="p-6 bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold">
+                        {result.personal}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-lg">Личное предназначение</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {energyDescriptions[result.personal]?.title || 'Энергия'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6 bg-gradient-to-br from-accent/10 to-accent/5 rounded-xl">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-accent text-accent-foreground flex items-center justify-center text-2xl font-bold">
+                        {result.destiny}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-lg">Энергия судьбы</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {energyDescriptions[result.destiny]?.title || 'Энергия'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6 bg-gradient-to-br from-secondary/20 to-secondary/10 rounded-xl">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center text-2xl font-bold">
+                        {result.social}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-lg">Социальная энергия</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {energyDescriptions[result.social]?.title || 'Энергия'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6 bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-primary/70 text-primary-foreground flex items-center justify-center text-2xl font-bold">
+                        {result.spiritual}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-lg">Духовная энергия</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {energyDescriptions[result.spiritual]?.title || 'Энергия'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 p-6 bg-muted/50 rounded-xl border-2 border-dashed border-primary/30">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Icon name="Lock" className="text-primary" size={32} />
+                    <div>
+                      <h3 className="text-xl font-semibold">Полная расшифровка доступна после оплаты</h3>
+                      <p className="text-muted-foreground">
+                        Получите детальный анализ всех аспектов жизни
+                      </p>
+                    </div>
+                  </div>
+                  <Tabs defaultValue="preview" className="mt-6">
+                    <TabsList className="grid w-full grid-cols-4">
+                      <TabsTrigger value="preview">Предназначение</TabsTrigger>
+                      <TabsTrigger value="health">Здоровье</TabsTrigger>
+                      <TabsTrigger value="relationships">Отношения</TabsTrigger>
+                      <TabsTrigger value="finance">Финансы</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="preview" className="mt-4 p-4 bg-card rounded-lg">
+                      <p className="text-muted-foreground italic">
+                        {energyDescriptions[result.personal]?.description.substring(0, 100)}...
+                      </p>
+                      <p className="text-sm text-primary mt-2">🔒 Полный текст доступен после оплаты</p>
+                    </TabsContent>
+                    <TabsContent value="health" className="mt-4 p-4 bg-card rounded-lg">
+                      <p className="text-muted-foreground italic">
+                        {energyDescriptions[result.personal]?.health.substring(0, 80)}...
+                      </p>
+                      <p className="text-sm text-primary mt-2">🔒 Полный анализ здоровья доступен после оплаты</p>
+                    </TabsContent>
+                    <TabsContent value="relationships" className="mt-4 p-4 bg-card rounded-lg">
+                      <p className="text-muted-foreground italic">
+                        {energyDescriptions[result.personal]?.relationships.substring(0, 80)}...
+                      </p>
+                      <p className="text-sm text-primary mt-2">🔒 Полный анализ отношений доступен после оплаты</p>
+                    </TabsContent>
+                    <TabsContent value="finance" className="mt-4 p-4 bg-card rounded-lg">
+                      <p className="text-muted-foreground italic">
+                        {energyDescriptions[result.personal]?.finance.substring(0, 80)}...
+                      </p>
+                      <p className="text-sm text-primary mt-2">🔒 Полный финансовый анализ доступен после оплаты</p>
+                    </TabsContent>
+                  </Tabs>
+                </div>
+              </CardContent>
+            </Card>
+
+            {showPricing && (
+              <div className="animate-fade-in">
+                <h2 className="text-4xl font-bold text-center mb-8 text-primary">
+                  Выберите тариф
+                </h2>
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {pricingPlans.map((plan, index) => (
+                    <Card
+                      key={index}
+                      className={`relative shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 ${
+                        plan.popular ? 'border-2 border-primary ring-2 ring-primary/20' : ''
+                      }`}
+                    >
+                      {plan.popular && (
+                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">
+                          Популярный
+                        </div>
+                      )}
+                      <CardHeader className="text-center">
+                        <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Icon name={plan.icon as any} className="text-primary" size={32} />
+                        </div>
+                        <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                        <div className="text-4xl font-bold text-primary my-2">{plan.price}</div>
+                        <CardDescription>{plan.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <ul className="space-y-3 mb-6">
+                          {plan.features.map((feature, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <Icon name="Check" className="text-primary mt-0.5 flex-shrink-0" size={20} />
+                              <span className="text-sm">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <Button className="w-full hover-scale" size="lg">
+                          Выбрать тариф
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        <Card className="mt-12 bg-gradient-to-br from-primary/5 to-accent/5">
+          <CardHeader>
+            <CardTitle className="text-3xl text-center">
+              Что вы получите в полной версии?
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center p-6">
+                <Icon name="Brain" className="mx-auto mb-4 text-primary" size={48} />
+                <h3 className="font-semibold text-xl mb-2">Глубокий анализ личности</h3>
+                <p className="text-muted-foreground">
+                  Кто вы по характеру, ваши сильные стороны и зоны роста
+                </p>
+              </div>
+              <div className="text-center p-6">
+                <Icon name="Heart" className="mx-auto mb-4 text-accent" size={48} />
+                <h3 className="font-semibold text-xl mb-2">Здоровье и тело</h3>
+                <p className="text-muted-foreground">
+                  Какие системы требуют внимания и почему возникают болезни
+                </p>
+              </div>
+              <div className="text-center p-6">
+                <Icon name="DollarSign" className="mx-auto mb-4 text-primary" size={48} />
+                <h3 className="font-semibold text-xl mb-2">Финансы и карьера</h3>
+                <p className="text-muted-foreground">
+                  Почему нет денег и через что они могут прийти
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
-};
-
-export default Index;
+}
