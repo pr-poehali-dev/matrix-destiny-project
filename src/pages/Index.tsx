@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,7 +6,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
 import { checkAccess, generateReport, downloadPDF, shareReport } from '@/lib/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { LiveStats } from '@/components/LiveStats';
+import { LiveNotifications } from '@/components/LiveNotifications';
+import { Testimonials } from '@/components/Testimonials';
+import { CTABlock } from '@/components/CTABlock';
 
 const calculateDestinyMatrix = (birthDate: string, name: string) => {
   const date = new Date(birthDate);
@@ -203,6 +207,7 @@ export default function Index() {
   const [adminEmail, setAdminEmail] = useState('');
   const { toast } = useToast();
   const navigate = useNavigate();
+  const calculatorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const storedEmail = localStorage.getItem('userEmail');
@@ -382,21 +387,32 @@ export default function Index() {
     }
   ];
 
+  const scrollToCalculator = () => {
+    calculatorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+      <LiveNotifications />
+      
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <header className="text-center mb-12 animate-fade-in">
+          <div className="flex justify-center mb-6">
+            <LiveStats baseCount={25000} />
+          </div>
+          
           <h1 className="text-5xl md:text-6xl font-bold text-primary mb-4 tracking-tight">
             Узнай О Себе Всё
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6">
             Рассчитай матрицу судьбы за 30 секунд — узнай своё предназначение, здоровье и финансовые возможности
           </p>
+          
+          <Link to="/about" className="text-primary hover:underline text-sm font-medium">
+            Узнать больше о методе →
+          </Link>
+          
           <div className="flex justify-center gap-4 mt-6 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <Icon name="Users" size={16} />
-              12 тыс+ расчётов
-            </span>
             <span className="flex items-center gap-1">
               <Icon name="Star" size={16} />
               4.9 рейтинг
@@ -405,10 +421,14 @@ export default function Index() {
               <Icon name="Shield" size={16} />
               Конфиденциально
             </span>
+            <span className="flex items-center gap-1">
+              <Icon name="Zap" size={16} />
+              30 секунд
+            </span>
           </div>
         </header>
 
-        <div className="grid lg:grid-cols-2 gap-8 mb-12">
+        <div ref={calculatorRef} className="grid lg:grid-cols-2 gap-8 mb-12">
           <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
             <CardHeader>
               <CardTitle className="text-3xl flex items-center gap-2">
@@ -827,77 +847,10 @@ export default function Index() {
           </CardContent>
         </Card>
 
-        <Card className="mt-12 bg-gradient-to-br from-accent/5 to-primary/5">
-          <CardHeader>
-            <CardTitle className="text-3xl text-center">
-              Отзывы наших пользователей
-            </CardTitle>
-            <CardDescription className="text-center text-base">
-              Более 12 000 человек уже узнали о себе больше
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-3 gap-6">
-              <Card className="bg-background/80">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="flex text-yellow-500">
-                      <Icon name="Star" size={20} />
-                      <Icon name="Star" size={20} />
-                      <Icon name="Star" size={20} />
-                      <Icon name="Star" size={20} />
-                      <Icon name="Star" size={20} />
-                    </div>
-                  </div>
-                  <p className="text-muted-foreground mb-4">
-                    "Невероятно точное описание! Особенно про здоровье — я действительно игнорировала проблемы с щитовидной. Теперь понимаю, почему так происходило."
-                  </p>
-                  <p className="font-semibold">Анна, 34 года</p>
-                  <p className="text-sm text-muted-foreground">Психолог</p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-background/80">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="flex text-yellow-500">
-                      <Icon name="Star" size={20} />
-                      <Icon name="Star" size={20} />
-                      <Icon name="Star" size={20} />
-                      <Icon name="Star" size={20} />
-                      <Icon name="Star" size={20} />
-                    </div>
-                  </div>
-                  <p className="text-muted-foreground mb-4">
-                    "Использую для работы с клиентами. Расшифровка очень подробная, помогает быстро найти точки роста. PDF-отчёты удобно распечатывать."
-                  </p>
-                  <p className="font-semibold">Дмитрий, 42 года</p>
-                  <p className="text-sm text-muted-foreground">Коуч</p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-background/80">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="flex text-yellow-500">
-                      <Icon name="Star" size={20} />
-                      <Icon name="Star" size={20} />
-                      <Icon name="Star" size={20} />
-                      <Icon name="Star" size={20} />
-                      <Icon name="Star" size={20} />
-                    </div>
-                  </div>
-                  <p className="text-muted-foreground mb-4">
-                    "Рассчитала матрицу для всей семьи! Теперь лучше понимаю детей и мужа. Рекомендую всем, кто хочет гармонии в отношениях."
-                  </p>
-                  <p className="font-semibold">Елена, 29 лет</p>
-                  <p className="text-sm text-muted-foreground">Мама двоих детей</p>
-                </CardContent>
-              </Card>
-            </div>
-          </CardContent>
-        </Card>
       </div>
+      
+      <Testimonials />
+      <CTABlock onCalculate={scrollToCalculator} />
     </div>
   );
 }
