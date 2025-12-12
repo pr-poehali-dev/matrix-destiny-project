@@ -330,13 +330,37 @@ export default function Index() {
 
   const pricingPlans = [
     {
-      name: 'Полный доступ',
-      price: '500₽',
+      name: 'Разовый доступ',
+      price: '200₽',
       type: 'single',
-      description: 'Получите полную расшифровку матрицы судьбы',
+      description: 'Одноразовая полная расшифровка',
       features: ['Полная расшифровка всех энергий', 'Анализ предназначения', 'Рекомендации по здоровью', 'Анализ отношений и финансов', 'PDF-отчет для печати'],
       icon: 'FileText'
     },
+    {
+      name: 'Месяц',
+      price: '1000₽',
+      type: 'month',
+      description: 'Безлимитный доступ на 30 дней',
+      features: ['Неограниченные расчеты', 'Полная расшифровка всех энергий', 'Анализ предназначения', 'Рекомендации по здоровью', 'Анализ отношений и финансов', 'PDF-отчеты для печати'],
+      icon: 'Calendar'
+    },
+    {
+      name: '6 месяцев',
+      price: '5000₽',
+      type: 'half_year',
+      description: 'Выгода 17% — 833₽/месяц',
+      features: ['Неограниченные расчеты 6 месяцев', 'Все возможности месячного доступа', 'Расширенная аналитика', 'Приоритетная поддержка'],
+      icon: 'TrendingUp'
+    },
+    {
+      name: 'Год',
+      price: '10000₽',
+      type: 'year',
+      description: 'Выгода 30% — 833₽/месяц',
+      features: ['Неограниченные расчеты целый год', 'Все возможности полугодового доступа', 'Индивидуальные консультации', 'Доступ к закрытому сообществу'],
+      icon: 'Award'
+    }
   ];
 
   const oldPricingPlans = [
@@ -676,36 +700,42 @@ export default function Index() {
                     <h2 className="text-4xl font-bold text-center mb-8 text-primary">
                       Получить полный доступ
                     </h2>
-                    <div className="max-w-2xl mx-auto">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
                       {pricingPlans.map((plan, index) => (
                         <Card
                           key={index}
-                          className="shadow-lg hover:shadow-2xl transition-all duration-300"
+                          className={`shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 ${
+                            plan.type === 'half_year' ? 'border-2 border-primary ring-2 ring-primary/20' : ''
+                          }`}
                         >
+                          {plan.type === 'half_year' && (
+                            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">
+                              Популярный
+                            </div>
+                          )}
                           <CardHeader className="text-center">
                             <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
                               <Icon name={plan.icon as any} className="text-primary" size={32} />
                             </div>
-                            <CardTitle className="text-3xl">{plan.name}</CardTitle>
-                            <div className="text-5xl font-bold text-primary my-4">{plan.price}</div>
-                            <CardDescription className="text-lg">{plan.description}</CardDescription>
+                            <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                            <div className="text-4xl font-bold text-primary my-2">{plan.price}</div>
+                            <CardDescription>{plan.description}</CardDescription>
                           </CardHeader>
                           <CardContent>
-                            <ul className="space-y-4 mb-8">
+                            <ul className="space-y-3 mb-6">
                               {plan.features.map((feature, idx) => (
-                                <li key={idx} className="flex items-start gap-3">
-                                  <Icon name="Check" className="text-primary mt-1 flex-shrink-0" size={24} />
-                                  <span className="text-base">{feature}</span>
+                                <li key={idx} className="flex items-start gap-2">
+                                  <Icon name="Check" className="text-primary mt-0.5 flex-shrink-0" size={20} />
+                                  <span className="text-sm">{feature}</span>
                                 </li>
                               ))}
                             </ul>
                             <Button 
-                              className="w-full hover-scale text-lg py-6" 
+                              className="w-full hover-scale" 
                               size="lg"
                               onClick={handlePayment}
                             >
-                              <Icon name="CreditCard" className="mr-2" size={24} />
-                              Оплатить через СБП
+                              Выбрать тариф
                             </Button>
                           </CardContent>
                         </Card>
