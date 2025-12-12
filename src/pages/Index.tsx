@@ -387,22 +387,36 @@ export default function Index() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <header className="text-center mb-12 animate-fade-in">
           <h1 className="text-5xl md:text-6xl font-bold text-primary mb-4 tracking-tight">
-            Матрица Судьбы
+            Узнай О Себе Всё
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Профессиональный инструмент для психологов и специалистов помогающих профессий
+            Рассчитай матрицу судьбы за 30 секунд — узнай своё предназначение, здоровье и финансовые возможности
           </p>
+          <div className="flex justify-center gap-4 mt-6 text-sm text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <Icon name="Users" size={16} />
+              12 тыс+ расчётов
+            </span>
+            <span className="flex items-center gap-1">
+              <Icon name="Star" size={16} />
+              4.9 рейтинг
+            </span>
+            <span className="flex items-center gap-1">
+              <Icon name="Shield" size={16} />
+              Конфиденциально
+            </span>
+          </div>
         </header>
 
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
             <CardHeader>
               <CardTitle className="text-3xl flex items-center gap-2">
-                <Icon name="Calculator" className="text-primary" />
-                Рассчитать матрицу
+                <Icon name="Sparkles" className="text-primary" />
+                Бесплатный расчёт
               </CardTitle>
               <CardDescription className="text-base">
-                Введите данные для получения полного разбора
+                Получите краткую расшифровку прямо сейчас — за 30 секунд
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -777,6 +791,77 @@ export default function Index() {
                   Почему нет денег и через что они могут прийти
                 </p>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="mt-12 bg-gradient-to-br from-accent/5 to-primary/5">
+          <CardHeader>
+            <CardTitle className="text-3xl text-center">
+              Отзывы наших пользователей
+            </CardTitle>
+            <CardDescription className="text-center text-base">
+              Более 12 000 человек уже узнали о себе больше
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="bg-background/80">
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex text-yellow-500">
+                      <Icon name="Star" size={20} />
+                      <Icon name="Star" size={20} />
+                      <Icon name="Star" size={20} />
+                      <Icon name="Star" size={20} />
+                      <Icon name="Star" size={20} />
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground mb-4">
+                    "Невероятно точное описание! Особенно про здоровье — я действительно игнорировала проблемы с щитовидной. Теперь понимаю, почему так происходило."
+                  </p>
+                  <p className="font-semibold">Анна, 34 года</p>
+                  <p className="text-sm text-muted-foreground">Психолог</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-background/80">
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex text-yellow-500">
+                      <Icon name="Star" size={20} />
+                      <Icon name="Star" size={20} />
+                      <Icon name="Star" size={20} />
+                      <Icon name="Star" size={20} />
+                      <Icon name="Star" size={20} />
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground mb-4">
+                    "Использую для работы с клиентами. Расшифровка очень подробная, помогает быстро найти точки роста. PDF-отчёты удобно распечатывать."
+                  </p>
+                  <p className="font-semibold">Дмитрий, 42 года</p>
+                  <p className="text-sm text-muted-foreground">Коуч</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-background/80">
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex text-yellow-500">
+                      <Icon name="Star" size={20} />
+                      <Icon name="Star" size={20} />
+                      <Icon name="Star" size={20} />
+                      <Icon name="Star" size={20} />
+                      <Icon name="Star" size={20} />
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground mb-4">
+                    "Рассчитала матрицу для всей семьи! Теперь лучше понимаю детей и мужа. Рекомендую всем, кто хочет гармонии в отношениях."
+                  </p>
+                  <p className="font-semibold">Елена, 29 лет</p>
+                  <p className="text-sm text-muted-foreground">Мама двоих детей</p>
+                </CardContent>
+              </Card>
             </div>
           </CardContent>
         </Card>
