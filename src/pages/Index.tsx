@@ -613,6 +613,18 @@ export default function Index() {
                   </div>
                 </div>
 
+                <div className="mt-6 flex justify-center">
+                  <Button
+                    onClick={handleShare}
+                    variant="outline"
+                    size="lg"
+                    className="gap-2"
+                  >
+                    <Icon name="Share2" />
+                    Поделиться результатом
+                  </Button>
+                </div>
+
                 {hasAccess ? (
                   <div className="mt-8 p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border-2 border-green-200">
                     <div className="flex items-center gap-3 mb-6">
@@ -658,6 +670,26 @@ export default function Index() {
                         </p>
                       </TabsContent>
                     </Tabs>
+                    
+                    <div className="mt-6 flex gap-3">
+                      <Button
+                        onClick={handleDownloadPDF}
+                        disabled={isGeneratingPDF}
+                        className="flex-1"
+                        size="lg"
+                      >
+                        <Icon name={isGeneratingPDF ? "Loader2" : "Download"} className={`mr-2 ${isGeneratingPDF ? 'animate-spin' : ''}`} />
+                        {isGeneratingPDF ? 'Создаём PDF...' : 'Скачать PDF'}
+                      </Button>
+                      <Button
+                        onClick={handleShare}
+                        variant="outline"
+                        size="lg"
+                      >
+                        <Icon name="Share2" className="mr-2" />
+                        Поделиться
+                      </Button>
+                    </div>
                   </div>
                 ) : (
                   <div className="mt-8 p-6 bg-muted/50 rounded-xl border-2 border-dashed border-primary/30">
