@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
-import { createPayment, checkPaymentStatus, createSubscription, checkSubscription, generateReport, downloadPDF, shareReport } from '@/lib/api';
+import { checkAccess, generateReport, downloadPDF, shareReport } from '@/lib/api';
+import { useNavigate } from 'react-router-dom';
 
 const calculateDestinyMatrix = (birthDate: string, name: string) => {
   const date = new Date(birthDate);
@@ -198,69 +199,22 @@ export default function Index() {
   const [result, setResult] = useState<ReturnType<typeof calculateDestinyMatrix> | null>(null);
   const [showPricing, setShowPricing] = useState(false);
   const [hasAccess, setHasAccess] = useState(false);
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [adminEmail, setAdminEmail] = useState('');
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const paymentId = urlParams.get('payment_id');
-    const subscriptionType = urlParams.get('subscription_type');
-    const userEmail = urlParams.get('email');
-    const userName = urlParams.get('name');
-
-    if (paymentId && subscriptionType && userEmail && userName) {
-      handlePaymentReturn(paymentId, subscriptionType, userEmail, userName);
+    const storedEmail = localStorage.getItem('userEmail');
+    const storedAdminEmail = localStorage.getItem('adminEmail');
+    if (storedEmail) {
+      setEmail(storedEmail);
+    }
+    if (storedAdminEmail) {
+      setAdminEmail(storedAdminEmail);
+      setHasAccess(true);
     }
   }, []);
-
-  const handlePaymentReturn = async (
-    paymentId: string,
-    subscriptionType: string,
-    userEmail: string,
-    userName: string
-  ) => {
-    try {
-      setIsProcessingPayment(true);
-      const paymentStatus = await checkPaymentStatus(paymentId);
-
-      if (paymentStatus.paid) {
-        const priceMap: Record<string, number> = {
-          single: 200,
-          month: 1000,
-          half_year: 5000,
-          year: 10000,
-        };
-
-        await createSubscription({
-          email: userEmail,
-          name: userName,
-          subscription_type: subscriptionType,
-          payment_id: paymentId,
-          amount: priceMap[subscriptionType] || 0,
-        });
-
-        setEmail(userEmail);
-        setName(userName);
-        setHasAccess(true);
-        
-        toast({
-          title: '✅ Оплата прошла успешно!',
-          description: 'Теперь у вас есть полный доступ к расшифровкам',
-        });
-
-        window.history.replaceState({}, '', window.location.pathname);
-      }
-    } catch (error) {
-      toast({
-        title: 'Ошибка обработки платежа',
-        description: 'Пожалуйста, свяжитесь с поддержкой',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsProcessingPayment(false);
-    }
-  };
 
   const handleCalculate = async () => {
     if (name && birthDate) {
@@ -269,47 +223,27 @@ export default function Index() {
       setShowPricing(true);
 
       if (email) {
+        localStorage.setItem('userEmail', email);
         try {
-          const subscription = await checkSubscription(email);
-          setHasAccess(subscription.has_access);
+          const accessCheck = await checkAccess(email);
+          setHasAccess(accessCheck.has_access);
         } catch (error) {
-          console.error('Failed to check subscription:', error);
+          console.error('Failed to check access:', error);
         }
       }
     }
   };
 
-  const handlePayment = async (subscriptionType: string) => {
-    if (!email || !name) {
+  const handlePayment = () => {
+    if (!email) {
       toast({
         title: 'Требуется email',
-        description: 'Пожалуйста, укажите email для оформления подписки',
+        description: 'Пожалуйста, укажите email для получения доступа',
         variant: 'destructive',
       });
       return;
     }
-
-    try {
-      const currentUrl = window.location.origin + window.location.pathname;
-      const returnUrl = `${currentUrl}?payment_id={payment_id}&subscription_type=${subscriptionType}&email=${encodeURIComponent(
-        email
-      )}&name=${encodeURIComponent(name)}`;
-
-      const payment = await createPayment({
-        subscription_type: subscriptionType as any,
-        email,
-        name,
-        return_url: returnUrl,
-      });
-
-      window.location.href = payment.confirmation_url;
-    } catch (error) {
-      toast({
-        title: 'Ошибка создания платежа',
-        description: 'Попробуйте позже или свяжитесь с поддержкой',
-        variant: 'destructive',
-      });
-    }
+    navigate('/payment');
   };
 
   const handleDownloadPDF = async () => {
@@ -383,24 +317,29 @@ export default function Index() {
     }
   };
 
+  const handleAdminAccess = () => {
+    if (adminEmail) {
+      localStorage.setItem('adminEmail', adminEmail);
+      setHasAccess(true);
+      toast({
+        title: '✅ Админ доступ активирован',
+        description: 'Теперь у вас есть полный доступ',
+      });
+    }
+  };
+
   const pricingPlans = [
     {
-      name: 'Разовый доступ',
-      price: '200₽',
+      name: 'Полный доступ',
+      price: '500₽',
       type: 'single',
-      description: 'Получите полный разбор вашей матрицы один раз',
-      features: ['Полная расшифровка энергий', 'Анализ предназначения', 'Рекомендации по здоровью', 'PDF-отчет'],
+      description: 'Получите полную расшифровку матрицы судьбы',
+      features: ['Полная расшифровка всех энергий', 'Анализ предназначения', 'Рекомендации по здоровью', 'Анализ отношений и финансов', 'PDF-отчет для печати'],
       icon: 'FileText'
     },
-    {
-      name: 'Месяц',
-      price: '1000₽',
-      type: 'month',
-      description: 'Для психологов и специалистов',
-      features: ['Неограниченные расчеты', 'Все разделы анализа', 'Сохранение клиентов', 'Поддержка 24/7'],
-      icon: 'Calendar',
-      popular: true
-    },
+  ];
+
+  const oldPricingPlans = [
     {
       name: 'Полгода',
       price: '5000₽',
@@ -475,11 +414,28 @@ export default function Index() {
                 onClick={handleCalculate}
                 className="w-full text-lg py-6 hover-scale"
                 size="lg"
-                disabled={isProcessingPayment}
               >
                 <Icon name="Sparkles" className="mr-2" />
-                {isProcessingPayment ? 'Обработка платежа...' : 'Рассчитать матрицу'}
+                Рассчитать матрицу
               </Button>
+              
+              {adminEmail === '' && (
+                <div className="pt-4 border-t">
+                  <p className="text-xs text-muted-foreground mb-2">Админ доступ:</p>
+                  <div className="flex gap-2">
+                    <Input
+                      type="email"
+                      placeholder="admin@email.com"
+                      value={adminEmail}
+                      onChange={(e) => setAdminEmail(e.target.value)}
+                      className="text-sm"
+                    />
+                    <Button onClick={handleAdminAccess} size="sm">
+                      Войти
+                    </Button>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -715,51 +671,48 @@ export default function Index() {
 
             {showPricing && (
               <div className="animate-fade-in">
-                <h2 className="text-4xl font-bold text-center mb-8 text-primary">
-                  Выберите тариф
-                </h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {pricingPlans.map((plan, index) => (
-                    <Card
-                      key={index}
-                      className={`relative shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 ${
-                        plan.popular ? 'border-2 border-primary ring-2 ring-primary/20' : ''
-                      }`}
-                    >
-                      {plan.popular && (
-                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">
-                          Популярный
-                        </div>
-                      )}
-                      <CardHeader className="text-center">
-                        <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Icon name={plan.icon as any} className="text-primary" size={32} />
-                        </div>
-                        <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                        <div className="text-4xl font-bold text-primary my-2">{plan.price}</div>
-                        <CardDescription>{plan.description}</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <ul className="space-y-3 mb-6">
-                          {plan.features.map((feature, idx) => (
-                            <li key={idx} className="flex items-start gap-2">
-                              <Icon name="Check" className="text-primary mt-0.5 flex-shrink-0" size={20} />
-                              <span className="text-sm">{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                        <Button 
-                          className="w-full hover-scale" 
-                          size="lg"
-                          onClick={() => handlePayment(plan.type)}
-                          disabled={hasAccess}
+                {!hasAccess && (
+                  <>
+                    <h2 className="text-4xl font-bold text-center mb-8 text-primary">
+                      Получить полный доступ
+                    </h2>
+                    <div className="max-w-2xl mx-auto">
+                      {pricingPlans.map((plan, index) => (
+                        <Card
+                          key={index}
+                          className="shadow-lg hover:shadow-2xl transition-all duration-300"
                         >
-                          {hasAccess ? 'Уже оплачено' : 'Выбрать тариф'}
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                          <CardHeader className="text-center">
+                            <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                              <Icon name={plan.icon as any} className="text-primary" size={32} />
+                            </div>
+                            <CardTitle className="text-3xl">{plan.name}</CardTitle>
+                            <div className="text-5xl font-bold text-primary my-4">{plan.price}</div>
+                            <CardDescription className="text-lg">{plan.description}</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <ul className="space-y-4 mb-8">
+                              {plan.features.map((feature, idx) => (
+                                <li key={idx} className="flex items-start gap-3">
+                                  <Icon name="Check" className="text-primary mt-1 flex-shrink-0" size={24} />
+                                  <span className="text-base">{feature}</span>
+                                </li>
+                              ))}
+                            </ul>
+                            <Button 
+                              className="w-full hover-scale text-lg py-6" 
+                              size="lg"
+                              onClick={handlePayment}
+                            >
+                              <Icon name="CreditCard" className="mr-2" size={24} />
+                              Оплатить через СБП
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>

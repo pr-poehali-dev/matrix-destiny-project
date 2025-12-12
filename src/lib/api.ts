@@ -1,7 +1,8 @@
 import func2url from '../../backend/func2url.json';
 
-const PAYMENT_URL = func2url.payment;
-const SUBSCRIPTION_URL = func2url.subscription;
+const ADMIN_REQUESTS_URL = func2url['admin-requests'];
+const PAYMENT_SUBMIT_URL = func2url['payment-submit'];
+const ADMIN_APPROVE_URL = func2url['admin-approve'];
 const REPORT_URL = func2url.report;
 
 export interface PaymentRequest {
@@ -32,56 +33,31 @@ export interface SubscriptionCheckResponse {
   end_date?: string;
 }
 
-export const createPayment = async (data: PaymentRequest): Promise<PaymentResponse> => {
-  const response = await fetch(PAYMENT_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
+export const checkAccess = async (email: string): Promise<SubscriptionCheckResponse> => {
+  const response = await fetch(`${ADMIN_REQUESTS_URL}?email=${encodeURIComponent(email)}`);
 
   if (!response.ok) {
-    throw new Error('Failed to create payment');
+    throw new Error('Failed to check access');
   }
 
-  return response.json();
+  const data = await response.json();
+  return { has_access: data.hasAccess || false };
+};
+
+export const createPayment = async (data: PaymentRequest): Promise<PaymentResponse> => {
+  throw new Error('Payment function removed - use manual payment via QR code');
 };
 
 export const checkPaymentStatus = async (paymentId: string): Promise<{ status: string; paid: boolean }> => {
-  const response = await fetch(`${PAYMENT_URL}?payment_id=${paymentId}`);
-
-  if (!response.ok) {
-    throw new Error('Failed to check payment status');
-  }
-
-  return response.json();
+  throw new Error('Payment status check removed - use manual payment via QR code');
 };
 
 export const createSubscription = async (data: SubscriptionRequest): Promise<any> => {
-  const response = await fetch(SUBSCRIPTION_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to create subscription');
-  }
-
-  return response.json();
+  throw new Error('Subscription creation removed - use manual payment via QR code');
 };
 
 export const checkSubscription = async (email: string): Promise<SubscriptionCheckResponse> => {
-  const response = await fetch(`${SUBSCRIPTION_URL}?email=${encodeURIComponent(email)}`);
-
-  if (!response.ok) {
-    throw new Error('Failed to check subscription');
-  }
-
-  return response.json();
+  return checkAccess(email);
 };
 
 export interface ReportRequest {

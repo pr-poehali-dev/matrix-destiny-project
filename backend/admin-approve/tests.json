@@ -1,0 +1,29 @@
+{
+  "tests": [
+    {
+      "name": "Approve payment without data",
+      "method": "POST",
+      "path": "/",
+      "body": {},
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Approve payment with data",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "id": 1,
+        "email": "test@example.com"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
