@@ -53,13 +53,22 @@ const Admin = () => {
   const fetchRequests = async () => {
     try {
       const func2url = await import('../../backend/func2url.json');
+      console.log('Загрузка заявок с:', func2url['admin-requests']);
       const response = await fetch(func2url['admin-requests']);
+      console.log('Ответ получен, status:', response.status);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
       const data = await response.json();
+      console.log('Данные получены:', data);
       setRequests(data.requests || []);
     } catch (error) {
+      console.error('Ошибка загрузки заявок:', error);
       toast({
         title: 'Ошибка',
-        description: 'Не удалось загрузить заявки',
+        description: `Не удалось загрузить заявки: ${error}`,
         variant: 'destructive',
       });
     } finally {
@@ -129,6 +138,8 @@ const Admin = () => {
 
     try {
       const func2url = await import('../../backend/func2url.json');
+      console.log('Выдача доступа:', { email: manualEmail, plan_type: manualPlanType });
+      
       const response = await fetch(func2url['admin-approve'], {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -139,7 +150,11 @@ const Admin = () => {
         }),
       });
 
+      console.log('Ответ сервера:', response.status);
+
       if (response.ok) {
+        const result = await response.json();
+        console.log('Успех:', result);
         toast({
           title: 'Доступ выдан',
           description: `Email ${manualEmail} получил доступ (${manualPlanType})`,
@@ -147,6 +162,7 @@ const Admin = () => {
         setManualEmail('');
       } else {
         const errorData = await response.json();
+        console.error('Ошибка от сервера:', errorData);
         toast({
           title: 'Ошибка',
           description: errorData.error || 'Не удалось выдать доступ',
@@ -154,9 +170,10 @@ const Admin = () => {
         });
       }
     } catch (error) {
+      console.error('Ошибка выдачи доступа:', error);
       toast({
         title: 'Ошибка',
-        description: 'Не удалось выдать доступ',
+        description: `Не удалось выдать доступ: ${error}`,
         variant: 'destructive',
       });
     }
