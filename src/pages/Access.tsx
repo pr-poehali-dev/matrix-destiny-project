@@ -144,6 +144,15 @@ const Access = () => {
                     <Icon name="CheckCircle" size={24} className="text-green-600" />
                     <h3 className="font-semibold text-green-900">Доступ активен!</h3>
                   </div>
+                  
+                  {accessInfo.plan_type !== 'single' && (
+                    <div className="bg-blue-50 border border-blue-300 rounded p-3 mb-3">
+                      <p className="text-xs text-blue-900">
+                        <strong>💡 Для подписчиков:</strong><br/>
+                        Используйте кнопку "Вход для подписчиков" на главной странице для автоматического входа с любого устройства
+                      </p>
+                    </div>
+                  )}
 
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center justify-between">

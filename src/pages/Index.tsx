@@ -205,6 +205,7 @@ export default function Index() {
   const [hasAccess, setHasAccess] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [adminEmail, setAdminEmail] = useState('');
+  const [isSubscriber, setIsSubscriber] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const calculatorRef = useRef<HTMLDivElement>(null);
@@ -212,9 +213,29 @@ export default function Index() {
   useEffect(() => {
     const storedEmail = localStorage.getItem('userEmail');
     const storedAdminEmail = localStorage.getItem('adminEmail');
+    const subscriberAuth = localStorage.getItem('subscriberAuth');
+    
     if (storedEmail) {
       setEmail(storedEmail);
+      
+      // Автоматически проверяем доступ для подписчиков
+      if (subscriberAuth === 'true') {
+        setIsSubscriber(true);
+        checkAccess(storedEmail).then((accessCheck) => {
+          if (accessCheck.has_access) {
+            setHasAccess(true);
+          } else {
+            // Если доступ истёк, очищаем авторизацию
+            localStorage.removeItem('subscriberAuth');
+            setIsSubscriber(false);
+          }
+        }).catch(() => {
+          localStorage.removeItem('subscriberAuth');
+          setIsSubscriber(false);
+        });
+      }
     }
+    
     if (storedAdminEmail) {
       setAdminEmail(storedAdminEmail);
       setHasAccess(true);
@@ -339,6 +360,16 @@ export default function Index() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('subscriberAuth');
+    setIsSubscriber(false);
+    setHasAccess(false);
+    toast({
+      title: 'Вы вышли из аккаунта',
+      description: 'Для входа используйте кнопку "Вход для подписчиков"',
+    });
+  };
+
   const pricingPlans = [
     {
       name: 'Разовый доступ',
@@ -402,6 +433,36 @@ export default function Index() {
       <LiveNotifications />
       
       <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="flex justify-end mb-4">
+          {isSubscriber ? (
+            <div className="flex items-center gap-3">
+              <div className="text-sm text-gray-600 hidden md:block">
+                <Icon name="CheckCircle" size={16} className="inline text-green-600 mr-1" />
+                Вы авторизованы как подписчик
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="gap-2"
+              >
+                <Icon name="LogOut" size={16} />
+                Выйти
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/login')}
+              className="gap-2"
+            >
+              <Icon name="LogIn" size={16} />
+              Вход для подписчиков
+            </Button>
+          )}
+        </div>
+
         <header className="text-center mb-12 animate-fade-in">
           <div className="flex justify-center mb-6">
             <LiveStats baseCount={25000} />
