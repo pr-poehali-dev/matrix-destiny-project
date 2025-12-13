@@ -197,7 +197,12 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         
         # КРИТИЧЕСКАЯ ПРОВЕРКА: Истёк ли срок подписки
         if expires_at:
-            if datetime.now() > expires_at:
+            now = datetime.now()
+            if expires_at.tzinfo:
+                from datetime import timezone
+                now = datetime.now(timezone.utc)
+            
+            if now > expires_at:
                 has_access = False
                 message = 'Срок действия подписки истёк'
                 
