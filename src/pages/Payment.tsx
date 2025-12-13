@@ -187,33 +187,51 @@ const Payment = () => {
                       key={plan}
                       type="button"
                       onClick={() => setSelectedPlan(plan)}
-                      className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
+                      className={`w-full p-4 rounded-lg border-2 transition-all duration-300 ease-in-out text-left relative transform ${
                         selectedPlan === plan
-                          ? 'border-purple-500 bg-purple-50'
-                          : 'border-gray-200 bg-white hover:border-purple-300'
+                          ? 'border-purple-600 bg-gradient-to-r from-purple-100 to-purple-50 shadow-lg ring-2 ring-purple-300 scale-105'
+                          : 'border-gray-200 bg-white hover:border-purple-300 hover:shadow-md hover:scale-102'
                       }`}
                     >
+                      {selectedPlan === plan && (
+                        <div className="absolute -top-2 -right-2 bg-purple-600 text-white rounded-full p-1">
+                          <Icon name="Check" size={16} />
+                        </div>
+                      )}
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="font-semibold text-gray-900">{plans[plan].label}</p>
+                          <p className={`font-semibold ${selectedPlan === plan ? 'text-purple-900' : 'text-gray-900'}`}>
+                            {plans[plan].label}
+                          </p>
                           {plans[plan].duration && (
-                            <p className="text-sm text-gray-600">Безлимитные расчёты</p>
+                            <p className={`text-sm ${selectedPlan === plan ? 'text-purple-700' : 'text-gray-600'}`}>
+                              Безлимитные расчёты
+                            </p>
                           )}
                         </div>
-                        <p className="text-lg font-bold text-purple-600">{plans[plan].price} ₽</p>
+                        <p className={`text-lg font-bold ${selectedPlan === plan ? 'text-purple-700' : 'text-purple-600'}`}>
+                          {plans[plan].price} ₽
+                        </p>
                       </div>
                     </button>
                   ))}
                 </div>
 
-                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                  <p className="text-green-800 text-sm font-bold mb-2">
-                    ✓ Выбрано: {plans[selectedPlan].label}
-                  </p>
-                  <p className="text-green-900 text-lg font-bold mb-2">
-                    К оплате: {plans[selectedPlan].price} ₽
-                  </p>
-                  <p className="text-green-700 text-xs">
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-5 rounded-lg border-2 border-green-300 shadow-md">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Icon name="CheckCircle2" size={20} className="text-green-600" />
+                    <p className="text-green-800 text-sm font-bold">
+                      Выбрано: {plans[selectedPlan].label}
+                    </p>
+                  </div>
+                  <div className="bg-white rounded-md p-3 mb-2 border border-green-200">
+                    <p className="text-green-700 text-xs mb-1">Итоговая сумма к оплате:</p>
+                    <p className="text-green-900 text-2xl font-bold">
+                      {plans[selectedPlan].price} ₽
+                    </p>
+                  </div>
+                  <p className="text-green-700 text-xs flex items-center gap-2">
+                    <Icon name="QrCode" size={14} />
                     Отсканируйте QR-код выше и оплатите эту сумму
                   </p>
                   {selectedPlan !== 'single' && (
