@@ -206,6 +206,7 @@ export default function Index() {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [adminEmail, setAdminEmail] = useState('');
   const [isSubscriber, setIsSubscriber] = useState(false);
+  const [subscriptionExpires, setSubscriptionExpires] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   const calculatorRef = useRef<HTMLDivElement>(null);
@@ -224,10 +225,18 @@ export default function Index() {
         checkAccess(storedEmail).then((accessCheck) => {
           if (accessCheck.has_access) {
             setHasAccess(true);
+            if (accessCheck.expires_at) {
+              setSubscriptionExpires(accessCheck.expires_at);
+            }
           } else {
             // Если доступ истёк, очищаем авторизацию
             localStorage.removeItem('subscriberAuth');
             setIsSubscriber(false);
+            toast({
+              title: 'Срок подписки истёк',
+              description: accessCheck.message || 'Продлите подписку для доступа',
+              variant: 'destructive',
+            });
           }
         }).catch(() => {
           localStorage.removeItem('subscriberAuth');
@@ -360,13 +369,28 @@ export default function Index() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const storedEmail = localStorage.getItem('userEmail');
+    
+    if (storedEmail) {
+      try {
+        // Удаляем сессию на сервере
+        await fetch('/api/access/check', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: storedEmail }),
+        });
+      } catch (error) {
+        console.error('Failed to logout on server:', error);
+      }
+    }
+    
     localStorage.removeItem('subscriberAuth');
     setIsSubscriber(false);
     setHasAccess(false);
     toast({
       title: 'Вы вышли из аккаунта',
-      description: 'Для входа используйте кнопку "Вход для подписчиков"',
+      description: 'Сессия на этом устройстве завершена',
     });
   };
 
@@ -439,6 +463,10 @@ export default function Index() {
               <div className="text-sm text-gray-600 hidden md:block">
                 <Icon name="CheckCircle" size={16} className="inline text-green-600 mr-1" />
                 Вы авторизованы как подписчик
+                {subscriptionExpires && (() => {
+                  const daysLeft = Math.ceil((new Date(subscriptionExpires).getTime() - new Date().getTime()) / 86400000);
+                  return daysLeft > 0 ? ` (ещё ${daysLeft} дн.)` : ' (истекает сегодня)';
+                })()}
               </div>
               <Button
                 variant="outline"

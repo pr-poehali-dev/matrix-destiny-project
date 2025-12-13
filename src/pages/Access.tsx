@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
 import { useNavigate } from 'react-router-dom';
+import { ActiveDevices } from '@/components/ActiveDevices';
 
 interface AccessInfo {
   has_access: boolean;
@@ -194,6 +195,12 @@ const Access = () => {
                 <p className="text-xs text-gray-500 text-center">
                   Вы будете перенаправлены на главную страницу для создания расшифровки
                 </p>
+              </div>
+            )}
+            
+            {accessInfo && accessInfo.has_access && accessInfo.plan_type !== 'single' && (
+              <div className="mt-6">
+                <ActiveDevices email={email} />
               </div>
             )}
 
