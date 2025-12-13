@@ -161,9 +161,23 @@ const Admin = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-6 md:py-12 px-3 md:px-4">
       <div className="max-w-6xl mx-auto w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Админ-панель</h1>
-          <p className="text-gray-600">Управление заявками на доступ</p>
+        <div className="flex items-center justify-between mb-6 md:mb-8">
+          <div className="text-center flex-1">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-1 md:mb-2">Админ-панель</h1>
+            <p className="text-sm md:text-base text-gray-600">Управление заявками на доступ</p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              sessionStorage.removeItem('admin_auth');
+              setIsAuthenticated(false);
+            }}
+            className="ml-2 flex-shrink-0"
+          >
+            <Icon name="LogOut" size={16} className="mr-1 md:mr-2" />
+            <span className="hidden md:inline">Выйти</span>
+          </Button>
         </div>
         
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4 mb-4 md:mb-6 w-full overflow-hidden">
