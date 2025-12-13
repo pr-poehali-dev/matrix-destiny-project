@@ -1,0 +1,20 @@
+{
+  "tests": [
+    {
+      "name": "Check access without email",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "Email обязателен"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Check access with email",
+      "method": "GET",
+      "path": "/?email=test@example.com",
+      "expectedStatus": 200
+    }
+  ]
+}
