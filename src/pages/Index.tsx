@@ -269,7 +269,7 @@ export default function Index() {
     }
   };
 
-  const handlePayment = () => {
+  const handlePayment = (planType?: string) => {
     if (!email) {
       toast({
         title: 'Требуется email',
@@ -278,7 +278,11 @@ export default function Index() {
       });
       return;
     }
-    navigate('/payment');
+    if (planType) {
+      navigate(`/payment?plan=${planType}`);
+    } else {
+      navigate('/payment');
+    }
   };
 
   const handleDownloadPDF = async () => {
@@ -1055,7 +1059,7 @@ export default function Index() {
                             <Button 
                               className="w-full hover-scale" 
                               size="lg"
-                              onClick={handlePayment}
+                              onClick={() => handlePayment(plan.type)}
                             >
                               Выбрать тариф
                             </Button>

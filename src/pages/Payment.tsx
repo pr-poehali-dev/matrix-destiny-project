@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 type PlanType = 'single' | 'month' | 'half_year' | 'year';
 
@@ -17,6 +17,7 @@ const plans = {
 };
 
 const Payment = () => {
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [screenshot, setScreenshot] = useState<File | null>(null);
@@ -24,6 +25,18 @@ const Payment = () => {
   const [selectedPlan, setSelectedPlan] = useState<PlanType>('single');
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const planFromUrl = searchParams.get('plan') as PlanType | null;
+    if (planFromUrl && plans[planFromUrl]) {
+      setSelectedPlan(planFromUrl);
+    }
+    
+    const storedEmail = localStorage.getItem('userEmail');
+    if (storedEmail) {
+      setEmail(storedEmail);
+    }
+  }, [searchParams]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -162,6 +175,13 @@ const Payment = () => {
                     <Icon name="Package" size={20} />
                     Шаг 1: Выберите тариф
                   </h3>
+                  {searchParams.get('plan') && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
+                      <p className="text-sm text-blue-900">
+                        ℹ️ <strong>Тариф выбран автоматически.</strong> Вы можете изменить его ниже.
+                      </p>
+                    </div>
+                  )}
                   {(Object.keys(plans) as PlanType[]).map((plan) => (
                     <button
                       key={plan}
