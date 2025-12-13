@@ -121,3 +121,29 @@ export const shareReport = async (data: ReportRequest): Promise<string> => {
   await navigator.clipboard.writeText(reportUrl);
   return 'copied';
 };
+
+export interface PaymentSubmitRequest {
+  email: string;
+  phone?: string;
+  screenshot: string;
+  filename: string;
+  plan_type: string;
+  amount: number;
+}
+
+export const submitPayment = async (data: PaymentSubmitRequest): Promise<any> => {
+  const response = await fetch(PAYMENT_SUBMIT_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || 'Failed to submit payment');
+  }
+
+  return response.json();
+};

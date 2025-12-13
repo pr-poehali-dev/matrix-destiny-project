@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { submitPayment } from '@/lib/api';
 
 type PlanType = 'single' | 'month' | 'half_year' | 'year';
 
@@ -72,33 +73,29 @@ const Payment = () => {
       reader.onload = async () => {
         const base64 = reader.result as string;
 
-        const response = await fetch('/api/payment/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
+        try {
+          const data = await submitPayment({
             email,
             phone,
             screenshot: base64,
             filename: screenshot.name,
             plan_type: selectedPlan,
             amount: plans[selectedPlan].price,
-          }),
-        });
+          });
 
-        const data = await response.json();
-
-        if (response.ok) {
           toast({
             title: '✅ Заявка отправлена',
             description: 'Доступ активируется автоматически в течение 1-3 часов после проверки',
           });
           setTimeout(() => navigate('/'), 2000);
-        } else {
+        } catch (error: any) {
           toast({
             title: 'Ошибка',
-            description: data.error || 'Не удалось отправить заявку',
+            description: error.message || 'Не удалось отправить заявку',
             variant: 'destructive',
           });
+        } finally {
+          setLoading(false);
         }
       };
 
@@ -109,7 +106,6 @@ const Payment = () => {
         description: 'Произошла ошибка при отправке',
         variant: 'destructive',
       });
-    } finally {
       setLoading(false);
     }
   };
