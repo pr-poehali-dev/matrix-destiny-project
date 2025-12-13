@@ -3,6 +3,7 @@ import func2url from '../../backend/func2url.json';
 const ADMIN_REQUESTS_URL = func2url['admin-requests'];
 const PAYMENT_SUBMIT_URL = func2url['payment-submit'];
 const ADMIN_APPROVE_URL = func2url['admin-approve'];
+const ACCESS_CHECK_URL = func2url['access-check'];
 const REPORT_URL = func2url.report;
 
 export interface PaymentRequest {
@@ -34,14 +35,14 @@ export interface SubscriptionCheckResponse {
 }
 
 export const checkAccess = async (email: string): Promise<SubscriptionCheckResponse> => {
-  const response = await fetch(`${ADMIN_REQUESTS_URL}?email=${encodeURIComponent(email)}`);
+  const response = await fetch(`${ACCESS_CHECK_URL}?email=${encodeURIComponent(email)}`);
 
   if (!response.ok) {
     throw new Error('Failed to check access');
   }
 
   const data = await response.json();
-  return { has_access: data.hasAccess || false };
+  return data;
 };
 
 export const createPayment = async (data: PaymentRequest): Promise<PaymentResponse> => {
