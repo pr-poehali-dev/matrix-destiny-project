@@ -3,6 +3,7 @@ import os
 import psycopg2
 import boto3
 import base64
+import requests
 from typing import Dict, Any
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
@@ -89,6 +90,31 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         conn.commit()
         cur.close()
         conn.close()
+        
+        try:
+            bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
+            chat_id = os.environ.get('TELEGRAM_CHAT_ID')
+            
+            if bot_token and chat_id:
+                message = f"🔔 <b>Новая заявка на оплату!</b>\n\n"
+                message += f"📧 Email: <code>{email}</code>\n"
+                if phone:
+                    message += f"📱 Телефон: {phone}\n"
+                message += f"🆔 ID заявки: {request_id}\n"
+                if screenshot_url:
+                    message += f"\n📸 <a href='{screenshot_url}'>Скриншот оплаты</a>"
+                
+                requests.post(
+                    f'https://api.telegram.org/bot{bot_token}/sendMessage',
+                    json={
+                        'chat_id': chat_id,
+                        'text': message,
+                        'parse_mode': 'HTML'
+                    },
+                    timeout=5
+                )
+        except:
+            pass
         
         return {
             'statusCode': 200,
