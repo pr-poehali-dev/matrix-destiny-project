@@ -113,15 +113,15 @@ const Admin = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center px-4">
-        <Card className="w-full max-w-md">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center px-3 md:px-4">
+        <Card className="w-full max-w-md mx-auto">
           <CardHeader>
-            <CardTitle className="text-2xl text-center">Вход в админ-панель</CardTitle>
+            <CardTitle className="text-xl md:text-2xl text-center">Вход в админ-панель</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="password">Пароль</Label>
+                <Label htmlFor="password" className="text-sm md:text-base">Пароль</Label>
                 <Input
                   type="password"
                   id="password"
@@ -130,9 +130,10 @@ const Admin = () => {
                   placeholder="Введите пароль"
                   autoFocus
                   required
+                  className="w-full text-base"
                 />
               </div>
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full text-base">
                 <Icon name="LogIn" size={16} className="mr-2" />
                 Войти
               </Button>
@@ -158,29 +159,29 @@ const Admin = () => {
   const processedRequests = requests.filter(r => r.status !== 'pending');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-12 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-6 md:py-12 px-3 md:px-4">
+      <div className="max-w-6xl mx-auto w-full">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Админ-панель</h1>
           <p className="text-gray-600">Управление заявками на доступ</p>
         </div>
         
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <div className="flex items-start gap-3">
-            <Icon name="Info" size={20} className="text-blue-600 mt-0.5 flex-shrink-0" />
-            <div className="text-sm text-blue-900">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4 mb-4 md:mb-6 w-full overflow-hidden">
+          <div className="flex items-start gap-2 md:gap-3">
+            <Icon name="Info" size={18} className="text-blue-600 mt-0.5 flex-shrink-0" />
+            <div className="text-xs md:text-sm text-blue-900">
               <strong>ℹ️ Рекомендация:</strong> Вы можете одобрять заявки прямо из Telegram — уведомления приходят автоматически с кнопками "Одобрить" / "Отклонить". 
               Это быстрее и удобнее, чем через эту панель!
             </div>
           </div>
         </div>
 
-        <div className="grid gap-6 mb-8">
-          <Card>
+        <div className="grid gap-4 md:gap-6 mb-6 md:mb-8">
+          <Card className="w-full overflow-hidden">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Icon name="Clock" size={24} className="text-orange-500" />
-                Ожидают проверки ({pendingRequests.length})
+              <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+                <Icon name="Clock" size={20} className="text-orange-500 flex-shrink-0" />
+                <span className="truncate">Ожидают проверки ({pendingRequests.length})</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -191,51 +192,53 @@ const Admin = () => {
                   {pendingRequests.map((request) => (
                     <div
                       key={request.id}
-                      className="border rounded-lg p-4 bg-white shadow-sm"
+                      className="border rounded-lg p-3 md:p-4 bg-white shadow-sm w-full overflow-hidden"
                     >
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Icon name="Mail" size={16} className="text-gray-400" />
-                            <span className="font-medium">{request.email}</span>
+                      <div className="flex flex-col gap-3 w-full">
+                        <div className="flex-1 w-full">
+                          <div className="flex items-center gap-2 mb-2 flex-wrap break-all">
+                            <Icon name="Mail" size={16} className="text-gray-400 flex-shrink-0" />
+                            <span className="font-medium text-sm md:text-base break-all">{request.email}</span>
                           </div>
                           {request.phone && (
                             <div className="flex items-center gap-2 mb-2">
-                              <Icon name="Phone" size={16} className="text-gray-400" />
+                              <Icon name="Phone" size={16} className="text-gray-400 flex-shrink-0" />
                               <span className="text-sm text-gray-600">{request.phone}</span>
                             </div>
                           )}
-                          <div className="flex items-center gap-2 text-sm text-gray-500">
-                            <Icon name="Calendar" size={16} />
+                          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500">
+                            <Icon name="Calendar" size={16} className="flex-shrink-0" />
                             <span>{new Date(request.created_at).toLocaleString('ru-RU')}</span>
                           </div>
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 w-full">
                           {request.screenshot_url && (
                             <Button
                               variant="outline"
                               size="sm"
                               onClick={() => window.open(request.screenshot_url, '_blank')}
-                              className="w-full md:w-auto"
+                              className="w-full"
                             >
                               <Icon name="Image" size={16} className="mr-2" />
                               Скриншот
                             </Button>
                           )}
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 w-full">
                             <Button
                               onClick={() => handleApprove(request.id, request.email)}
-                              className="flex-1 md:flex-none bg-green-600 hover:bg-green-700"
+                              className="flex-1 bg-green-600 hover:bg-green-700 text-sm md:text-base"
+                              size="sm"
                             >
-                              <Icon name="Check" size={16} className="mr-2" />
+                              <Icon name="Check" size={16} className="mr-1 md:mr-2" />
                               Одобрить
                             </Button>
                             <Button
                               onClick={() => handleReject(request.id)}
                               variant="destructive"
-                              className="flex-1 md:flex-none"
+                              className="flex-1 text-sm md:text-base"
+                              size="sm"
                             >
-                              <Icon name="X" size={16} className="mr-2" />
+                              <Icon name="X" size={16} className="mr-1 md:mr-2" />
                               Отклонить
                             </Button>
                           </div>
@@ -248,11 +251,11 @@ const Admin = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="w-full overflow-hidden">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Icon name="CheckCircle" size={24} className="text-green-500" />
-                Обработанные ({processedRequests.length})
+              <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+                <Icon name="CheckCircle" size={20} className="text-green-500 flex-shrink-0" />
+                <span className="truncate">Обработанные ({processedRequests.length})</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -263,23 +266,25 @@ const Admin = () => {
                   {processedRequests.map((request) => (
                     <div
                       key={request.id}
-                      className="border rounded-lg p-3 bg-gray-50 flex items-center justify-between"
+                      className="border rounded-lg p-3 bg-gray-50 w-full overflow-hidden"
                     >
-                      <div>
-                        <span className="font-medium">{request.email}</span>
-                        <span className="text-sm text-gray-500 ml-4">
-                          {new Date(request.created_at).toLocaleDateString('ru-RU')}
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 w-full">
+                        <div className="flex-1 min-w-0">
+                          <span className="font-medium text-sm md:text-base break-all block">{request.email}</span>
+                          <span className="text-xs md:text-sm text-gray-500 block mt-1">
+                            {new Date(request.created_at).toLocaleDateString('ru-RU')}
+                          </span>
+                        </div>
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs md:text-sm font-medium whitespace-nowrap self-start md:self-center ${
+                            request.status === 'approved'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}
+                        >
+                          {request.status === 'approved' ? 'Одобрено' : 'Отклонено'}
                         </span>
                       </div>
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${
-                          request.status === 'approved'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}
-                      >
-                        {request.status === 'approved' ? 'Одобрено' : 'Отклонено'}
-                      </span>
                     </div>
                   ))}
                 </div>
