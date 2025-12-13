@@ -507,40 +507,66 @@ export default function Index() {
           </div>
         </div>
 
-        <header className="text-center mb-12 animate-fade-in">
-          <div className="flex justify-center mb-6">
-            <LiveStats baseCount={25000} />
+        <header className="relative overflow-hidden rounded-3xl mb-12 animate-fade-in shadow-2xl">
+          {/* Космический фон */}
+          <div className="absolute inset-0 z-0">
+            <img 
+              src="https://cdn.poehali.dev/files/1000038242.jpg" 
+              alt="Космический фон"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
+            
+            {/* Мерцающие звёзды */}
+            <div className="absolute inset-0 opacity-60">
+              <div className="absolute top-[10%] left-[15%] w-2 h-2 bg-white rounded-full animate-twinkle" style={{ animationDelay: '0s' }}></div>
+              <div className="absolute top-[20%] right-[25%] w-1 h-1 bg-white rounded-full animate-twinkle" style={{ animationDelay: '0.5s' }}></div>
+              <div className="absolute top-[40%] left-[30%] w-1.5 h-1.5 bg-purple-200 rounded-full animate-twinkle" style={{ animationDelay: '1s' }}></div>
+              <div className="absolute top-[60%] right-[15%] w-1 h-1 bg-blue-200 rounded-full animate-twinkle" style={{ animationDelay: '1.5s' }}></div>
+              <div className="absolute top-[75%] left-[20%] w-2 h-2 bg-pink-200 rounded-full animate-twinkle" style={{ animationDelay: '2s' }}></div>
+              <div className="absolute top-[30%] right-[35%] w-1 h-1 bg-white rounded-full animate-twinkle" style={{ animationDelay: '0.7s' }}></div>
+              <div className="absolute top-[50%] left-[45%] w-1.5 h-1.5 bg-yellow-200 rounded-full animate-twinkle" style={{ animationDelay: '1.2s' }}></div>
+            </div>
           </div>
-          
-          <h1 className="text-5xl md:text-6xl font-bold text-primary mb-4 tracking-tight">
-            Узнай О Себе Всё
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6">
-            Рассчитай матрицу судьбы за 30 секунд — узнай своё предназначение, здоровье и финансовые возможности
-          </p>
-          
-          <div className="flex justify-center gap-4">
-            <Link to="/about" className="text-primary hover:underline text-sm font-medium">
-              Узнать больше о методе →
-            </Link>
-            <Link to="/blog" className="text-primary hover:underline text-sm font-medium">
-              База знаний для специалистов →
-            </Link>
-          </div>
-          
-          <div className="flex justify-center gap-4 mt-6 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <Icon name="Star" size={16} />
-              4.9 рейтинг
-            </span>
-            <span className="flex items-center gap-1">
-              <Icon name="Shield" size={16} />
-              Конфиденциально
-            </span>
-            <span className="flex items-center gap-1">
-              <Icon name="Zap" size={16} />
-              30 секунд
-            </span>
+
+          {/* Контент */}
+          <div className="relative z-10 text-center py-20 px-6">
+            <div className="flex justify-center mb-8">
+              <LiveStats baseCount={25000} />
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl animate-float">
+              <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-blue-300 bg-clip-text text-transparent animate-shimmer">
+                Узнай О Себе Всё
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-8 drop-shadow-lg">
+              Рассчитай матрицу судьбы за 30 секунд — узнай своё предназначение, здоровье и финансовые возможности
+            </p>
+            
+            <div className="flex flex-wrap justify-center gap-4 mb-8">
+              <Link to="/about" className="text-purple-200 hover:text-white hover:underline text-sm font-medium transition-colors drop-shadow-lg">
+                Узнать больше о методе →
+              </Link>
+              <Link to="/blog" className="text-purple-200 hover:text-white hover:underline text-sm font-medium transition-colors drop-shadow-lg">
+                База знаний для специалистов →
+              </Link>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-white/80">
+              <span className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20 shadow-lg hover:bg-white/20 transition-all">
+                <Icon name="Star" size={18} className="text-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.6)]" />
+                <span className="font-semibold">4.9 рейтинг</span>
+              </span>
+              <span className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20 shadow-lg hover:bg-white/20 transition-all">
+                <Icon name="Shield" size={18} className="text-green-300 drop-shadow-[0_0_8px_rgba(134,239,172,0.6)]" />
+                <span className="font-semibold">Конфиденциально</span>
+              </span>
+              <span className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20 shadow-lg hover:bg-white/20 transition-all">
+                <Icon name="Zap" size={18} className="text-blue-300 drop-shadow-[0_0_8px_rgba(147,197,253,0.6)]" />
+                <span className="font-semibold">30 секунд</span>
+              </span>
+            </div>
           </div>
         </header>
 
