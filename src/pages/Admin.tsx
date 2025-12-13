@@ -17,11 +17,34 @@ interface PaymentRequest {
 const Admin = () => {
   const [requests, setRequests] = useState<PaymentRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchRequests();
+    const savedAuth = sessionStorage.getItem('admin_auth');
+    if (savedAuth === 'true') {
+      setIsAuthenticated(true);
+      fetchRequests();
+    } else {
+      setLoading(false);
+    }
   }, []);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === 'Romanio07Vivat') {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('admin_auth', 'true');
+      setLoading(true);
+      fetchRequests();
+    } else {
+      toast({
+        title: 'Неверный пароль',
+        variant: 'destructive',
+      });
+    }
+  };
 
   const fetchRequests = async () => {
     try {
@@ -85,6 +108,40 @@ const Admin = () => {
       });
     }
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center px-4">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl text-center">Вход в админ-панель</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  Пароль
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder="Введите пароль"
+                  autoFocus
+                />
+              </div>
+              <Button type="submit" className="w-full">
+                <Icon name="LogIn" size={16} className="mr-2" />
+                Войти
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
