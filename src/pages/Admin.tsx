@@ -113,7 +113,7 @@ const Admin = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center px-3 md:px-4">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-end md:items-center justify-center px-3 md:px-4 pb-6 md:pb-0">
         <Card className="w-full max-w-md mx-auto">
           <CardHeader>
             <CardTitle className="text-xl md:text-2xl text-center">Вход в админ-панель</CardTitle>
@@ -128,9 +128,9 @@ const Admin = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Введите пароль"
-                  autoFocus
                   required
                   className="w-full text-base"
+                  inputMode="text"
                 />
               </div>
               <Button type="submit" className="w-full text-base">
