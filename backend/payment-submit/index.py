@@ -104,12 +104,22 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 if screenshot_url:
                     message += f"\n📸 <a href='{screenshot_url}'>Скриншот оплаты</a>"
                 
+                keyboard = {
+                    'inline_keyboard': [
+                        [
+                            {'text': '✅ Одобрить', 'callback_data': f'approve_{request_id}'},
+                            {'text': '❌ Отклонить', 'callback_data': f'reject_{request_id}'}
+                        ]
+                    ]
+                }
+                
                 requests.post(
                     f'https://api.telegram.org/bot{bot_token}/sendMessage',
                     json={
                         'chat_id': chat_id,
                         'text': message,
-                        'parse_mode': 'HTML'
+                        'parse_mode': 'HTML',
+                        'reply_markup': keyboard
                     },
                     timeout=5
                 )
