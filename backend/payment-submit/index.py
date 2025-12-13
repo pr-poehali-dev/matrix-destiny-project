@@ -96,13 +96,15 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         conn.close()
         
         try:
-            smtp_host = os.environ.get('SMTP_HOST')
-            smtp_port = os.environ.get('SMTP_PORT')
-            smtp_user = os.environ.get('SMTP_USER')
-            smtp_password = os.environ.get('SMTP_PASSWORD')
-            admin_email = os.environ.get('ADMIN_EMAIL')
+            # Используем Яндекс почту для уведомлений
+            smtp_host = 'smtp.yandex.ru'
+            smtp_port = 465
+            smtp_user = os.environ.get('YANDEX_EMAIL')
+            smtp_password = os.environ.get('YANDEX_APP_PASSWORD')
+            admin_email = os.environ.get('YANDEX_EMAIL')
             
             print(f"DEBUG: SMTP configured: {bool(smtp_host and smtp_port and smtp_user and smtp_password and admin_email)}")
+            print(f"DEBUG: Using Yandex SMTP - Email: {admin_email}")
             
             if smtp_host and smtp_port and smtp_user and smtp_password and admin_email:
                 plan_labels = {
