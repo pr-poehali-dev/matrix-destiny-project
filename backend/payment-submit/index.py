@@ -10,7 +10,7 @@ from typing import Dict, Any
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
-    Принимает заявку на оплату от пользователя
+    Принимает заявку на оплату от пользователя и отправляет уведомление на email
     Args: event - dict с httpMethod, body (email, phone, screenshot base64)
           context - объект с атрибутами запроса
     Returns: HTTP response dict
