@@ -2,7 +2,7 @@ import json
 import os
 import psycopg2
 from typing import Dict, Any
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
@@ -64,17 +64,39 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 }
             
             cur.execute("""
+                SELECT plan_type FROM payment_requests WHERE id = %s
+            """, (request_id,))
+            result = cur.fetchone()
+            plan_type = result[0] if result else 'single'
+            
+            expires_at = None
+            downloads_left = None
+            
+            if plan_type == 'single':
+                downloads_left = 1
+            elif plan_type == 'month':
+                expires_at = datetime.now() + timedelta(days=30)
+            elif plan_type == 'half_year':
+                expires_at = datetime.now() + timedelta(days=180)
+            elif plan_type == 'year':
+                expires_at = datetime.now() + timedelta(days=365)
+            
+            cur.execute("""
                 UPDATE payment_requests 
                 SET status = 'approved', approved_at = %s
                 WHERE id = %s
             """, (datetime.now(), request_id))
             
             cur.execute("""
-                INSERT INTO active_access (email, granted_by)
-                VALUES (%s, 'admin')
+                INSERT INTO active_access (email, plan_type, expires_at, downloads_left, granted_by)
+                VALUES (%s, %s, %s, %s, 'admin')
                 ON CONFLICT (email) 
-                DO UPDATE SET granted_at = CURRENT_TIMESTAMP
-            """, (email,))
+                DO UPDATE SET 
+                    plan_type = EXCLUDED.plan_type,
+                    expires_at = EXCLUDED.expires_at,
+                    downloads_left = EXCLUDED.downloads_left,
+                    granted_at = CURRENT_TIMESTAMP
+            """, (email, plan_type, expires_at, downloads_left))
             
             message = 'Доступ активирован'
         else:

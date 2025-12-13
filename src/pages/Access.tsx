@@ -96,6 +96,9 @@ const Access = () => {
               <Icon name="Key" size={24} />
               Проверка доступа
             </CardTitle>
+            <CardDescription className="text-base pt-2">
+              Введите email, который вы указали при оплате, чтобы проверить статус вашего доступа
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleCheckAccess} className="space-y-4">
@@ -191,9 +194,16 @@ const Access = () => {
                   <Icon name="AlertCircle" size={20} className="text-yellow-600" />
                   <h3 className="font-semibold text-yellow-900">Доступ не найден</h3>
                 </div>
-                <p className="text-sm text-yellow-800 mb-4">
+                <p className="text-sm text-yellow-800 mb-3">
                   {accessInfo.message || 'Возможно, ваша заявка ещё не одобрена'}
                 </p>
+                <div className="bg-white border border-yellow-300 rounded p-3 mb-4">
+                  <p className="text-xs text-yellow-900">
+                    <strong>Что делать?</strong><br/>
+                    • Если вы уже оплатили — подождите 1-3 часа, доступ активируется автоматически<br/>
+                    • Если ещё не оплатили — нажмите кнопку ниже для выбора тарифа
+                  </p>
+                </div>
                 <Button
                   onClick={() => navigate('/payment')}
                   variant="outline"

@@ -76,8 +76,8 @@ const Payment = () => {
 
         if (response.ok) {
           toast({
-            title: 'Заявка отправлена',
-            description: 'Мы проверим оплату и активируем доступ в течение нескольких часов',
+            title: '✅ Заявка отправлена',
+            description: 'Доступ активируется автоматически в течение 1-3 часов после проверки',
           });
           setTimeout(() => navigate('/'), 2000);
         } else {
@@ -132,29 +132,36 @@ const Payment = () => {
                 </div>
 
                 <div className="bg-purple-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-purple-900 mb-2">Как оплатить:</h3>
+                  <h3 className="font-semibold text-purple-900 mb-2">📋 Инструкция:</h3>
                   <ol className="space-y-2 text-sm text-purple-800">
                     <li className="flex gap-2">
                       <span className="font-bold">1.</span>
-                      <span>Откройте приложение вашего банка</span>
+                      <span>Выберите тариф ниже</span>
                     </li>
                     <li className="flex gap-2">
                       <span className="font-bold">2.</span>
-                      <span>Отсканируйте QR-код для оплаты</span>
+                      <span>Откройте банк → Отсканируйте QR-код</span>
                     </li>
                     <li className="flex gap-2">
                       <span className="font-bold">3.</span>
-                      <span>Подтвердите платеж</span>
+                      <span>Введите сумму согласно тарифу и оплатите</span>
                     </li>
                     <li className="flex gap-2">
                       <span className="font-bold">4.</span>
-                      <span>Сделайте скриншот и заполните форму справа</span>
+                      <span>Сделайте скриншот оплаты</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="font-bold">5.</span>
+                      <span>Заполните форму справа и прикрепите скриншот</span>
                     </li>
                   </ol>
                 </div>
 
                 <div className="space-y-3">
-                  <h3 className="font-semibold text-gray-900 mb-3">Выберите тариф:</h3>
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <Icon name="Package" size={20} />
+                    Шаг 1: Выберите тариф
+                  </h3>
                   {(Object.keys(plans) as PlanType[]).map((plan) => (
                     <button
                       key={plan}
@@ -180,11 +187,14 @@ const Payment = () => {
                 </div>
 
                 <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                  <p className="text-green-800 text-sm font-medium">
-                    ✓ Выбрано: {plans[selectedPlan].label} — {plans[selectedPlan].price} ₽
+                  <p className="text-green-800 text-sm font-bold mb-2">
+                    ✓ Выбрано: {plans[selectedPlan].label}
                   </p>
-                  <p className="text-green-700 text-sm mt-1">
-                    Доступ активируется в течение нескольких часов после проверки
+                  <p className="text-green-900 text-lg font-bold mb-2">
+                    К оплате: {plans[selectedPlan].price} ₽
+                  </p>
+                  <p className="text-green-700 text-xs">
+                    Отсканируйте QR-код выше и оплатите эту сумму
                   </p>
                 </div>
               </div>
@@ -195,8 +205,11 @@ const Payment = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Icon name="Send" size={24} />
-                Подтверждение оплаты
+                Шаг 2: Подтверждение оплаты
               </CardTitle>
+              <CardDescription>
+                После оплаты заполните форму ниже и прикрепите скриншот
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -212,7 +225,7 @@ const Payment = () => {
                     className="mt-1"
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    На этот email придёт уведомление об активации
+                    💡 Укажите тот же email, что вы видели при расчёте матрицы
                   </p>
                 </div>
 
@@ -240,6 +253,9 @@ const Payment = () => {
                       className="cursor-pointer"
                     />
                   </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    📸 Скриншот из банка с подтверждением перевода на сумму {plans[selectedPlan].price} ₽
+                  </p>
                   {screenshot && (
                     <div className="mt-2 flex items-center gap-2 text-sm text-green-600">
                       <Icon name="CheckCircle" size={16} />

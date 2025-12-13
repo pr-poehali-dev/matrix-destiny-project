@@ -164,6 +164,16 @@ const Admin = () => {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Админ-панель</h1>
           <p className="text-gray-600">Управление заявками на доступ</p>
         </div>
+        
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <div className="flex items-start gap-3">
+            <Icon name="Info" size={20} className="text-blue-600 mt-0.5 flex-shrink-0" />
+            <div className="text-sm text-blue-900">
+              <strong>ℹ️ Рекомендация:</strong> Вы можете одобрять заявки прямо из Telegram — уведомления приходят автоматически с кнопками "Одобрить" / "Отклонить". 
+              Это быстрее и удобнее, чем через эту панель!
+            </div>
+          </div>
+        </div>
 
         <div className="grid gap-6 mb-8">
           <Card>

@@ -656,9 +656,10 @@ export default function Index() {
                     <div className="flex items-center gap-3 mb-6">
                       <Icon name="CheckCircle" className="text-green-600" size={32} />
                       <div>
-                        <h3 className="text-xl font-semibold text-green-900">У вас есть доступ!</h3>
+                        <h3 className="text-xl font-semibold text-green-900">✅ Доступ активен!</h3>
                         <p className="text-green-700">
-                          Полная расшифровка вашей матрицы судьбы
+                          Полная расшифровка вашей матрицы судьбы по всем аспектам<br/>
+                          <span className="text-sm">Прокрутите вниз для просмотра всех 4 энергий</span>
                         </p>
                       </div>
                     </div>
@@ -869,11 +870,20 @@ export default function Index() {
                     <div className="flex items-center gap-3 mb-4">
                       <Icon name="Lock" className="text-primary" size={32} />
                       <div>
-                        <h3 className="text-xl font-semibold">Полная расшифровка доступна после оплаты</h3>
+                        <h3 className="text-xl font-semibold">🔒 Полная расшифровка</h3>
                         <p className="text-muted-foreground">
-                          Получите детальный анализ всех аспектов жизни
+                          Детальный анализ здоровья, отношений, финансов и предназначения
                         </p>
                       </div>
+                    </div>
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                      <p className="text-sm text-yellow-900">
+                        💡 <strong>Как получить доступ:</strong><br/>
+                        1️⃣ Нажмите кнопку "Получить доступ" ниже<br/>
+                        2️⃣ Выберите тариф и оплатите через СБП<br/>
+                        3️⃣ Через 1-3 часа доступ активируется автоматически<br/>
+                        4️⃣ Вернитесь сюда и увидите полную расшифровку
+                      </p>
                     </div>
                     <Tabs defaultValue="preview" className="mt-6">
                       <TabsList className="grid w-full grid-cols-4">
@@ -916,9 +926,14 @@ export default function Index() {
               <div className="animate-fade-in">
                 {!hasAccess && (
                   <>
-                    <h2 className="text-4xl font-bold text-center mb-8 text-primary">
+                    <h2 className="text-4xl font-bold text-center mb-4 text-primary">
                       Получить полный доступ
                     </h2>
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-3xl mx-auto mb-8">
+                      <p className="text-center text-sm text-blue-900">
+                        ℹ️ <strong>Уже оплатили?</strong> Проверьте статус доступа → <Link to="/access" className="underline font-semibold hover:text-blue-700">Страница проверки доступа</Link>
+                      </p>
+                    </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
                       {pricingPlans.map((plan, index) => (
                         <Card
