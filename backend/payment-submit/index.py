@@ -195,8 +195,14 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 msg.attach(part)
                 
                 print(f"DEBUG: Sending email to {admin_email}")
-                server = smtplib.SMTP(smtp_host, int(smtp_port))
-                server.starttls()
+                
+                # Для порта 465 используем SMTP_SSL, для 587 - SMTP + starttls
+                if int(smtp_port) == 465:
+                    server = smtplib.SMTP_SSL(smtp_host, int(smtp_port))
+                else:
+                    server = smtplib.SMTP(smtp_host, int(smtp_port))
+                    server.starttls()
+                
                 server.login(smtp_user, smtp_password)
                 server.sendmail(smtp_user, admin_email, msg.as_string())
                 server.quit()
