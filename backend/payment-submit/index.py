@@ -3,9 +3,7 @@ import os
 import psycopg2
 import boto3
 import base64
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import requests
 from typing import Dict, Any
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
@@ -96,17 +94,14 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         conn.close()
         
         try:
-            # Используем Яндекс почту для уведомлений
-            smtp_host = 'smtp.yandex.ru'
-            smtp_port = 465
-            smtp_user = os.environ.get('YANDEX_EMAIL')
-            smtp_password = os.environ.get('YANDEX_APP_PASSWORD')
-            admin_email = os.environ.get('YANDEX_EMAIL')
+            # Отправляем уведомление в Telegram
+            bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
+            chat_id = os.environ.get('TELEGRAM_CHAT_ID')
             
-            print(f"DEBUG: SMTP configured: {bool(smtp_host and smtp_port and smtp_user and smtp_password and admin_email)}")
-            print(f"DEBUG: Using Yandex SMTP - Email: {admin_email}")
+            print(f"DEBUG: Telegram configured: {bool(bot_token and chat_id)}")
+            print(f"DEBUG: Chat ID: {chat_id}")
             
-            if smtp_host and smtp_port and smtp_user and smtp_password and admin_email:
+            if bot_token and chat_id:
                 plan_labels = {
                     'single': 'Разовая расшифровка',
                     'month': '1 месяц безлимит',
@@ -114,105 +109,46 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'year': '12 месяцев безлимит'
                 }
                 
-                msg = MIMEMultipart('alternative')
-                msg['Subject'] = f'🔔 Новая заявка #{request_id} на оплату'
-                msg['From'] = smtp_user
-                msg['To'] = admin_email
-                
                 admin_url = f"https://preview--matrix-destiny-project.poehali.dev/admin"
                 
-                html_body = f"""
-                <html>
-                <head>
-                    <style>
-                        body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
-                        .container {{ max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; }}
-                        .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; }}
-                        .content {{ background: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
-                        .info-row {{ margin: 15px 0; padding: 12px; background: #f8f9fa; border-left: 4px solid #667eea; border-radius: 4px; }}
-                        .info-label {{ font-weight: bold; color: #667eea; display: inline-block; min-width: 120px; }}
-                        .button {{ display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: bold; }}
-                        .button:hover {{ background: #5568d3; }}
-                        .screenshot {{ margin: 15px 0; }}
-                        .screenshot a {{ color: #667eea; text-decoration: none; font-weight: bold; }}
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <div class="header">
-                            <h2 style="margin: 0;">🔔 Новая заявка на оплату!</h2>
-                        </div>
-                        <div class="content">
-                            <div class="info-row">
-                                <span class="info-label">📧 Email:</span>
-                                <span>{email}</span>
-                            </div>
-                """
+                message = f"""🔔 *Новая заявка #{request_id} на оплату*
+
+📧 Email: {email}"""
                 
                 if phone:
-                    html_body += f"""
-                            <div class="info-row">
-                                <span class="info-label">📱 Телефон:</span>
-                                <span>{phone}</span>
-                            </div>
-                    """
+                    message += f"\n📱 Телефон: {phone}"
                 
-                html_body += f"""
-                            <div class="info-row">
-                                <span class="info-label">💳 Тариф:</span>
-                                <span>{plan_labels.get(plan_type, plan_type)}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">💰 Сумма:</span>
-                                <span><strong>{amount} ₽</strong></span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">🆔 ID заявки:</span>
-                                <span>#{request_id}</span>
-                            </div>
-                """
+                message += f"""
+💳 Тариф: {plan_labels.get(plan_type, plan_type)}
+💰 Сумма: *{amount} ₽*
+🆔 ID заявки: #{request_id}
+"""
                 
                 if screenshot_url:
-                    html_body += f"""
-                            <div class="screenshot">
-                                <p><strong>📸 Скриншот оплаты:</strong></p>
-                                <a href="{screenshot_url}" target="_blank">Открыть скриншот в новой вкладке →</a>
-                            </div>
-                    """
+                    message += f"\n📸 [Открыть скриншот оплаты]({screenshot_url})"
                 
-                html_body += f"""
-                            <div style="margin-top: 30px; text-align: center;">
-                                <a href="{admin_url}" class="button">Открыть админ-панель</a>
-                            </div>
-                            <p style="margin-top: 30px; color: #666; font-size: 14px; text-align: center;">
-                                В админ-панели вы можете одобрить или отклонить заявку
-                            </p>
-                        </div>
-                    </div>
-                </body>
-                </html>
-                """
+                message += f"\n\n[Открыть админ-панель]({admin_url})"
                 
-                part = MIMEText(html_body, 'html')
-                msg.attach(part)
+                print(f"DEBUG: Sending Telegram message to chat_id: {chat_id}")
                 
-                print(f"DEBUG: Sending email to {admin_email}")
+                telegram_url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+                response = requests.post(telegram_url, json={
+                    'chat_id': chat_id,
+                    'text': message,
+                    'parse_mode': 'Markdown',
+                    'disable_web_page_preview': False
+                })
                 
-                # Для порта 465 используем SMTP_SSL, для 587 - SMTP + starttls
-                if int(smtp_port) == 465:
-                    server = smtplib.SMTP_SSL(smtp_host, int(smtp_port))
+                print(f"DEBUG: Telegram response status: {response.status_code}, body: {response.text}")
+                
+                if response.status_code != 200:
+                    print(f"ERROR: Failed to send Telegram message: {response.text}")
                 else:
-                    server = smtplib.SMTP(smtp_host, int(smtp_port))
-                    server.starttls()
-                
-                server.login(smtp_user, smtp_password)
-                server.sendmail(smtp_user, admin_email, msg.as_string())
-                server.quit()
-                print(f"DEBUG: Email sent successfully to {admin_email}")
+                    print(f"DEBUG: Telegram message sent successfully")
             else:
-                print("WARNING: SMTP not configured, skipping email notification")
-        except Exception as email_error:
-            print(f"ERROR sending email notification: {str(email_error)}")
+                print("WARNING: Telegram not configured, skipping notification")
+        except Exception as telegram_error:
+            print(f"ERROR sending Telegram notification: {str(telegram_error)}")
             import traceback
             traceback.print_exc()
         
