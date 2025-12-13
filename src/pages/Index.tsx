@@ -457,38 +457,50 @@ export default function Index() {
       <LiveNotifications />
       
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <div className="flex justify-end mb-4">
-          {isSubscriber ? (
-            <div className="flex items-center gap-3">
-              <div className="text-sm text-gray-600 hidden md:block">
-                <Icon name="CheckCircle" size={16} className="inline text-green-600 mr-1" />
-                Вы авторизованы как подписчик
-                {subscriptionExpires && (() => {
-                  const daysLeft = Math.ceil((new Date(subscriptionExpires).getTime() - new Date().getTime()) / 86400000);
-                  return daysLeft > 0 ? ` (ещё ${daysLeft} дн.)` : ' (истекает сегодня)';
-                })()}
+        <div className="flex justify-between items-center mb-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/admin')}
+            className="gap-2 text-gray-500 hover:text-gray-900"
+          >
+            <Icon name="Shield" size={16} />
+            <span className="hidden md:inline">Админ</span>
+          </Button>
+          
+          <div>
+            {isSubscriber ? (
+              <div className="flex items-center gap-3">
+                <div className="text-sm text-gray-600 hidden md:block">
+                  <Icon name="CheckCircle" size={16} className="inline text-green-600 mr-1" />
+                  Вы авторизованы как подписчик
+                  {subscriptionExpires && (() => {
+                    const daysLeft = Math.ceil((new Date(subscriptionExpires).getTime() - new Date().getTime()) / 86400000);
+                    return daysLeft > 0 ? ` (ещё ${daysLeft} дн.)` : ' (истекает сегодня)';
+                  })()}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="gap-2"
+                >
+                  <Icon name="LogOut" size={16} />
+                  Выйти
+                </Button>
               </div>
+            ) : (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={handleLogout}
+                onClick={() => navigate('/login')}
                 className="gap-2"
               >
-                <Icon name="LogOut" size={16} />
-                Выйти
+                <Icon name="LogIn" size={16} />
+                Вход для подписчиков
               </Button>
-            </div>
-          ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate('/login')}
-              className="gap-2"
-            >
-              <Icon name="LogIn" size={16} />
-              Вход для подписчиков
-            </Button>
-          )}
+            )}
+          </div>
         </div>
 
         <header className="text-center mb-12 animate-fade-in">
