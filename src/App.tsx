@@ -11,6 +11,7 @@ import About from "./pages/About";
 import Access from "./pages/Access";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import DomainSetupGuide from "./components/DomainSetupGuide";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <DomainSetupGuide />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
