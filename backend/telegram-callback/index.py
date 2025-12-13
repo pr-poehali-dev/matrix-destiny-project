@@ -14,6 +14,30 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
     method: str = event.get('httpMethod', 'POST')
     
+    # Временно: показываем информацию о боте при GET-запросе
+    if method == 'GET':
+        bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
+        if bot_token:
+            response = requests.get(f'https://api.telegram.org/bot{bot_token}/getMe')
+            if response.status_code == 200:
+                bot_info = response.json().get('result', {})
+                return {
+                    'statusCode': 200,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({
+                        'username': bot_info.get('username'),
+                        'first_name': bot_info.get('first_name'),
+                        'link': f"https://t.me/{bot_info.get('username')}"
+                    }),
+                    'isBase64Encoded': False
+                }
+        return {
+            'statusCode': 500,
+            'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': 'Bot token not found'}),
+            'isBase64Encoded': False
+        }
+    
     if method == 'OPTIONS':
         return {
             'statusCode': 200,
