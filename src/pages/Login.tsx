@@ -28,7 +28,8 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/access/check?email=${encodeURIComponent(email)}`);
+      const func2url = await import('../../backend/func2url.json');
+      const response = await fetch(`${func2url['access-check']}?email=${encodeURIComponent(email)}`);
       const data = await response.json();
 
       if (response.ok && data.has_access) {
