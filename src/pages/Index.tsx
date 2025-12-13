@@ -5,13 +5,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
-import { checkAccess, generateReport, downloadPDF, shareReport } from '@/lib/api';
+import { checkAccess } from '@/lib/api';
 import { useNavigate, Link } from 'react-router-dom';
 import { LiveStats } from '@/components/LiveStats';
 import { LiveNotifications } from '@/components/LiveNotifications';
 import { Testimonials } from '@/components/Testimonials';
 import { CTABlock } from '@/components/CTABlock';
 import { energyDescriptions } from '@/data/arcana-descriptions';
+import { generatePDF, downloadPDF } from '@/utils/pdfGenerator';
 
 const calculateDestinyMatrix = (birthDate: string, name: string) => {
   const date = new Date(birthDate);
@@ -141,28 +142,30 @@ export default function Index() {
 
     try {
       setIsGeneratingPDF(true);
-      const reportData = await generateReport({
+      
+      toast({
+        title: '⏳ Генерируем PDF...',
+        description: 'Создаем ваш персональный отчет',
+      });
+
+      const pdfBlob = await generatePDF({
         name: result.name,
-        birth_date: birthDate,
         personal: result.personal,
         destiny: result.destiny,
         social: result.social,
         spiritual: result.spiritual,
-        email: email,
+        birthDate: birthDate,
       });
 
-      downloadPDF(reportData.pdf, reportData.filename);
-      
-      if (email) {
-        const accessCheck = await checkAccess(email);
-        setHasAccess(accessCheck.has_access);
-      }
+      const filename = `matrix-${result.name.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`;
+      downloadPDF(pdfBlob, filename);
       
       toast({
         title: '✅ PDF готов!',
-        description: 'Отчет успешно скачан',
+        description: 'Отчет успешно скачан. Проверьте папку загрузок',
       });
     } catch (error: any) {
+      console.error('PDF generation error:', error);
       toast({
         title: 'Ошибка генерации PDF',
         description: error?.message || 'Попробуйте позже',
@@ -176,32 +179,41 @@ export default function Index() {
   const handleShare = async () => {
     if (!result) return;
 
-    try {
-      const shareResult = await shareReport({
-        name: result.name,
-        birth_date: birthDate,
-        personal: result.personal,
-        destiny: result.destiny,
-        social: result.social,
-        spiritual: result.spiritual,
-      });
+    const shareText = `Моя Матрица Судьбы:\n\n` +
+      `👤 Личная энергия: ${energyDescriptions[result.personal]?.title || result.personal}\n` +
+      `🎯 Энергия судьбы: ${energyDescriptions[result.destiny]?.title || result.destiny}\n` +
+      `👥 Социальная энергия: ${energyDescriptions[result.social]?.title || result.social}\n` +
+      `✨ Духовная энергия: ${energyDescriptions[result.spiritual]?.title || result.spiritual}\n\n` +
+      `Рассчитай свою матрицу: ${window.location.origin}`;
 
-      if (shareResult === 'shared') {
+    try {
+      // Проверяем Web Share API
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Моя Матрица Судьбы',
+          text: shareText,
+        });
+        
         toast({
           title: '✅ Поделились!',
           description: 'Отчет успешно отправлен',
         });
       } else {
+        // Fallback: копируем в буфер обмена
+        await navigator.clipboard.writeText(shareText);
+        
         toast({
-          title: '✅ Ссылка скопирована',
-          description: 'Отправьте её через любой мессенджер',
+          title: '✅ Скопировано в буфер!',
+          description: 'Теперь можете вставить текст в любой мессенджер',
         });
       }
     } catch (error) {
+      console.error('Share error:', error);
+      
+      // Если и clipboard API недоступен, показываем текст
       toast({
-        title: 'Ошибка',
-        description: 'Не удалось поделиться отчетом',
-        variant: 'destructive',
+        title: 'Скопируйте текст вручную',
+        description: shareText.substring(0, 100) + '...',
       });
     }
   };
@@ -541,34 +553,49 @@ export default function Index() {
                         Полный анализ всех ваших энергий и рекомендации
                       </CardDescription>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       <Button
                         onClick={handleShare}
                         variant="outline"
-                        className="gap-2"
+                        size="lg"
+                        className="gap-2 hover:bg-blue-50 hover:border-blue-300 transition-all"
                       >
-                        <Icon name="Share2" size={16} />
-                        Поделиться
+                        <Icon name="Share2" size={18} />
+                        <span className="hidden sm:inline">Поделиться</span>
                       </Button>
                       <Button
                         onClick={handleDownloadPDF}
                         disabled={isGeneratingPDF}
-                        className="gap-2 hover-scale"
+                        size="lg"
+                        className="gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg hover:shadow-xl transition-all"
                       >
                         {isGeneratingPDF ? (
                           <>
-                            <Icon name="Loader2" size={16} className="animate-spin" />
-                            Генерация...
+                            <Icon name="Loader2" size={18} className="animate-spin" />
+                            Создаём PDF...
                           </>
                         ) : (
                           <>
-                            <Icon name="Download" size={16} />
-                            Скачать PDF
+                            <Icon name="Download" size={18} />
+                            Скачать PDF-отчёт
                           </>
                         )}
                       </Button>
                     </div>
                   </div>
+                  {hasAccess && (
+                    <div className="px-6 py-3 bg-gradient-to-r from-blue-50 to-purple-50 border-t">
+                      <div className="flex items-start gap-3 text-sm">
+                        <Icon name="FileCheck" size={20} className="text-primary mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="font-semibold text-primary mb-1">PDF-отчёт включает:</p>
+                          <p className="text-muted-foreground">
+                            Полную расшифровку всех 4 энергий + детальные рекомендации по здоровью, отношениям, финансам и профессиям (~40-50 страниц)
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </CardHeader>
                 <CardContent>
                   <Tabs defaultValue="personal" className="w-full">
