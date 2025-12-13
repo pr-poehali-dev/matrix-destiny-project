@@ -10,6 +10,8 @@ import Admin from "./pages/Admin";
 import About from "./pages/About";
 import Access from "./pages/Access";
 import Login from "./pages/Login";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 import TimewebSetupGuide from "./components/TimewebSetupGuide";
 
@@ -28,6 +30,8 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/access" element={<Access />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogPost />} />
           <Route path="/timeweb-setup" element={<TimewebSetupGuide />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

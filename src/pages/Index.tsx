@@ -515,9 +515,14 @@ export default function Index() {
             Рассчитай матрицу судьбы за 30 секунд — узнай своё предназначение, здоровье и финансовые возможности
           </p>
           
-          <Link to="/about" className="text-primary hover:underline text-sm font-medium">
-            Узнать больше о методе →
-          </Link>
+          <div className="flex justify-center gap-4">
+            <Link to="/about" className="text-primary hover:underline text-sm font-medium">
+              Узнать больше о методе →
+            </Link>
+            <Link to="/blog" className="text-primary hover:underline text-sm font-medium">
+              База знаний для специалистов →
+            </Link>
+          </div>
           
           <div className="flex justify-center gap-4 mt-6 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
