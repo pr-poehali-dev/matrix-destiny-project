@@ -2,6 +2,7 @@ import json
 import os
 import psycopg2
 import requests
+from datetime import datetime, timedelta
 from typing import Dict, Any
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
@@ -63,8 +64,46 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 UPDATE payment_requests 
                 SET status = 'approved', approved_at = CURRENT_TIMESTAMP
                 WHERE id = %s
-                RETURNING email
+                RETURNING email, plan_type
             """, (request_id,))
+            
+            result = cur.fetchone()
+            if not result:
+                conn.close()
+                return {
+                    'statusCode': 404,
+                    'headers': {'Content-Type': 'application/json'},
+                    'body': json.dumps({'error': 'Request not found'}),
+                    'isBase64Encoded': False
+                }
+            
+            email, plan_type = result
+            
+            expires_at = None
+            downloads_left = None
+            
+            if plan_type == 'single':
+                downloads_left = 1
+            elif plan_type == 'month':
+                expires_at = datetime.now() + timedelta(days=30)
+            elif plan_type == 'half_year':
+                expires_at = datetime.now() + timedelta(days=180)
+            elif plan_type == 'year':
+                expires_at = datetime.now() + timedelta(days=365)
+            
+            cur.execute("""
+                INSERT INTO active_access (email, plan_type, expires_at, downloads_left, granted_by)
+                VALUES (%s, %s, %s, %s, 'telegram_admin')
+                ON CONFLICT (email) 
+                DO UPDATE SET 
+                    plan_type = EXCLUDED.plan_type,
+                    expires_at = EXCLUDED.expires_at,
+                    downloads_left = EXCLUDED.downloads_left,
+                    granted_at = CURRENT_TIMESTAMP
+            """, (email, plan_type, expires_at, downloads_left))
+            
+            conn.commit()
+            
             new_status = 'одобрена ✅'
             status_emoji = '✅'
         elif action == 'reject':
@@ -74,6 +113,13 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 WHERE id = %s
                 RETURNING email
             """, (request_id,))
+            
+            result = cur.fetchone()
+            if result:
+                email = result[0]
+            
+            conn.commit()
+            
             new_status = 'отклонена ❌'
             status_emoji = '❌'
         else:
@@ -85,18 +131,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 'isBase64Encoded': False
             }
         
-        result = cur.fetchone()
-        conn.commit()
         cur.close()
         conn.close()
-        
-        if not result:
-            return {
-                'statusCode': 404,
-                'headers': {'Content-Type': 'application/json'},
-                'body': json.dumps({'error': 'Request not found'}),
-                'isBase64Encoded': False
-            }
         
         bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
         
