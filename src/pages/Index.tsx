@@ -583,24 +583,6 @@ export default function Index() {
                 <Icon name="Sparkles" className="mr-2" />
                 Рассчитать матрицу
               </Button>
-              
-              {adminEmail === '' && (
-                <div className="pt-4 border-t">
-                  <p className="text-xs text-muted-foreground mb-2">Админ доступ:</p>
-                  <div className="flex gap-2">
-                    <Input
-                      type="email"
-                      placeholder="admin@email.com"
-                      value={adminEmail}
-                      onChange={(e) => setAdminEmail(e.target.value)}
-                      className="text-sm"
-                    />
-                    <Button onClick={handleAdminAccess} size="sm">
-                      Войти
-                    </Button>
-                  </div>
-                </div>
-              )}
             </CardContent>
           </Card>
 
