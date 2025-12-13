@@ -270,18 +270,24 @@ export default function Index() {
         destiny: result.destiny,
         social: result.social,
         spiritual: result.spiritual,
+        email: email,
       });
 
       downloadPDF(reportData.pdf, reportData.filename);
+      
+      if (email) {
+        const accessCheck = await checkAccess(email);
+        setHasAccess(accessCheck.has_access);
+      }
       
       toast({
         title: '✅ PDF готов!',
         description: 'Отчет успешно скачан',
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: 'Ошибка генерации PDF',
-        description: 'Попробуйте позже',
+        description: error?.message || 'Попробуйте позже',
         variant: 'destructive',
       });
     } finally {
@@ -656,40 +662,187 @@ export default function Index() {
                         </p>
                       </div>
                     </div>
-                    <Tabs defaultValue="preview" className="mt-6">
-                      <TabsList className="grid w-full grid-cols-4">
-                        <TabsTrigger value="preview">Предназначение</TabsTrigger>
-                        <TabsTrigger value="health">Здоровье</TabsTrigger>
-                        <TabsTrigger value="relationships">Отношения</TabsTrigger>
-                        <TabsTrigger value="finance">Финансы</TabsTrigger>
-                      </TabsList>
-                      <TabsContent value="preview" className="mt-4 p-6 bg-white rounded-lg shadow-sm">
-                        <h4 className="font-semibold text-lg mb-3 text-primary">
-                          {energyDescriptions[result.personal]?.title}
+                    <div className="space-y-6">
+                      <div className="p-6 bg-white rounded-lg shadow-sm border-l-4 border-primary">
+                        <h4 className="font-bold text-xl mb-4 text-primary flex items-center gap-2">
+                          <Icon name="User" size={24} />
+                          Личное предназначение: {energyDescriptions[result.personal]?.title}
                         </h4>
-                        <p className="text-foreground leading-relaxed">
-                          {energyDescriptions[result.personal]?.description}
-                        </p>
-                      </TabsContent>
-                      <TabsContent value="health" className="mt-4 p-6 bg-white rounded-lg shadow-sm">
-                        <h4 className="font-semibold text-lg mb-3 text-primary">Здоровье</h4>
-                        <p className="text-foreground leading-relaxed">
-                          {energyDescriptions[result.personal]?.health}
-                        </p>
-                      </TabsContent>
-                      <TabsContent value="relationships" className="mt-4 p-6 bg-white rounded-lg shadow-sm">
-                        <h4 className="font-semibold text-lg mb-3 text-primary">Отношения</h4>
-                        <p className="text-foreground leading-relaxed">
-                          {energyDescriptions[result.personal]?.relationships}
-                        </p>
-                      </TabsContent>
-                      <TabsContent value="finance" className="mt-4 p-6 bg-white rounded-lg shadow-sm">
-                        <h4 className="font-semibold text-lg mb-3 text-primary">Финансы</h4>
-                        <p className="text-foreground leading-relaxed">
-                          {energyDescriptions[result.personal]?.finance}
-                        </p>
-                      </TabsContent>
-                    </Tabs>
+                        <div className="space-y-4">
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="Sparkles" size={18} />
+                              Описание
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.personal]?.description}
+                            </p>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="Heart" size={18} />
+                              Здоровье
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.personal]?.health}
+                            </p>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="Users" size={18} />
+                              Отношения
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.personal]?.relationships}
+                            </p>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="DollarSign" size={18} />
+                              Финансы
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.personal]?.finance}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-6 bg-white rounded-lg shadow-sm border-l-4 border-accent">
+                        <h4 className="font-bold text-xl mb-4 text-accent flex items-center gap-2">
+                          <Icon name="Target" size={24} />
+                          Энергия судьбы: {energyDescriptions[result.destiny]?.title}
+                        </h4>
+                        <div className="space-y-4">
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="Sparkles" size={18} />
+                              Описание
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.destiny]?.description}
+                            </p>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="Heart" size={18} />
+                              Здоровье
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.destiny]?.health}
+                            </p>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="Users" size={18} />
+                              Отношения
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.destiny]?.relationships}
+                            </p>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="DollarSign" size={18} />
+                              Финансы
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.destiny]?.finance}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-6 bg-white rounded-lg shadow-sm border-l-4 border-secondary">
+                        <h4 className="font-bold text-xl mb-4 text-secondary-foreground flex items-center gap-2">
+                          <Icon name="Users" size={24} />
+                          Социальная энергия: {energyDescriptions[result.social]?.title}
+                        </h4>
+                        <div className="space-y-4">
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="Sparkles" size={18} />
+                              Описание
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.social]?.description}
+                            </p>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="Heart" size={18} />
+                              Здоровье
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.social]?.health}
+                            </p>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="Users" size={18} />
+                              Отношения
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.social]?.relationships}
+                            </p>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="DollarSign" size={18} />
+                              Финансы
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.social]?.finance}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-6 bg-white rounded-lg shadow-sm border-l-4 border-purple-500">
+                        <h4 className="font-bold text-xl mb-4 text-purple-700 flex items-center gap-2">
+                          <Icon name="Sparkles" size={24} />
+                          Духовная энергия: {energyDescriptions[result.spiritual]?.title}
+                        </h4>
+                        <div className="space-y-4">
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="Sparkles" size={18} />
+                              Описание
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.spiritual]?.description}
+                            </p>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="Heart" size={18} />
+                              Здоровье
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.spiritual]?.health}
+                            </p>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="Users" size={18} />
+                              Отношения
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.spiritual]?.relationships}
+                            </p>
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-md mb-2 flex items-center gap-2">
+                              <Icon name="DollarSign" size={18} />
+                              Финансы
+                            </h5>
+                            <p className="text-foreground leading-relaxed pl-6">
+                              {energyDescriptions[result.spiritual]?.finance}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     
                     <div className="mt-6 flex gap-3">
                       <Button

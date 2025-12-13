@@ -1,0 +1,23 @@
+{
+  "tests": [
+    {
+      "name": "Download without email",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "test": "data"
+      },
+      "expectedStatus": 400
+    },
+    {
+      "name": "Download with email",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "email": "test@example.com",
+        "calculation_data": {"test": "data"}
+      },
+      "expectedStatus": 200
+    }
+  ]
+}
