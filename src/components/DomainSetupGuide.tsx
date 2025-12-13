@@ -124,21 +124,33 @@ export default function DomainSetupGuide() {
               </div>
             </div>
 
-            <div className="flex gap-3 pt-4">
+            <div className="flex flex-col gap-3 pt-4">
               <Button
-                onClick={() => window.open('https://app.poehali.dev', '_blank')}
-                className="flex-1 gap-2"
+                onClick={() => window.location.href = '/timeweb-setup'}
+                variant="default"
+                size="lg"
+                className="w-full gap-2"
               >
-                <Icon name="ExternalLink" size={16} />
-                Открыть poehali.dev
+                <Icon name="BookOpen" size={18} />
+                Инструкция для Timeweb
               </Button>
-              <Button
-                onClick={() => setOpen(false)}
-                variant="outline"
-                className="flex-1"
-              >
-                Закрыть
-              </Button>
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => window.open('https://app.poehali.dev', '_blank')}
+                  className="flex-1 gap-2"
+                  variant="outline"
+                >
+                  <Icon name="ExternalLink" size={16} />
+                  Открыть poehali.dev
+                </Button>
+                <Button
+                  onClick={() => setOpen(false)}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Закрыть
+                </Button>
+              </div>
             </div>
           </div>
         </DialogContent>

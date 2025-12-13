@@ -12,6 +12,7 @@ import Access from "./pages/Access";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import DomainSetupGuide from "./components/DomainSetupGuide";
+import TimewebSetupGuide from "./components/TimewebSetupGuide";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/access" element={<Access />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/timeweb-setup" element={<TimewebSetupGuide />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
