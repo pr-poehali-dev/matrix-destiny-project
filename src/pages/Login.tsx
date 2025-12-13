@@ -29,8 +29,11 @@ const Login = () => {
 
     try {
       const func2url = await import('../../backend/func2url.json');
-      const response = await fetch(`${func2url['access-check']}?email=${encodeURIComponent(email)}`);
+      const url = `${func2url['access-check']}?email=${encodeURIComponent(email)}&v=${Date.now()}`;
+      console.log('Проверка доступа:', url);
+      const response = await fetch(url);
       const data = await response.json();
+      console.log('Ответ сервера:', data);
 
       if (response.ok && data.has_access) {
         // Проверяем, что это подписка (не разовый доступ)
