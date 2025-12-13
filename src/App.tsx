@@ -14,6 +14,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 import TimewebSetupGuide from "./components/TimewebSetupGuide";
+import VIP from "./pages/VIP";
 
 const queryClient = new QueryClient();
 
