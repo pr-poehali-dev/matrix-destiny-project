@@ -21,6 +21,8 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
+  const [manualEmail, setManualEmail] = useState('');
+  const [manualPlanType, setManualPlanType] = useState<'single' | 'month' | 'half_year' | 'year'>('month');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -114,6 +116,52 @@ const Admin = () => {
     }
   };
 
+  const handleManualGrant = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!manualEmail) {
+      toast({
+        title: 'Ошибка',
+        description: 'Введите email',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      const func2url = await import('../../backend/func2url.json');
+      const response = await fetch(func2url['admin-approve'], {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: manualEmail, 
+          plan_type: manualPlanType,
+          action: 'grant' 
+        }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: 'Доступ выдан',
+          description: `Email ${manualEmail} получил доступ (${manualPlanType})`,
+        });
+        setManualEmail('');
+      } else {
+        const errorData = await response.json();
+        toast({
+          title: 'Ошибка',
+          description: errorData.error || 'Не удалось выдать доступ',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось выдать доступ',
+        variant: 'destructive',
+      });
+    }
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-end md:items-center justify-center px-3 md:px-4 pb-6 md:pb-0">
@@ -183,6 +231,50 @@ const Admin = () => {
           </Button>
         </div>
         
+        <Card className="w-full mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+              <Icon name="UserPlus" size={20} className="text-green-500 flex-shrink-0" />
+              <span>Выдать доступ вручную</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleManualGrant} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="manual-email">Email</Label>
+                  <Input
+                    type="email"
+                    id="manual-email"
+                    value={manualEmail}
+                    onChange={(e) => setManualEmail(e.target.value)}
+                    placeholder="user@example.com"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="manual-plan">Тип доступа</Label>
+                  <select
+                    id="manual-plan"
+                    value={manualPlanType}
+                    onChange={(e) => setManualPlanType(e.target.value as any)}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <option value="single">Разовая расшифровка</option>
+                    <option value="month">1 месяц безлимит</option>
+                    <option value="half_year">6 месяцев безлимит</option>
+                    <option value="year">12 месяцев безлимит</option>
+                  </select>
+                </div>
+              </div>
+              <Button type="submit" className="w-full">
+                <Icon name="Check" size={16} className="mr-2" />
+                Выдать доступ
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4 mb-4 md:mb-6 w-full overflow-hidden">
           <div className="flex items-start gap-2 md:gap-3">
             <Icon name="Info" size={18} className="text-blue-600 mt-0.5 flex-shrink-0" />

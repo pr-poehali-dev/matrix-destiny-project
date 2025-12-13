@@ -42,6 +42,59 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         request_id = body_data.get('id')
         email = body_data.get('email')
         action = body_data.get('action', 'approve')
+        plan_type = body_data.get('plan_type')
+        
+        conn = psycopg2.connect(os.environ['DATABASE_URL'])
+        cur = conn.cursor()
+        
+        if action == 'grant':
+            if not email:
+                return {
+                    'statusCode': 400,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Email обязателен'}),
+                    'isBase64Encoded': False
+                }
+            
+            if not plan_type:
+                plan_type = 'month'
+            
+            expires_at = None
+            downloads_left = None
+            
+            if plan_type == 'single':
+                downloads_left = 1
+            elif plan_type == 'month':
+                expires_at = datetime.now() + timedelta(days=30)
+            elif plan_type == 'half_year':
+                expires_at = datetime.now() + timedelta(days=180)
+            elif plan_type == 'year':
+                expires_at = datetime.now() + timedelta(days=365)
+            
+            cur.execute("""
+                INSERT INTO active_access (email, plan_type, expires_at, downloads_left, granted_by)
+                VALUES (%s, %s, %s, %s, 'admin_manual')
+                ON CONFLICT (email) 
+                DO UPDATE SET 
+                    plan_type = EXCLUDED.plan_type,
+                    expires_at = EXCLUDED.expires_at,
+                    downloads_left = EXCLUDED.downloads_left,
+                    granted_at = CURRENT_TIMESTAMP
+            """, (email, plan_type, expires_at, downloads_left))
+            
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+            return {
+                'statusCode': 200,
+                'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps({
+                    'success': True,
+                    'message': 'Доступ выдан'
+                }),
+                'isBase64Encoded': False
+            }
         
         if not request_id:
             return {
@@ -50,9 +103,6 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 'body': json.dumps({'error': 'ID обязателен'}),
                 'isBase64Encoded': False
             }
-        
-        conn = psycopg2.connect(os.environ['DATABASE_URL'])
-        cur = conn.cursor()
         
         if action == 'approve':
             if not email:
