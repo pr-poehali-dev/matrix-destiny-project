@@ -50,7 +50,8 @@ const Admin = () => {
 
   const fetchRequests = async () => {
     try {
-      const response = await fetch('/api/admin/requests');
+      const func2url = await import('../../backend/func2url.json');
+      const response = await fetch(func2url['admin-requests']);
       const data = await response.json();
       setRequests(data.requests || []);
     } catch (error) {
@@ -66,7 +67,8 @@ const Admin = () => {
 
   const handleApprove = async (id: number, email: string) => {
     try {
-      const response = await fetch('/api/admin/approve', {
+      const func2url = await import('../../backend/func2url.json');
+      const response = await fetch(func2url['admin-approve'], {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, email, action: 'approve' }),
@@ -90,7 +92,8 @@ const Admin = () => {
 
   const handleReject = async (id: number) => {
     try {
-      const response = await fetch('/api/admin/approve', {
+      const func2url = await import('../../backend/func2url.json');
+      const response = await fetch(func2url['admin-approve'], {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, action: 'reject' }),
