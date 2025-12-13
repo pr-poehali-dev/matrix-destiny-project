@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -11,6 +11,20 @@ import Icon from '@/components/ui/icon';
 
 export default function DomainSetupGuide() {
   const [open, setOpen] = useState(false);
+  const [shouldShow, setShouldShow] = useState(true);
+
+  useEffect(() => {
+    const currentDomain = window.location.hostname;
+    const isCustomDomain = !currentDomain.includes('poehali.dev');
+    
+    if (isCustomDomain) {
+      setShouldShow(false);
+    }
+  }, []);
+
+  if (!shouldShow) {
+    return null;
+  }
 
   return (
     <>
