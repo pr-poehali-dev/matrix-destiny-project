@@ -42,6 +42,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         phone = body_data.get('phone', '')
         screenshot_base64 = body_data.get('screenshot', '')
         filename = body_data.get('filename', 'screenshot.jpg')
+        plan_type = body_data.get('plan_type', 'single')
+        amount = body_data.get('amount', 200)
         
         if not email:
             return {
@@ -80,10 +82,10 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         cur = conn.cursor()
         
         cur.execute("""
-            INSERT INTO payment_requests (email, phone, screenshot_url, status)
-            VALUES (%s, %s, %s, 'pending')
+            INSERT INTO payment_requests (email, phone, screenshot_url, status, plan_type, amount)
+            VALUES (%s, %s, %s, 'pending', %s, %s)
             RETURNING id
-        """, (email, phone, screenshot_url))
+        """, (email, phone, screenshot_url, plan_type, amount))
         
         request_id = cur.fetchone()[0]
         
@@ -96,10 +98,19 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             chat_id = os.environ.get('TELEGRAM_CHAT_ID')
             
             if bot_token and chat_id:
+                plan_labels = {
+                    'single': 'Разовая расшифровка',
+                    'month': '1 месяц безлимит',
+                    'half_year': '6 месяцев безлимит',
+                    'year': '12 месяцев безлимит'
+                }
+                
                 message = f"🔔 <b>Новая заявка на оплату!</b>\n\n"
                 message += f"📧 Email: <code>{email}</code>\n"
                 if phone:
                     message += f"📱 Телефон: {phone}\n"
+                message += f"💳 Тариф: <b>{plan_labels.get(plan_type, plan_type)}</b>\n"
+                message += f"💰 Сумма: {amount} ₽\n"
                 message += f"🆔 ID заявки: {request_id}\n"
                 if screenshot_url:
                     message += f"\n📸 <a href='{screenshot_url}'>Скриншот оплаты</a>"

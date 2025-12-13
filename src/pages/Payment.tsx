@@ -7,11 +7,21 @@ import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
 import { useNavigate } from 'react-router-dom';
 
+type PlanType = 'single' | 'month' | 'half_year' | 'year';
+
+const plans = {
+  single: { price: 200, label: 'Разовая расшифровка', duration: null },
+  month: { price: 1000, label: '1 месяц безлимит', duration: '1 месяц' },
+  half_year: { price: 5000, label: '6 месяцев безлимит', duration: '6 месяцев' },
+  year: { price: 10000, label: '12 месяцев безлимит', duration: '12 месяцев' },
+};
+
 const Payment = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [screenshot, setScreenshot] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<PlanType>('single');
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -57,6 +67,8 @@ const Payment = () => {
             phone,
             screenshot: base64,
             filename: screenshot.name,
+            plan_type: selectedPlan,
+            amount: plans[selectedPlan].price,
           }),
         });
 
@@ -141,9 +153,35 @@ const Payment = () => {
                   </ol>
                 </div>
 
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-gray-900 mb-3">Выберите тариф:</h3>
+                  {(Object.keys(plans) as PlanType[]).map((plan) => (
+                    <button
+                      key={plan}
+                      type="button"
+                      onClick={() => setSelectedPlan(plan)}
+                      className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
+                        selectedPlan === plan
+                          ? 'border-purple-500 bg-purple-50'
+                          : 'border-gray-200 bg-white hover:border-purple-300'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold text-gray-900">{plans[plan].label}</p>
+                          {plans[plan].duration && (
+                            <p className="text-sm text-gray-600">Безлимитные расчёты</p>
+                          )}
+                        </div>
+                        <p className="text-lg font-bold text-purple-600">{plans[plan].price} ₽</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
                 <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                   <p className="text-green-800 text-sm font-medium">
-                    ✓ Стоимость: 500 рублей
+                    ✓ Выбрано: {plans[selectedPlan].label} — {plans[selectedPlan].price} ₽
                   </p>
                   <p className="text-green-700 text-sm mt-1">
                     Доступ активируется в течение нескольких часов после проверки
