@@ -97,6 +97,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
             chat_id = os.environ.get('TELEGRAM_CHAT_ID')
             
+            print(f"DEBUG: bot_token exists: {bool(bot_token)}, chat_id exists: {bool(chat_id)}")
+            
             if bot_token and chat_id:
                 plan_labels = {
                     'single': 'Разовая расшифровка',
@@ -124,7 +126,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     ]
                 }
                 
-                requests.post(
+                print(f"DEBUG: Sending Telegram message to chat_id: {chat_id}")
+                telegram_response = requests.post(
                     f'https://api.telegram.org/bot{bot_token}/sendMessage',
                     json={
                         'chat_id': chat_id,
@@ -134,8 +137,13 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     },
                     timeout=5
                 )
-        except:
-            pass
+                print(f"DEBUG: Telegram response status: {telegram_response.status_code}, body: {telegram_response.text}")
+            else:
+                print("WARNING: Telegram bot_token or chat_id not configured")
+        except Exception as telegram_error:
+            print(f"ERROR sending Telegram notification: {str(telegram_error)}")
+            import traceback
+            traceback.print_exc()
         
         return {
             'statusCode': 200,
