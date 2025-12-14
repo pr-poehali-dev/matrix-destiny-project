@@ -49,7 +49,11 @@ def send_pdf_email(recipient_email: str, recipient_name: str, pdf_base64: str) -
         smtp_host = os.environ.get('SMTP_HOST')
         smtp_port = int(os.environ.get('SMTP_PORT', '587'))
         
+        print(f'DEBUG: SMTP configured: {bool(smtp_user and smtp_password and smtp_host)}')
+        print(f'DEBUG: SMTP host: {smtp_host}, port: {smtp_port}')
+        
         if not all([smtp_user, smtp_password, smtp_host]):
+            print('ERROR: Missing SMTP credentials')
             return False
         
         msg = MIMEMultipart()
@@ -102,13 +106,18 @@ def send_pdf_email(recipient_email: str, recipient_name: str, pdf_base64: str) -
         )
         msg.attach(pdf_attachment)
         
+        print(f'DEBUG: Connecting to SMTP {smtp_host}:{smtp_port}')
         with smtplib.SMTP(smtp_host, smtp_port) as server:
             server.starttls()
+            print(f'DEBUG: Logging in as {smtp_user}')
             server.login(smtp_user, smtp_password)
+            print(f'DEBUG: Sending email to {recipient_email}')
             server.send_message(msg)
         
+        print(f'SUCCESS: Email sent to {recipient_email}')
         return True
-    except:
+    except Exception as e:
+        print(f'ERROR: Failed to send email: {str(e)}')
         return False
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
