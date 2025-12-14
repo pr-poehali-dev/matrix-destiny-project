@@ -21,8 +21,17 @@ export const generatePDF = async (result: MatrixResult): Promise<Blob> => {
   const maxWidth = pageWidth - 2 * margin;
   let currentY = margin;
 
+  // Функция для добавления водяного знака
+  const addWatermark = () => {
+    pdf.setTextColor(200, 200, 200);
+    pdf.setFontSize(10);
+    pdf.text('о-тебе.рф', pageWidth / 2, pageHeight - 10, { align: 'center' });
+    pdf.setTextColor(0, 0, 0);
+  };
+
   // Функция для добавления новой страницы
   const addNewPage = () => {
+    addWatermark();
     pdf.addPage();
     currentY = margin;
   };
@@ -96,6 +105,9 @@ export const generatePDF = async (result: MatrixResult): Promise<Blob> => {
   
   pdf.setFontSize(10);
   pdf.text(`Дата рождения: ${new Date(result.birthDate).toLocaleDateString('ru-RU')}`, pageWidth / 2, 42, { align: 'center' });
+
+  // Водяной знак на первой странице
+  addWatermark();
 
   currentY = 60;
 
@@ -171,6 +183,9 @@ export const generatePDF = async (result: MatrixResult): Promise<Blob> => {
   pdf.setFontSize(10);
   pdf.text('Используйте эти знания для осознанной жизни и реализации своего потенциала', pageWidth / 2, currentY + 18, { align: 'center' });
   pdf.text('Сайт: о-тебе.рф | Дата создания: ' + new Date().toLocaleDateString('ru-RU'), pageWidth / 2, currentY + 28, { align: 'center' });
+
+  // Добавляем водяной знак на последнюю страницу
+  addWatermark();
 
   // Возвращаем PDF как Blob
   return pdf.output('blob');
