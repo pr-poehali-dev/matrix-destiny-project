@@ -53,22 +53,31 @@ const Admin = () => {
   const fetchRequests = async () => {
     try {
       const func2url = await import('../../backend/func2url.json');
-      console.log('Загрузка заявок с:', func2url['admin-requests']);
-      const response = await fetch(func2url['admin-requests']);
-      console.log('Ответ получен, status:', response.status);
+      const url = func2url['admin-requests'];
+      console.log('🔄 Загрузка заявок с:', url);
+      
+      const response = await fetch(url);
+      console.log('📡 Ответ получен, status:', response.status, 'ok:', response.ok);
       
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        const text = await response.text();
+        console.error('❌ Ошибка HTTP:', response.status, text);
+        throw new Error(`HTTP ${response.status}: ${text}`);
       }
       
-      const data = await response.json();
-      console.log('Данные получены:', data);
+      const text = await response.text();
+      console.log('📄 Текст ответа:', text.substring(0, 200));
+      
+      const data = text ? JSON.parse(text) : { requests: [] };
+      console.log('✅ Данные распарсены:', data);
+      console.log('📊 Количество заявок:', data.requests?.length || 0);
+      
       setRequests(data.requests || []);
     } catch (error) {
-      console.error('Ошибка загрузки заявок:', error);
+      console.error('❌ Ошибка загрузки заявок:', error);
       toast({
-        title: 'Ошибка',
-        description: `Не удалось загрузить заявки: ${error}`,
+        title: 'Ошибка загрузки',
+        description: `${error}`,
         variant: 'destructive',
       });
     } finally {
@@ -150,29 +159,32 @@ const Admin = () => {
         }),
       });
 
-      console.log('Ответ сервера:', response.status);
+      console.log('📡 Ответ сервера:', response.status, 'ok:', response.ok);
+
+      const text = await response.text();
+      console.log('📄 Текст ответа:', text);
 
       if (response.ok) {
         let result;
-        const text = await response.text();
-        console.log('Ответ сервера (текст):', text);
         
         try {
           result = text ? JSON.parse(text) : {};
+          console.log('✅ Успешный ответ:', result);
         } catch (e) {
-          console.error('Ошибка парсинга JSON:', e);
+          console.error('⚠️ Ошибка парсинга JSON:', e, 'Текст:', text);
           result = {};
         }
         
-        console.log('Успех:', result);
         toast({
           title: '✅ Доступ выдан',
           description: `Email ${manualEmail} получил доступ (${manualPlanType})`,
         });
         setManualEmail('');
+        
+        // Обновляем список заявок
+        setTimeout(() => fetchRequests(), 500);
       } else {
         let errorData;
-        const text = await response.text();
         
         try {
           errorData = text ? JSON.parse(text) : { error: 'Неизвестная ошибка' };
@@ -180,7 +192,7 @@ const Admin = () => {
           errorData = { error: text || 'Ошибка сервера' };
         }
         
-        console.error('Ошибка от сервера:', errorData);
+        console.error('❌ Ошибка от сервера:', errorData);
         toast({
           title: 'Ошибка',
           description: errorData.error || 'Не удалось выдать доступ',

@@ -1018,6 +1018,19 @@ export default function Index() {
         <CTABlock onCalculate={scrollToCalculator} />
         
         <Testimonials />
+        
+        {/* Футер с ссылкой на админ-панель */}
+        <footer className="mt-16 py-8 border-t">
+          <div className="text-center">
+            <Link 
+              to="/admin" 
+              className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-2"
+            >
+              <Icon name="Shield" size={16} />
+              Админ-панель
+            </Link>
+          </div>
+        </footer>
       </div>
 
       {showLoginModal && (
