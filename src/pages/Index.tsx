@@ -412,6 +412,40 @@ export default function Index() {
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
       <LiveNotifications />
       
+      {/* Hero Section с космической картинкой */}
+      <div className="relative w-full h-[60vh] min-h-[500px] overflow-hidden">
+        <img 
+          src="https://cdn.poehali.dev/files/1000038242.jpg" 
+          alt="Космос и судьба"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background"></div>
+        
+        <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center items-center text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white text-sm mb-6 border border-white/20">
+            <Icon name="Sparkles" size={16} />
+            <span className="font-medium">Профессиональная расшифровка Матрицы Судьбы</span>
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
+            Матрица Судьбы
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-8 drop-shadow-lg">
+            Узнайте своё предназначение, таланты и жизненные задачи через расчёт по дате рождения
+          </p>
+
+          <Button 
+            onClick={scrollToCalculator}
+            size="lg"
+            className="text-lg px-8 py-6 bg-white text-primary hover:bg-white/90 shadow-2xl hover:scale-105 transition-all"
+          >
+            <Icon name="Calculator" size={20} className="mr-2" />
+            Рассчитать свою матрицу
+          </Button>
+        </div>
+      </div>
+
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="flex justify-between items-center mb-4">
           <Button
@@ -472,36 +506,30 @@ export default function Index() {
           )}
         </div>
 
-        <div className="text-center mb-12 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm mb-4">
-            <Icon name="Sparkles" size={16} />
-            <span className="font-medium">Профессиональная расшифровка Матрицы Судьбы</span>
-          </div>
-          
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
-            Матрица Судьбы: Расшифровка онлайн
-          </h1>
-          
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Узнайте свое предназначение, таланты и жизненные задачи через расчет Матрицы Судьбы по дате рождения
-          </p>
-
-          <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm">
-            <div className="flex items-center gap-2">
-              <Icon name="CheckCircle2" size={18} className="text-green-600" />
-              <span>Полная расшифровка всех энергий</span>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Что вы получите
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-green-100 dark:border-green-900">
+              <Icon name="CheckCircle2" size={32} className="text-green-600 mx-auto mb-3" />
+              <h3 className="font-bold mb-2">Полная расшифровка</h3>
+              <p className="text-sm text-muted-foreground">Анализ всех 4 энергий вашей матрицы</p>
             </div>
-            <div className="flex items-center gap-2">
-              <Icon name="Heart" size={18} className="text-red-600" />
-              <span>Анализ отношений и совместимости</span>
+            <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-red-100 dark:border-red-900">
+              <Icon name="Heart" size={32} className="text-red-600 mx-auto mb-3" />
+              <h3 className="font-bold mb-2">Отношения</h3>
+              <p className="text-sm text-muted-foreground">Совместимость и рекомендации</p>
             </div>
-            <div className="flex items-center gap-2">
-              <Icon name="DollarSign" size={18} className="text-green-600" />
-              <span>Финансовое предназначение</span>
+            <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-green-100 dark:border-green-900">
+              <Icon name="DollarSign" size={32} className="text-green-600 mx-auto mb-3" />
+              <h3 className="font-bold mb-2">Финансы</h3>
+              <p className="text-sm text-muted-foreground">Денежное предназначение</p>
             </div>
-            <div className="flex items-center gap-2">
-              <Icon name="Activity" size={18} className="text-blue-600" />
-              <span>Рекомендации по здоровью</span>
+            <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-blue-100 dark:border-blue-900">
+              <Icon name="Activity" size={32} className="text-blue-600 mx-auto mb-3" />
+              <h3 className="font-bold mb-2">Здоровье</h3>
+              <p className="text-sm text-muted-foreground">Зоны внимания и рекомендации</p>
             </div>
           </div>
         </div>
