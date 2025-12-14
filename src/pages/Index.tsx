@@ -393,7 +393,8 @@ export default function Index() {
                       return 'Подписка истекает';
                     }
                   })()}
-                </div>
+                </span>
+              </div>
                 <Button
                   variant="outline"
                   size="sm"
