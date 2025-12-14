@@ -190,18 +190,41 @@ export default function Index() {
       return;
     }
 
-    // Полный текст со всеми расшифровками
+    // ПОЛНЫЙ текст со ВСЕМИ расшифровками (предназначение, здоровье, отношения, финансы)
     const shareText = `🔮 МАТРИЦА СУДЬБЫ - ${result.name}\n\n` +
       `📅 Дата рождения: ${new Date(birthDate).toLocaleDateString('ru-RU')}\n\n` +
       `═══════════════════════════\n\n` +
-      `👤 ЛИЧНАЯ ЭНЕРГИЯ: ${energyDescriptions[result.personal]?.title || result.personal}\n` +
+      
+      `👤 ЛИЧНАЯ ЭНЕРГИЯ: ${energyDescriptions[result.personal]?.title || result.personal}\n\n` +
       `${energyDescriptions[result.personal]?.description || ''}\n\n` +
-      `🎯 ПРЕДНАЗНАЧЕНИЕ: ${energyDescriptions[result.destiny]?.title || result.destiny}\n` +
+      `💊 ЗДОРОВЬЕ:\n${energyDescriptions[result.personal]?.health || ''}\n\n` +
+      `💕 ОТНОШЕНИЯ:\n${energyDescriptions[result.personal]?.relationships || ''}\n\n` +
+      `💰 ФИНАНСЫ:\n${energyDescriptions[result.personal]?.finance || ''}\n\n` +
+      
+      `═══════════════════════════\n\n` +
+      
+      `🎯 ПРЕДНАЗНАЧЕНИЕ: ${energyDescriptions[result.destiny]?.title || result.destiny}\n\n` +
       `${energyDescriptions[result.destiny]?.description || ''}\n\n` +
-      `👥 СОЦИАЛЬНАЯ ЭНЕРГИЯ: ${energyDescriptions[result.social]?.title || result.social}\n` +
+      `💊 ЗДОРОВЬЕ:\n${energyDescriptions[result.destiny]?.health || ''}\n\n` +
+      `💕 ОТНОШЕНИЯ:\n${energyDescriptions[result.destiny]?.relationships || ''}\n\n` +
+      `💰 ФИНАНСЫ:\n${energyDescriptions[result.destiny]?.finance || ''}\n\n` +
+      
+      `═══════════════════════════\n\n` +
+      
+      `👥 СОЦИАЛЬНАЯ ЭНЕРГИЯ: ${energyDescriptions[result.social]?.title || result.social}\n\n` +
       `${energyDescriptions[result.social]?.description || ''}\n\n` +
-      `✨ ДУХОВНАЯ ЭНЕРГИЯ: ${energyDescriptions[result.spiritual]?.title || result.spiritual}\n` +
+      `💊 ЗДОРОВЬЕ:\n${energyDescriptions[result.social]?.health || ''}\n\n` +
+      `💕 ОТНОШЕНИЯ:\n${energyDescriptions[result.social]?.relationships || ''}\n\n` +
+      `💰 ФИНАНСЫ:\n${energyDescriptions[result.social]?.finance || ''}\n\n` +
+      
+      `═══════════════════════════\n\n` +
+      
+      `✨ ДУХОВНАЯ ЭНЕРГИЯ: ${energyDescriptions[result.spiritual]?.title || result.spiritual}\n\n` +
       `${energyDescriptions[result.spiritual]?.description || ''}\n\n` +
+      `💊 ЗДОРОВЬЕ:\n${energyDescriptions[result.spiritual]?.health || ''}\n\n` +
+      `💕 ОТНОШЕНИЯ:\n${energyDescriptions[result.spiritual]?.relationships || ''}\n\n` +
+      `💰 ФИНАНСЫ:\n${energyDescriptions[result.spiritual]?.finance || ''}\n\n` +
+      
       `═══════════════════════════\n\n` +
       `🌐 Рассчитай свою матрицу: ${window.location.origin}`;
 

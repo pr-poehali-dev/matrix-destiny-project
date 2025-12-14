@@ -14,8 +14,15 @@ export const generatePDF = async (result: MatrixResult): Promise<Blob> => {
   const pdfMake = await import('pdfmake/build/pdfmake');
   const pdfFonts = await import('pdfmake/build/vfs_fonts');
   
-  // Инициализация VFS
-  (pdfMake as any).default.vfs = (pdfFonts as any).default.pdfMake.vfs;
+  // ИСПРАВЛЕНИЕ: правильная инициализация VFS
+  const pdfMakeInstance = (pdfMake as any).default || pdfMake;
+  const vfsFonts = (pdfFonts as any).default?.pdfMake?.vfs || (pdfFonts as any).pdfMake?.vfs;
+  
+  if (!vfsFonts) {
+    throw new Error('Failed to load pdfMake fonts');
+  }
+  
+  pdfMakeInstance.vfs = vfsFonts;
 
   return new Promise((resolve, reject) => {
     try {
@@ -212,7 +219,8 @@ export const generatePDF = async (result: MatrixResult): Promise<Blob> => {
         }
       };
 
-      const pdfDocGenerator = (pdfMake as any).default.createPdf(docDefinition);
+      // ИСПРАВЛЕНИЕ: используем сохранённый pdfMakeInstance
+      const pdfDocGenerator = pdfMakeInstance.createPdf(docDefinition);
       
       pdfDocGenerator.getBlob((blob: Blob) => {
         resolve(blob);
