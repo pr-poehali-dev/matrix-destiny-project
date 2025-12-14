@@ -395,16 +395,15 @@ export default function Index() {
                   })()}
                 </span>
               </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleLogout}
-                  className="gap-2"
-                >
-                  <Icon name="LogOut" size={16} />
-                  Выйти
-                </Button>
-              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="gap-2"
+              >
+                <Icon name="LogOut" size={16} />
+                Выйти
+              </Button>
             </div>
           )}
         </div>
