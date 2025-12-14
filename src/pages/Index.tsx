@@ -52,6 +52,9 @@ export default function Index() {
   const [adminEmail, setAdminEmail] = useState('');
   const [isSubscriber, setIsSubscriber] = useState(false);
   const [subscriptionExpires, setSubscriptionExpires] = useState<string | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [generatedImagesCount, setGeneratedImagesCount] = useState(0);
   const { toast } = useToast();
   const navigate = useNavigate();
   const calculatorRef = useRef<HTMLDivElement>(null);
@@ -288,12 +291,68 @@ export default function Index() {
     }
     
     localStorage.removeItem('subscriberAuth');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('adminEmail');
     setIsSubscriber(false);
     setHasAccess(false);
+    setEmail('');
+    setAdminEmail('');
     toast({
       title: 'Вы вышли из аккаунта',
       description: 'Сессия на этом устройстве завершена',
     });
+  };
+
+  const handleLogin = async () => {
+    if (!loginEmail) {
+      toast({
+        title: 'Требуется email',
+        description: 'Пожалуйста, введите email',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      const accessCheck = await checkAccess(loginEmail);
+      
+      if (accessCheck.has_access) {
+        localStorage.setItem('userEmail', loginEmail);
+        localStorage.setItem('subscriberAuth', 'true');
+        setEmail(loginEmail);
+        setIsSubscriber(true);
+        setHasAccess(true);
+        
+        if (accessCheck.expires_at) {
+          setSubscriptionExpires(accessCheck.expires_at);
+        }
+        
+        if (accessCheck.generated_images !== undefined) {
+          setGeneratedImagesCount(accessCheck.generated_images);
+        }
+        
+        setShowLoginModal(false);
+        setLoginEmail('');
+        
+        toast({
+          title: '✅ Вход выполнен',
+          description: 'Добро пожаловать! У вас есть активная подписка',
+        });
+      } else {
+        toast({
+          title: 'Доступ не найден',
+          description: 'У этого email нет активной подписки',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast({
+        title: 'Ошибка входа',
+        description: 'Попробуйте позже',
+        variant: 'destructive',
+      });
+    }
   };
 
   const pricingPlans = [
@@ -371,7 +430,17 @@ export default function Index() {
             </Link>
           </Button>
 
-          {isSubscriber && (
+          {!isSubscriber ? (
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => setShowLoginModal(true)}
+              className="gap-2"
+            >
+              <Icon name="LogIn" size={16} />
+              Войти
+            </Button>
+          ) : (
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-100 text-green-800 text-sm">
                 <Icon name="CheckCircle2" size={16} />
@@ -925,6 +994,56 @@ export default function Index() {
         
         <Testimonials />
       </div>
+
+      {showLoginModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowLoginModal(false)}>
+          <Card className="w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Icon name="LogIn" size={24} />
+                Вход в аккаунт
+              </CardTitle>
+              <CardDescription>
+                Введите email, который вы использовали при оплате подписки
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Email</label>
+                <Input
+                  type="email"
+                  placeholder="example@email.com"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleLogin();
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleLogin}
+                  className="flex-1"
+                >
+                  <Icon name="LogIn" size={16} className="mr-2" />
+                  Войти
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowLoginModal(false)}
+                >
+                  Отмена
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground text-center">
+                Нет подписки? <button onClick={() => { setShowLoginModal(false); scrollToCalculator(); }} className="text-primary hover:underline">Оформить подписку</button>
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
