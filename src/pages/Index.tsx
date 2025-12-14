@@ -12,7 +12,6 @@ import { LiveNotifications } from '@/components/LiveNotifications';
 import { Testimonials } from '@/components/Testimonials';
 import { CTABlock } from '@/components/CTABlock';
 import { energyDescriptions } from '@/data/arcana-descriptions';
-import { generatePDF, downloadPDF } from '@/utils/pdfGenerator';
 
 const calculateDestinyMatrix = (birthDate: string, name: string) => {
   const date = new Date(birthDate);
@@ -150,6 +149,9 @@ export default function Index() {
         title: sendEmail ? '📧 Готовим отчёт...' : '⏳ Генерируем PDF...',
         description: sendEmail ? 'Отправляем PDF на ваш email' : 'Создаем ваш персональный отчет',
       });
+
+      // Динамический импорт pdfGenerator только когда нужен
+      const { generatePDF, downloadPDF } = await import('@/utils/pdfGenerator');
 
       const pdfBlob = await generatePDF({
         name: result.name,
