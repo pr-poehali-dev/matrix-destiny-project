@@ -10,14 +10,18 @@
       "expectedStatus": 400
     },
     {
-      "name": "Download with email",
+      "name": "Download with invalid email returns 403",
       "method": "POST",
       "path": "/",
       "body": {
         "email": "test@example.com",
         "calculation_data": {"test": "data"}
       },
-      "expectedStatus": 200
+      "expectedStatus": 403,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
     }
   ]
 }

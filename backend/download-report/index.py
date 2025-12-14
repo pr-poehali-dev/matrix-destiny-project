@@ -3,12 +3,43 @@ import os
 import base64
 import smtplib
 import psycopg2
+import requests
 from datetime import datetime
 from typing import Dict, Any, Optional
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
+
+def send_telegram_notification(recipient_email: str, recipient_name: str) -> bool:
+    """Отправка уведомления в Telegram о скачивании PDF"""
+    try:
+        bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
+        chat_id = os.environ.get('TELEGRAM_CHAT_ID')
+        
+        if not bot_token or not chat_id:
+            return False
+        
+        message = f'''
+📧 <b>PDF отправлен на email!</b>
+
+👤 <b>Клиент:</b> {recipient_name}
+📨 <b>Email:</b> {recipient_email}
+⏰ <b>Время:</b> {datetime.now().strftime('%d.%m.%Y %H:%M')}
+
+✅ PDF-отчёт успешно отправлен клиенту
+'''
+        
+        url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
+        response = requests.post(url, json={
+            'chat_id': chat_id,
+            'text': message,
+            'parse_mode': 'HTML'
+        }, timeout=5)
+        
+        return response.status_code == 200
+    except:
+        return False
 
 def send_pdf_email(recipient_email: str, recipient_name: str, pdf_base64: str) -> bool:
     """Отправка PDF на email клиента"""
@@ -193,8 +224,12 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         
         # Отправляем PDF на email если предоставлен
         email_sent = False
+        telegram_sent = False
         if pdf_base64:
             email_sent = send_pdf_email(email, user_name, pdf_base64)
+            # Отправляем уведомление в Telegram если email отправлен
+            if email_sent:
+                telegram_sent = send_telegram_notification(email, user_name)
         
         return {
             'statusCode': 200,
@@ -203,7 +238,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 'success': True,
                 'downloads_left': new_downloads_left,
                 'message': 'Скачивание учтено',
-                'email_sent': email_sent
+                'email_sent': email_sent,
+                'telegram_notification': telegram_sent
             }),
             'isBase64Encoded': False
         }
