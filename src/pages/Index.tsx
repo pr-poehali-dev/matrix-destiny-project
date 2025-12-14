@@ -712,43 +712,51 @@ export default function Index() {
 
                     <TabsContent value="personal" className="space-y-6 mt-6">
                       <div className="space-y-6">
-                        <div className="p-6 bg-white rounded-lg shadow-sm border-l-4 border-primary">
-                          <h4 className="font-bold text-xl mb-4 text-primary flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-950 rounded-lg shadow-md border-l-4 border-primary">
+                          <h4 className="font-bold text-2xl mb-4 text-primary flex items-center gap-2">
                             <Icon name="User" size={24} />
                             Личное предназначение: {energyDescriptions[result.personal]?.title}
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.personal]?.description}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.personal]?.description}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="p-6 bg-green-50 rounded-lg shadow-sm border-l-4 border-green-600">
-                          <h4 className="font-bold text-xl mb-4 text-green-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 rounded-lg shadow-md border-l-4 border-green-600">
+                          <h4 className="font-bold text-2xl mb-4 text-green-900 dark:text-green-100 flex items-center gap-2">
                             <Icon name="Activity" size={24} />
                             Здоровье и тело
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.personal]?.health}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.personal]?.health}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="p-6 bg-pink-50 rounded-lg shadow-sm border-l-4 border-pink-600">
-                          <h4 className="font-bold text-xl mb-4 text-pink-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-950 dark:to-pink-900 rounded-lg shadow-md border-l-4 border-pink-600">
+                          <h4 className="font-bold text-2xl mb-4 text-pink-900 dark:text-pink-100 flex items-center gap-2">
                             <Icon name="Heart" size={24} />
                             Отношения и любовь
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.personal]?.relationships}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.personal]?.relationships}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="p-6 bg-amber-50 rounded-lg shadow-sm border-l-4 border-amber-600">
-                          <h4 className="font-bold text-xl mb-4 text-amber-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 rounded-lg shadow-md border-l-4 border-amber-600">
+                          <h4 className="font-bold text-2xl mb-4 text-amber-900 dark:text-amber-100 flex items-center gap-2">
                             <Icon name="DollarSign" size={24} />
                             Деньги и финансы
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.personal]?.finance}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.personal]?.finance}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -756,43 +764,51 @@ export default function Index() {
 
                     <TabsContent value="destiny" className="space-y-6 mt-6">
                       <div className="space-y-6">
-                        <div className="p-6 bg-white rounded-lg shadow-sm border-l-4 border-purple-600">
-                          <h4 className="font-bold text-xl mb-4 text-purple-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-white to-purple-50 dark:from-gray-900 dark:to-purple-950 rounded-lg shadow-md border-l-4 border-purple-600">
+                          <h4 className="font-bold text-2xl mb-4 text-purple-900 dark:text-purple-100 flex items-center gap-2">
                             <Icon name="Target" size={24} />
                             Предназначение: {energyDescriptions[result.destiny]?.title}
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.destiny]?.description}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.destiny]?.description}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="p-6 bg-green-50 rounded-lg shadow-sm border-l-4 border-green-600">
-                          <h4 className="font-bold text-xl mb-4 text-green-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 rounded-lg shadow-md border-l-4 border-green-600">
+                          <h4 className="font-bold text-2xl mb-4 text-green-900 dark:text-green-100 flex items-center gap-2">
                             <Icon name="Activity" size={24} />
                             Здоровье и тело
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.destiny]?.health}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.destiny]?.health}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="p-6 bg-pink-50 rounded-lg shadow-sm border-l-4 border-pink-600">
-                          <h4 className="font-bold text-xl mb-4 text-pink-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-950 dark:to-pink-900 rounded-lg shadow-md border-l-4 border-pink-600">
+                          <h4 className="font-bold text-2xl mb-4 text-pink-900 dark:text-pink-100 flex items-center gap-2">
                             <Icon name="Heart" size={24} />
                             Отношения и любовь
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.destiny]?.relationships}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.destiny]?.relationships}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="p-6 bg-amber-50 rounded-lg shadow-sm border-l-4 border-amber-600">
-                          <h4 className="font-bold text-xl mb-4 text-amber-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 rounded-lg shadow-md border-l-4 border-amber-600">
+                          <h4 className="font-bold text-2xl mb-4 text-amber-900 dark:text-amber-100 flex items-center gap-2">
                             <Icon name="DollarSign" size={24} />
                             Деньги и финансы
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.destiny]?.finance}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.destiny]?.finance}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -800,43 +816,51 @@ export default function Index() {
 
                     <TabsContent value="social" className="space-y-6 mt-6">
                       <div className="space-y-6">
-                        <div className="p-6 bg-white rounded-lg shadow-sm border-l-4 border-green-600">
-                          <h4 className="font-bold text-xl mb-4 text-green-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-white to-green-50 dark:from-gray-900 dark:to-green-950 rounded-lg shadow-md border-l-4 border-green-600">
+                          <h4 className="font-bold text-2xl mb-4 text-green-900 dark:text-green-100 flex items-center gap-2">
                             <Icon name="Users" size={24} />
                             Социальное: {energyDescriptions[result.social]?.title}
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.social]?.description}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.social]?.description}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="p-6 bg-green-50 rounded-lg shadow-sm border-l-4 border-green-600">
-                          <h4 className="font-bold text-xl mb-4 text-green-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 rounded-lg shadow-md border-l-4 border-green-600">
+                          <h4 className="font-bold text-2xl mb-4 text-green-900 dark:text-green-100 flex items-center gap-2">
                             <Icon name="Activity" size={24} />
                             Здоровье и тело
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.social]?.health}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.social]?.health}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="p-6 bg-pink-50 rounded-lg shadow-sm border-l-4 border-pink-600">
-                          <h4 className="font-bold text-xl mb-4 text-pink-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-950 dark:to-pink-900 rounded-lg shadow-md border-l-4 border-pink-600">
+                          <h4 className="font-bold text-2xl mb-4 text-pink-900 dark:text-pink-100 flex items-center gap-2">
                             <Icon name="Heart" size={24} />
                             Отношения и любовь
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.social]?.relationships}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.social]?.relationships}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="p-6 bg-amber-50 rounded-lg shadow-sm border-l-4 border-amber-600">
-                          <h4 className="font-bold text-xl mb-4 text-amber-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 rounded-lg shadow-md border-l-4 border-amber-600">
+                          <h4 className="font-bold text-2xl mb-4 text-amber-900 dark:text-amber-100 flex items-center gap-2">
                             <Icon name="DollarSign" size={24} />
                             Деньги и финансы
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.social]?.finance}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.social]?.finance}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -844,43 +868,51 @@ export default function Index() {
 
                     <TabsContent value="spiritual" className="space-y-6 mt-6">
                       <div className="space-y-6">
-                        <div className="p-6 bg-white rounded-lg shadow-sm border-l-4 border-amber-600">
-                          <h4 className="font-bold text-xl mb-4 text-amber-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-white to-amber-50 dark:from-gray-900 dark:to-amber-950 rounded-lg shadow-md border-l-4 border-amber-600">
+                          <h4 className="font-bold text-2xl mb-4 text-amber-900 dark:text-amber-100 flex items-center gap-2">
                             <Icon name="Sparkles" size={24} />
                             Духовное: {energyDescriptions[result.spiritual]?.title}
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.spiritual]?.description}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.spiritual]?.description}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="p-6 bg-green-50 rounded-lg shadow-sm border-l-4 border-green-600">
-                          <h4 className="font-bold text-xl mb-4 text-green-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 rounded-lg shadow-md border-l-4 border-green-600">
+                          <h4 className="font-bold text-2xl mb-4 text-green-900 dark:text-green-100 flex items-center gap-2">
                             <Icon name="Activity" size={24} />
                             Здоровье и тело
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.spiritual]?.health}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.spiritual]?.health}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="p-6 bg-pink-50 rounded-lg shadow-sm border-l-4 border-pink-600">
-                          <h4 className="font-bold text-xl mb-4 text-pink-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-950 dark:to-pink-900 rounded-lg shadow-md border-l-4 border-pink-600">
+                          <h4 className="font-bold text-2xl mb-4 text-pink-900 dark:text-pink-100 flex items-center gap-2">
                             <Icon name="Heart" size={24} />
                             Отношения и любовь
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.spiritual]?.relationships}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.spiritual]?.relationships}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="p-6 bg-amber-50 rounded-lg shadow-sm border-l-4 border-amber-600">
-                          <h4 className="font-bold text-xl mb-4 text-amber-900 flex items-center gap-2">
+                        <div className="p-6 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 rounded-lg shadow-md border-l-4 border-amber-600">
+                          <h4 className="font-bold text-2xl mb-4 text-amber-900 dark:text-amber-100 flex items-center gap-2">
                             <Icon name="DollarSign" size={24} />
                             Деньги и финансы
                           </h4>
-                          <div className="prose prose-sm max-w-none">
-                            <div className="whitespace-pre-wrap">{energyDescriptions[result.spiritual]?.finance}</div>
+                          <div className="prose prose-base max-w-none dark:prose-invert">
+                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
+                              {energyDescriptions[result.spiritual]?.finance}
+                            </div>
                           </div>
                         </div>
                       </div>
