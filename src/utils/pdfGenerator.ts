@@ -11,18 +11,27 @@ interface MatrixResult {
 
 export const generatePDF = async (result: MatrixResult): Promise<Blob> => {
   // Динамический импорт pdfmake
-  const pdfMake = await import('pdfmake/build/pdfmake');
-  const pdfFonts = await import('pdfmake/build/vfs_fonts');
+  const [pdfMakeModule, pdfFontsModule] = await Promise.all([
+    import('pdfmake/build/pdfmake'),
+    import('pdfmake/build/vfs_fonts')
+  ]);
   
-  // ИСПРАВЛЕНИЕ: правильная инициализация VFS
-  const pdfMakeInstance = (pdfMake as any).default || pdfMake;
-  const vfsFonts = (pdfFonts as any).default?.pdfMake?.vfs || (pdfFonts as any).pdfMake?.vfs;
+  // Получаем правильный экспорт
+  const pdfMake = (pdfMakeModule as any).default || pdfMakeModule;
+  const pdfFonts = (pdfFontsModule as any).default || pdfFontsModule;
   
-  if (!vfsFonts) {
-    throw new Error('Failed to load pdfMake fonts');
+  // Инициализация VFS - проверяем все возможные варианты
+  const vfs = pdfFonts.pdfMake?.vfs || pdfFonts.vfs || (pdfFontsModule as any).pdfMake?.vfs;
+  
+  if (!vfs) {
+    console.error('Font module structure:', pdfFonts);
+    throw new Error('Failed to load pdfMake fonts - VFS not found');
   }
   
-  pdfMakeInstance.vfs = vfsFonts;
+  // Назначаем VFS
+  if (pdfMake.vfs === undefined) {
+    pdfMake.vfs = vfs;
+  }
 
   return new Promise((resolve, reject) => {
     try {
@@ -219,8 +228,8 @@ export const generatePDF = async (result: MatrixResult): Promise<Blob> => {
         }
       };
 
-      // ИСПРАВЛЕНИЕ: используем сохранённый pdfMakeInstance
-      const pdfDocGenerator = pdfMakeInstance.createPdf(docDefinition);
+      // Создаем PDF документ
+      const pdfDocGenerator = pdfMake.createPdf(docDefinition);
       
       pdfDocGenerator.getBlob((blob: Blob) => {
         resolve(blob);
