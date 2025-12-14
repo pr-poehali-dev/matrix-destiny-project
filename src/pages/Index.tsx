@@ -130,7 +130,7 @@ export default function Index() {
     }
   };
 
-  const handleDownloadPDF = async () => {
+  const handleDownloadPDF = async (sendEmail: boolean = false) => {
     if (!result || !hasAccess) {
       toast({
         title: 'Доступ ограничен',
@@ -144,8 +144,8 @@ export default function Index() {
       setIsGeneratingPDF(true);
       
       toast({
-        title: '⏳ Генерируем PDF...',
-        description: 'Создаем ваш персональный отчет',
+        title: sendEmail ? '📧 Готовим отчёт...' : '⏳ Генерируем PDF...',
+        description: sendEmail ? 'Отправляем PDF на ваш email' : 'Создаем ваш персональный отчет',
       });
 
       const pdfBlob = await generatePDF({
@@ -157,13 +157,55 @@ export default function Index() {
         birthDate: birthDate,
       });
 
-      const filename = `matrix-${result.name.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`;
-      downloadPDF(pdfBlob, filename);
-      
-      toast({
-        title: '✅ PDF готов!',
-        description: 'Отчет успешно скачан. Проверьте папку загрузок',
-      });
+      if (sendEmail) {
+        // Конвертируем Blob в base64
+        const reader = new FileReader();
+        reader.readAsDataURL(pdfBlob);
+        reader.onloadend = async () => {
+          const base64data = reader.result?.toString().split(',')[1];
+          
+          try {
+            const response = await fetch('https://functions.poehali.dev/1037cd04-7532-4217-8f66-d055ab1d28e9', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: email,
+                name: result.name,
+                pdf_base64: base64data,
+                calculation_data: result,
+              }),
+            });
+
+            const data = await response.json();
+            
+            if (data.email_sent) {
+              toast({
+                title: '✅ PDF отправлен!',
+                description: `Проверьте почту ${email}`,
+              });
+            } else {
+              toast({
+                title: '⚠️ PDF сохранён',
+                description: 'Отчёт учтён, но отправка на email не удалась',
+              });
+            }
+          } catch (err) {
+            toast({
+              title: 'Ошибка отправки',
+              description: 'Попробуйте скачать PDF вместо этого',
+              variant: 'destructive',
+            });
+          }
+        };
+      } else {
+        const filename = `matrix-${result.name.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`;
+        downloadPDF(pdfBlob, filename);
+        
+        toast({
+          title: '✅ PDF готов!',
+          description: 'Отчет успешно скачан. Проверьте папку загрузок',
+        });
+      }
     } catch (error: any) {
       console.error('PDF generation error:', error);
       toast({
@@ -564,7 +606,17 @@ export default function Index() {
                         <span className="hidden sm:inline">Поделиться</span>
                       </Button>
                       <Button
-                        onClick={handleDownloadPDF}
+                        onClick={() => handleDownloadPDF(true)}
+                        disabled={isGeneratingPDF}
+                        variant="outline"
+                        size="lg"
+                        className="gap-2 hover:bg-green-50 hover:border-green-300 transition-all"
+                      >
+                        <Icon name="Mail" size={18} />
+                        <span className="hidden sm:inline">На Email</span>
+                      </Button>
+                      <Button
+                        onClick={() => handleDownloadPDF(false)}
                         disabled={isGeneratingPDF}
                         size="lg"
                         className="gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg hover:shadow-xl transition-all"
@@ -577,7 +629,7 @@ export default function Index() {
                         ) : (
                           <>
                             <Icon name="Download" size={18} />
-                            Скачать PDF-отчёт
+                            Скачать PDF
                           </>
                         )}
                       </Button>
@@ -591,6 +643,10 @@ export default function Index() {
                           <p className="font-semibold text-primary mb-1">PDF-отчёт включает:</p>
                           <p className="text-muted-foreground">
                             Полную расшифровку всех 4 энергий + детальные рекомендации по здоровью, отношениям, финансам и профессиям (~40-50 страниц)
+                          </p>
+                          <p className="text-muted-foreground mt-2 flex items-center gap-1">
+                            <Icon name="Mail" size={14} />
+                            Получите PDF на {email} или скачайте сразу
                           </p>
                         </div>
                       </div>
