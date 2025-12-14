@@ -395,6 +395,10 @@ export default function Index() {
                   })()}
                 </span>
               </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-100 text-blue-800 text-sm">
+                <Icon name="Image" size={16} />
+                <span className="font-medium">{generatedImagesCount} / 150 картинок</span>
+              </div>
               <Button
                 variant="outline"
                 size="sm"
