@@ -47,7 +47,6 @@ export default function Index() {
   const [result, setResult] = useState<ReturnType<typeof calculateDestinyMatrix> | null>(null);
   const [showPricing, setShowPricing] = useState(false);
   const [hasAccess, setHasAccess] = useState(false);
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [adminEmail, setAdminEmail] = useState('');
   const [isSubscriber, setIsSubscriber] = useState(false);
   const [subscriptionExpires, setSubscriptionExpires] = useState<string | null>(null);
@@ -133,54 +132,7 @@ export default function Index() {
     }
   };
 
-  const handleDownloadPDF = async () => {
-    if (!result || !hasAccess) {
-      toast({
-        title: 'Доступ ограничен',
-        description: 'Оплатите подписку для скачивания отчета',
-        variant: 'destructive',
-      });
-      return;
-    }
 
-    try {
-      setIsGeneratingPDF(true);
-      
-      toast({
-        title: '⏳ Генерируем PDF...',
-        description: 'Создаем ваш персональный отчет',
-      });
-
-      // Динамический импорт pdfGenerator только когда нужен
-      const { generatePDF, downloadPDF } = await import('@/utils/pdfGenerator');
-
-      const pdfBlob = await generatePDF({
-        name: result.name,
-        personal: result.personal,
-        destiny: result.destiny,
-        social: result.social,
-        spiritual: result.spiritual,
-        birthDate: birthDate,
-      });
-
-      const filename = `matrix-${result.name.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`;
-      downloadPDF(pdfBlob, filename);
-      
-      toast({
-        title: '✅ PDF готов!',
-        description: 'Отчет успешно скачан. Проверьте папку загрузок',
-      });
-    } catch (error: any) {
-      console.error('PDF generation error:', error);
-      toast({
-        title: 'Ошибка генерации PDF',
-        description: error?.message || 'Попробуйте позже',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsGeneratingPDF(false);
-    }
-  };
 
   const handleShare = async () => {
     if (!result || !hasAccess) {
@@ -240,7 +192,7 @@ export default function Index() {
         
         toast({
           title: '✅ Поделились!',
-          description: 'Отчет успешно отправлен',
+          description: 'Весь контент отправлен — все 4 энергии со всеми разделами',
         });
       } else {
         // Fallback: копируем в буфер обмена
@@ -248,7 +200,7 @@ export default function Index() {
         
         toast({
           title: '✅ Скопировано в буфер!',
-          description: 'Теперь можете вставить текст в любой мессенджер',
+          description: 'Весь контент скопирован — все 4 энергии, здоровье, отношения, финансы. Вставьте в любой мессенджер',
         });
       }
     } catch (error) {
@@ -356,7 +308,7 @@ export default function Index() {
       price: '200₽',
       type: 'single',
       description: 'Одноразовая полная расшифровка',
-      features: ['Полная расшифровка всех энергий', 'Анализ предназначения', 'Рекомендации по здоровью', 'Анализ отношений и финансов', 'PDF-отчет для печати'],
+      features: ['Полная расшифровка всех энергий', 'Анализ предназначения', 'Рекомендации по здоровью', 'Анализ отношений и финансов', 'Копирование полного отчёта'],
       icon: 'FileText'
     },
     {
@@ -364,7 +316,7 @@ export default function Index() {
       price: '1000₽',
       type: 'month',
       description: 'Безлимитный доступ на 30 дней',
-      features: ['Безлимитные расчеты и расшифровки', 'Безлимитное скачивание PDF', 'Полный анализ здоровья, отношений и финансов', 'Рекомендации по предназначению'],
+      features: ['Безлимитные расчеты и расшифровки', 'Копирование полного отчёта', 'Полный анализ здоровья, отношений и финансов', 'Рекомендации по предназначению'],
       icon: 'Calendar'
     },
     {
@@ -372,7 +324,7 @@ export default function Index() {
       price: '5000₽',
       type: 'half_year',
       description: 'Выгода 17% — 833₽/месяц',
-      features: ['Безлимитные расчеты и расшифровки', 'Безлимитное скачивание PDF', 'Все возможности месячного доступа', 'Расширенная аналитика', 'Приоритетная поддержка'],
+      features: ['Безлимитные расчеты и расшифровки', 'Копирование полного отчёта', 'Все возможности месячного доступа', 'Расширенная аналитика', 'Приоритетная поддержка'],
       icon: 'TrendingUp'
     },
     {
@@ -380,7 +332,7 @@ export default function Index() {
       price: '10000₽',
       type: 'year',
       description: 'Выгода 30% — 833₽/месяц',
-      features: ['Безлимитные расчеты и расшифровки', 'Безлимитное скачивание PDF', 'Все возможности полугодового доступа', 'Индивидуальные консультации', 'Доступ к закрытому сообществу'],
+      features: ['Безлимитные расчеты и расшифровки', 'Копирование полного отчёта', 'Все возможности полугодового доступа', 'Индивидуальные консультации', 'Доступ к закрытому сообществу'],
       icon: 'Award'
     }
   ];
@@ -743,44 +695,24 @@ export default function Index() {
                         Полный анализ всех ваших энергий и рекомендации
                       </CardDescription>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      <Button
-                        onClick={handleShare}
-                        variant="outline"
-                        size="lg"
-                        className="gap-2 hover:bg-blue-50 hover:border-blue-300 transition-all"
-                      >
-                        <Icon name="Share2" size={18} />
-                        <span className="hidden sm:inline">Поделиться полным отчётом</span>
-                      </Button>
-                      <Button
-                        onClick={handleDownloadPDF}
-                        disabled={isGeneratingPDF}
-                        size="lg"
-                        className="gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg hover:shadow-xl transition-all"
-                      >
-                        {isGeneratingPDF ? (
-                          <>
-                            <Icon name="Loader2" size={18} className="animate-spin" />
-                            Создаём PDF...
-                          </>
-                        ) : (
-                          <>
-                            <Icon name="Download" size={18} />
-                            Скачать PDF
-                          </>
-                        )}
-                      </Button>
-                    </div>
+                    <Button
+                      onClick={handleShare}
+                      size="lg"
+                      className="gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg hover:shadow-xl transition-all"
+                    >
+                      <Icon name="Share2" size={18} />
+                      <span className="hidden sm:inline">Скопировать весь отчёт</span>
+                      <span className="sm:hidden">Копировать всё</span>
+                    </Button>
                   </div>
                   {hasAccess && (
                     <div className="px-6 py-3 bg-gradient-to-r from-blue-50 to-purple-50 border-t">
                       <div className="flex items-start gap-3 text-sm">
-                        <Icon name="FileCheck" size={20} className="text-primary mt-0.5 flex-shrink-0" />
+                        <Icon name="Share2" size={20} className="text-primary mt-0.5 flex-shrink-0" />
                         <div>
-                          <p className="font-semibold text-primary mb-1">PDF-отчёт включает:</p>
+                          <p className="font-semibold text-primary mb-1">📋 Скопировать весь отчёт:</p>
                           <p className="text-muted-foreground">
-                            Полную расшифровку всех 4 энергий + детальные рекомендации по здоровью, отношениям, финасам и профессиям (~40-50 страниц)
+                            Нажмите кнопку выше — скопируется ВСЯ информация с экрана: все 4 энергии, здоровье, отношения, финансы, профессии (~40-50 страниц текста). Затем вставьте в WhatsApp, Telegram или другой мессенджер
                           </p>
                         </div>
                       </div>
@@ -1072,7 +1004,7 @@ export default function Index() {
                           <li>• Рекомендации по здоровью с указанием слабых зон</li>
                           <li>• Анализ отношений и совместимости</li>
                           <li>• Финансовое предназначение и профессии</li>
-                          <li>• PDF-отчет для печати и хранения</li>
+                          <li>• Копирование полного отчёта (~40-50 страниц текста)</li>
                         </ul>
                       </div>
                     </div>
