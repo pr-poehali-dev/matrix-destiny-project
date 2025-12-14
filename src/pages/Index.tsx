@@ -680,11 +680,11 @@ export default function Index() {
                 </CardHeader>
                 <CardContent>
                   <Tabs defaultValue="personal" className="w-full">
-                    <TabsList className="grid w-full grid-cols-4">
-                      <TabsTrigger value="personal">Личное</TabsTrigger>
-                      <TabsTrigger value="destiny">Предназначение</TabsTrigger>
-                      <TabsTrigger value="social">Социальное</TabsTrigger>
-                      <TabsTrigger value="spiritual">Духовное</TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2">
+                      <TabsTrigger value="personal" className="text-xs sm:text-sm">Личное</TabsTrigger>
+                      <TabsTrigger value="destiny" className="text-xs sm:text-sm">Предназначение</TabsTrigger>
+                      <TabsTrigger value="social" className="text-xs sm:text-sm">Социальное</TabsTrigger>
+                      <TabsTrigger value="spiritual" className="text-xs sm:text-sm">Духовное</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="personal" className="space-y-6 mt-6">
