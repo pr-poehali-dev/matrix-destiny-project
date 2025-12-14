@@ -1,8 +1,4 @@
 import { energyDescriptions } from '@/data/arcana-descriptions';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 interface MatrixResult {
   name: string;
@@ -14,6 +10,12 @@ interface MatrixResult {
 }
 
 export const generatePDF = async (result: MatrixResult): Promise<Blob> => {
+  // Динамический импорт pdfmake
+  const pdfMake = await import('pdfmake/build/pdfmake');
+  const pdfFonts = await import('pdfmake/build/vfs_fonts');
+  
+  // Инициализация VFS
+  (pdfMake as any).default.vfs = (pdfFonts as any).default.pdfMake.vfs;
 
   return new Promise((resolve, reject) => {
     try {
@@ -210,7 +212,7 @@ export const generatePDF = async (result: MatrixResult): Promise<Blob> => {
         }
       };
 
-      const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+      const pdfDocGenerator = (pdfMake as any).default.createPdf(docDefinition);
       
       pdfDocGenerator.getBlob((blob: Blob) => {
         resolve(blob);
