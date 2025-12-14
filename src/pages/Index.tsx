@@ -53,9 +53,11 @@ export default function Index() {
   const [subscriptionExpires, setSubscriptionExpires] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginEmail, setLoginEmail] = useState('');
+  const [activeTab, setActiveTab] = useState('personal');
   const { toast } = useToast();
   const navigate = useNavigate();
   const calculatorRef = useRef<HTMLDivElement>(null);
+  const detailsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const storedEmail = localStorage.getItem('userEmail');
@@ -598,41 +600,97 @@ export default function Index() {
               </CardHeader>
               <CardContent className="pt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="p-6 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-2 border-blue-200 dark:border-blue-800">
+                  <button
+                    onClick={() => {
+                      if (hasAccess) {
+                        setActiveTab('personal');
+                        detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }}
+                    className={`p-6 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-2 border-blue-200 dark:border-blue-800 text-left transition-all ${hasAccess ? 'hover:shadow-xl hover:scale-105 cursor-pointer' : 'cursor-default'}`}
+                  >
                     <div className="flex items-center gap-2 mb-2">
                       <Icon name="User" size={20} className="text-blue-600" />
                       <h3 className="font-bold text-blue-900 dark:text-blue-100">Личное</h3>
                     </div>
                     <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">{result.personal}</p>
                     <p className="text-sm text-blue-700 dark:text-blue-300 mt-2">Ваше истинное Я</p>
-                  </div>
+                    {hasAccess && (
+                      <p className="text-xs text-blue-600 dark:text-blue-400 mt-2 flex items-center gap-1">
+                        <Icon name="ChevronDown" size={14} />
+                        Нажмите для подробностей
+                      </p>
+                    )}
+                  </button>
 
-                  <div className="p-6 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-2 border-purple-200 dark:border-purple-800">
+                  <button
+                    onClick={() => {
+                      if (hasAccess) {
+                        setActiveTab('destiny');
+                        detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }}
+                    className={`p-6 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-2 border-purple-200 dark:border-purple-800 text-left transition-all ${hasAccess ? 'hover:shadow-xl hover:scale-105 cursor-pointer' : 'cursor-default'}`}
+                  >
                     <div className="flex items-center gap-2 mb-2">
                       <Icon name="Target" size={20} className="text-purple-600" />
                       <h3 className="font-bold text-purple-900 dark:text-purple-100">Предназначение</h3>
                     </div>
                     <p className="text-4xl font-bold text-purple-600 dark:text-purple-400">{result.destiny}</p>
                     <p className="text-sm text-purple-700 dark:text-purple-300 mt-2">Ваша миссия</p>
-                  </div>
+                    {hasAccess && (
+                      <p className="text-xs text-purple-600 dark:text-purple-400 mt-2 flex items-center gap-1">
+                        <Icon name="ChevronDown" size={14} />
+                        Нажмите для подробностей
+                      </p>
+                    )}
+                  </button>
 
-                  <div className="p-6 rounded-lg bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-2 border-green-200 dark:border-green-800">
+                  <button
+                    onClick={() => {
+                      if (hasAccess) {
+                        setActiveTab('social');
+                        detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }}
+                    className={`p-6 rounded-lg bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-2 border-green-200 dark:border-green-800 text-left transition-all ${hasAccess ? 'hover:shadow-xl hover:scale-105 cursor-pointer' : 'cursor-default'}`}
+                  >
                     <div className="flex items-center gap-2 mb-2">
                       <Icon name="Users" size={20} className="text-green-600" />
                       <h3 className="font-bold text-green-900 dark:text-green-100">Социальное</h3>
                     </div>
                     <p className="text-4xl font-bold text-green-600 dark:text-green-400">{result.social}</p>
                     <p className="text-sm text-green-700 dark:text-green-300 mt-2">Как вас видят</p>
-                  </div>
+                    {hasAccess && (
+                      <p className="text-xs text-green-600 dark:text-green-400 mt-2 flex items-center gap-1">
+                        <Icon name="ChevronDown" size={14} />
+                        Нажмите для подробностей
+                      </p>
+                    )}
+                  </button>
 
-                  <div className="p-6 rounded-lg bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 border-2 border-amber-200 dark:border-amber-800">
+                  <button
+                    onClick={() => {
+                      if (hasAccess) {
+                        setActiveTab('spiritual');
+                        detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }}
+                    className={`p-6 rounded-lg bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 border-2 border-amber-200 dark:border-amber-800 text-left transition-all ${hasAccess ? 'hover:shadow-xl hover:scale-105 cursor-pointer' : 'cursor-default'}`}
+                  >
                     <div className="flex items-center gap-2 mb-2">
                       <Icon name="Sparkles" size={20} className="text-amber-600" />
                       <h3 className="font-bold text-amber-900 dark:text-amber-100">Духовное</h3>
                     </div>
                     <p className="text-4xl font-bold text-amber-600 dark:text-amber-400">{result.spiritual}</p>
                     <p className="text-sm text-amber-700 dark:text-amber-300 mt-2">Ваш духовный путь</p>
-                  </div>
+                    {hasAccess && (
+                      <p className="text-xs text-amber-600 dark:text-amber-400 mt-2 flex items-center gap-1">
+                        <Icon name="ChevronDown" size={14} />
+                        Нажмите для подробностей
+                      </p>
+                    )}
+                  </button>
                 </div>
 
                 <div className="mt-6 p-4 bg-muted/50 rounded-lg border">
@@ -645,7 +703,7 @@ export default function Index() {
             </Card>
 
             {hasAccess ? (
-              <Card className="shadow-xl">
+              <Card className="shadow-xl" ref={detailsRef}>
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
@@ -702,7 +760,7 @@ export default function Index() {
                   )}
                 </CardHeader>
                 <CardContent>
-                  <Tabs defaultValue="personal" className="w-full">
+                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2">
                       <TabsTrigger value="personal" className="text-xs sm:text-sm">Личное</TabsTrigger>
                       <TabsTrigger value="destiny" className="text-xs sm:text-sm">Предназначение</TabsTrigger>
