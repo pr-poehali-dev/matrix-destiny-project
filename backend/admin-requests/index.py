@@ -31,16 +31,21 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         }
     
     try:
-        conn = psycopg2.connect(os.environ['DATABASE_URL'])
+        database_url = os.environ.get('DATABASE_URL')
+        print(f"DEBUG: Connecting to database...")
+        conn = psycopg2.connect(database_url)
         cur = conn.cursor()
         
+        print(f"DEBUG: Executing query...")
         cur.execute("""
             SELECT id, email, phone, screenshot_url, status, created_at, plan_type, amount
             FROM payment_requests
             ORDER BY created_at DESC
         """)
+        print(f"DEBUG: Query executed")
         
         rows = cur.fetchall()
+        print(f"DEBUG: Fetched {len(rows)} rows")
         
         requests = []
         for row in rows:
@@ -57,6 +62,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         
         cur.close()
         conn.close()
+        
+        print(f"DEBUG: Returning {len(requests)} requests")
         
         return {
             'statusCode': 200,

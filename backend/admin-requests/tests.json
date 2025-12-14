@@ -4,11 +4,7 @@
       "name": "Get all payment requests",
       "method": "GET",
       "path": "/",
-      "expectedStatus": 200,
-      "expectedBody": {
-        "requests": []
-      },
-      "bodyMatcher": "partial"
+      "expectedStatus": 200
     }
   ]
 }

@@ -33,6 +33,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     
     try:
         body_str = event.get('body', '{}')
+        print(f"DEBUG: Received body_str: {body_str}")
+        
         if not body_str or body_str.strip() == '':
             body_str = '{}'
         
@@ -42,7 +44,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         plan_type = body_data.get('plan_type', 'month')
         request_id = body_data.get('id')
         
-        print(f"DEBUG: action={action}, email={email}, plan_type={plan_type}, request_id={request_id}")
+        print(f"DEBUG: Parsed - action={action}, email={email}, plan_type={plan_type}, request_id={request_id}")
         
         conn = psycopg2.connect(os.environ['DATABASE_URL'])
         cur = conn.cursor()

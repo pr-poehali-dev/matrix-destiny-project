@@ -153,15 +153,33 @@ const Admin = () => {
       console.log('Ответ сервера:', response.status);
 
       if (response.ok) {
-        const result = await response.json();
+        let result;
+        const text = await response.text();
+        console.log('Ответ сервера (текст):', text);
+        
+        try {
+          result = text ? JSON.parse(text) : {};
+        } catch (e) {
+          console.error('Ошибка парсинга JSON:', e);
+          result = {};
+        }
+        
         console.log('Успех:', result);
         toast({
-          title: 'Доступ выдан',
+          title: '✅ Доступ выдан',
           description: `Email ${manualEmail} получил доступ (${manualPlanType})`,
         });
         setManualEmail('');
       } else {
-        const errorData = await response.json();
+        let errorData;
+        const text = await response.text();
+        
+        try {
+          errorData = text ? JSON.parse(text) : { error: 'Неизвестная ошибка' };
+        } catch (e) {
+          errorData = { error: text || 'Ошибка сервера' };
+        }
+        
         console.error('Ошибка от сервера:', errorData);
         toast({
           title: 'Ошибка',
