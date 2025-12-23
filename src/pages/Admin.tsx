@@ -193,11 +193,26 @@ const Admin = () => {
         }
         
         console.error('❌ Ошибка от сервера:', errorData);
+        console.error('❌ HTTP статус:', response.status);
+        console.error('❌ Полный текст:', text);
+        
+        const errorMessage = errorData.error || text || 'Неизвестная ошибка сервера';
+        
         toast({
-          title: 'Ошибка',
-          description: errorData.error || 'Не удалось выдать доступ',
+          title: `Ошибка (${response.status})`,
+          description: errorMessage.length > 150 ? errorMessage.substring(0, 150) + '...' : errorMessage,
           variant: 'destructive',
         });
+        
+        // Показываем детали в alert для отладки
+        if (response.status >= 500) {
+          console.error('FULL ERROR DETAILS:', {
+            status: response.status,
+            statusText: response.statusText,
+            body: text,
+            parsed: errorData
+          });
+        }
       }
     } catch (error) {
       console.error('Ошибка выдачи доступа:', error);
