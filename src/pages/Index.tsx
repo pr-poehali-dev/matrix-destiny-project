@@ -367,6 +367,34 @@ export default function Index() {
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
       <LiveNotifications />
       
+      {/* Рекламный баннер для профессионалов */}
+      <div className="bg-gradient-to-r from-purple-700 via-indigo-700 to-blue-700 text-white py-4 shadow-lg">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start">
+              <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                <Icon name="Briefcase" size={18} />
+                <span className="font-bold text-sm">ДЛЯ ПРОФЕССИОНАЛОВ</span>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 text-sm">
+                <span className="font-semibold">👨‍💼 HR</span>
+                <span className="text-white/60">•</span>
+                <span className="font-semibold">🧠 Психологи</span>
+                <span className="text-white/60">•</span>
+                <span className="font-semibold">📈 Коучи</span>
+                <span className="text-white/60">•</span>
+                <span className="font-semibold">🍎 Нутрициологи</span>
+              </div>
+            </div>
+            <div className="text-center md:text-right">
+              <p className="text-sm font-semibold">
+                🎯 Полный анализ клиента за 5 минут • От 300₽
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       {/* Hero Section с космической картинкой */}
       <div className="relative w-full h-[60vh] min-h-[500px] overflow-hidden">
         <img 
@@ -377,17 +405,23 @@ export default function Index() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background"></div>
         
         <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center items-center text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white text-sm mb-6 border border-white/20">
-            <Icon name="Sparkles" size={16} />
-            <span className="font-medium">Профессиональная расшифровка Матрицы Судьбы</span>
+          <div className="mb-6 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 text-gray-900 px-6 py-3 rounded-2xl shadow-2xl border-2 border-white/50 animate-pulse">
+            <p className="font-bold text-lg md:text-xl flex items-center gap-2 flex-wrap justify-center">
+              <Icon name="Briefcase" size={24} className="flex-shrink-0" />
+              <span>Профессиональный инструмент для HR • Психологов • Коучей • Нутрициологов</span>
+            </p>
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
             Матрица Судьбы
           </h1>
           
-          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-8 drop-shadow-lg">
-            Узнайте своё предназначение, таланты и жизненные задачи через расчёт по дате рождения
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-4 drop-shadow-lg">
+            Узнайте ВСЁ о человеке за 5 минут: предназначение, таланты, здоровье, деньги, отношения
+          </p>
+          
+          <p className="text-lg md:text-xl text-yellow-300 font-bold mb-8 drop-shadow-lg">
+            ⚡ Диагностика клиента • Подбор кандидатов • Работа с блоками • Персональное питание
           </p>
 
           <Button 
