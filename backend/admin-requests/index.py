@@ -11,7 +11,10 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
     method: str = event.get('httpMethod', 'GET')
     
-    print(f"[ADMIN] Request: method={method}, event={json.dumps(event)[:500]}")
+    print(f"[ADMIN] === NEW REQUEST ===")
+    print(f"[ADMIN] Method: {method}")
+    print(f"[ADMIN] Headers: {event.get('headers', {})}")
+    print(f"[ADMIN] Query: {event.get('queryStringParameters', {})}")
     
     if method == 'OPTIONS':
         return {
@@ -57,9 +60,16 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             cur.close()
             conn.close()
             
+            print(f"[ADMIN] ✅ Returning {len(requests)} requests")
+            
             return {
                 'statusCode': 200,
-                'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                'headers': {
+                    'Content-Type': 'application/json', 
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type'
+                },
                 'body': json.dumps({'requests': requests}),
                 'isBase64Encoded': False
             }
