@@ -2,6 +2,5 @@
   "admin-requests": "https://functions.poehali.dev/e14fe81a-41ed-459b-8775-8f0a68f09455",
   "download-report": "https://functions.poehali.dev/1037cd04-7532-4217-8f66-d055ab1d28e9",
   "access-check": "https://functions.poehali.dev/1a7b2c38-227e-4fa6-878a-c35711ae23ee",
-  "payment-submit": "https://functions.poehali.dev/7aa3e3b2-f3c8-4169-b31a-314fbc52ba7a",
-  "admin-approve": "https://functions.poehali.dev/e892808a-393e-4b95-a1ab-f7e39388cb7e"
+  "payment-submit": "https://functions.poehali.dev/7aa3e3b2-f3c8-4169-b31a-314fbc52ba7a"
 }

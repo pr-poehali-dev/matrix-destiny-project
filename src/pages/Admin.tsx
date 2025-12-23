@@ -88,7 +88,7 @@ const Admin = () => {
   const handleApprove = async (id: number, email: string) => {
     try {
       const func2url = await import('../../backend/func2url.json');
-      const response = await fetch(func2url['admin-approve'], {
+      const response = await fetch(func2url['admin-requests'], {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, email, action: 'approve' }),
@@ -113,7 +113,7 @@ const Admin = () => {
   const handleReject = async (id: number) => {
     try {
       const func2url = await import('../../backend/func2url.json');
-      const response = await fetch(func2url['admin-approve'], {
+      const response = await fetch(func2url['admin-requests'], {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, action: 'reject' }),
@@ -149,7 +149,7 @@ const Admin = () => {
       const func2url = await import('../../backend/func2url.json');
       console.log('Выдача доступа:', { email: manualEmail, plan_type: manualPlanType });
       
-      const response = await fetch(func2url['admin-approve'], {
+      const response = await fetch(func2url['admin-requests'], {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
