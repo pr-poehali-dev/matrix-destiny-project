@@ -49,11 +49,27 @@ const Admin = () => {
   const loadRequests = async () => {
     try {
       const func2url = await import('../../backend/func2url.json');
-      const res = await fetch(func2url['admin-requests']);
-      const data = await res.json();
+      const url = func2url['admin-requests'];
+      
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        cache: 'no-store'
+      });
+      
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      
+      const text = await res.text();
+      const data = JSON.parse(text);
       setRequests(data.requests || []);
     } catch (err) {
-      toast({ title: 'Ошибка загрузки', variant: 'destructive' });
+      console.error('Load error:', err);
+      toast({ title: 'Ошибка загрузки', description: String(err), variant: 'destructive' });
     } finally {
       setLoading(false);
     }
