@@ -11,25 +11,25 @@ interface PaymentRequest {
   email: string;
   phone?: string;
   screenshot_url?: string;
-  status: 'pending' | 'approved' | 'rejected';
+  status: string;
   created_at: string;
-  notes?: string;
+  plan_type: string;
+  amount: number;
 }
 
 const Admin = () => {
   const [requests, setRequests] = useState<PaymentRequest[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
+  const [isAuth, setIsAuth] = useState(false);
   const [manualEmail, setManualEmail] = useState('');
-  const [manualPlanType, setManualPlanType] = useState<'single' | 'month' | 'half_year' | 'year'>('month');
+  const [manualPlan, setManualPlan] = useState<'single' | 'month' | 'half_year' | 'year'>('month');
   const { toast } = useToast();
 
   useEffect(() => {
-    const savedAuth = sessionStorage.getItem('admin_auth');
-    if (savedAuth === 'true') {
-      setIsAuthenticated(true);
-      fetchRequests();
+    if (sessionStorage.getItem('admin') === 'true') {
+      setIsAuth(true);
+      loadRequests();
     } else {
       setLoading(false);
     }
@@ -38,53 +38,22 @@ const Admin = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (password === 'Romanio07Vivat') {
-      setIsAuthenticated(true);
-      sessionStorage.setItem('admin_auth', 'true');
-      setLoading(true);
-      fetchRequests();
+      sessionStorage.setItem('admin', 'true');
+      setIsAuth(true);
+      loadRequests();
     } else {
-      toast({
-        title: 'Неверный пароль',
-        variant: 'destructive',
-      });
+      toast({ title: 'Неверный пароль', variant: 'destructive' });
     }
   };
 
-  const fetchRequests = async () => {
+  const loadRequests = async () => {
     try {
       const func2url = await import('../../backend/func2url.json');
-      const url = `${func2url['admin-requests']}?t=${Date.now()}`;
-      console.log('🔄 Загрузка заявок с:', url);
-      
-      const response = await fetch(url, {
-        cache: 'no-cache',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      console.log('📡 Ответ получен, status:', response.status, 'ok:', response.ok);
-      
-      if (!response.ok) {
-        const text = await response.text();
-        console.error('❌ Ошибка HTTP:', response.status, text);
-        throw new Error(`HTTP ${response.status}: ${text}`);
-      }
-      
-      const text = await response.text();
-      console.log('📄 Текст ответа:', text.substring(0, 200));
-      
-      const data = text ? JSON.parse(text) : { requests: [] };
-      console.log('✅ Данные распарсены:', data);
-      console.log('📊 Количество заявок:', data.requests?.length || 0);
-      
+      const res = await fetch(func2url['admin-requests']);
+      const data = await res.json();
       setRequests(data.requests || []);
-    } catch (error) {
-      console.error('❌ Ошибка загрузки заявок:', error);
-      toast({
-        title: 'Ошибка загрузки',
-        description: `${error}`,
-        variant: 'destructive',
-      });
+    } catch (err) {
+      toast({ title: 'Ошибка загрузки', variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -93,165 +62,71 @@ const Admin = () => {
   const handleApprove = async (id: number, email: string) => {
     try {
       const func2url = await import('../../backend/func2url.json');
-      const response = await fetch(func2url['admin-requests'], {
+      await fetch(func2url['admin-requests'], {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, email, action: 'approve' }),
+        body: JSON.stringify({ action: 'approve', id, email }),
       });
-
-      if (response.ok) {
-        toast({
-          title: 'Доступ активирован',
-          description: `Пользователь ${email} получил доступ`,
-        });
-        fetchRequests();
-      }
-    } catch (error) {
-      toast({
-        title: 'Ошибка',
-        description: 'Не удалось активировать доступ',
-        variant: 'destructive',
-      });
+      toast({ title: '✅ Доступ выдан' });
+      loadRequests();
+    } catch {
+      toast({ title: 'Ошибка', variant: 'destructive' });
     }
   };
 
   const handleReject = async (id: number) => {
     try {
       const func2url = await import('../../backend/func2url.json');
-      const response = await fetch(func2url['admin-requests'], {
+      await fetch(func2url['admin-requests'], {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, action: 'reject' }),
+        body: JSON.stringify({ action: 'reject', id }),
       });
-
-      if (response.ok) {
-        toast({
-          title: 'Заявка отклонена',
-        });
-        fetchRequests();
-      }
-    } catch (error) {
-      toast({
-        title: 'Ошибка',
-        description: 'Не удалось отклонить заявку',
-        variant: 'destructive',
-      });
+      toast({ title: 'Заявка отклонена' });
+      loadRequests();
+    } catch {
+      toast({ title: 'Ошибка', variant: 'destructive' });
     }
   };
 
-  const handleManualGrant = async (e: React.FormEvent) => {
+  const handleGrant = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!manualEmail) {
-      toast({
-        title: 'Ошибка',
-        description: 'Введите email',
-        variant: 'destructive',
-      });
-      return;
-    }
+    if (!manualEmail) return;
 
     try {
       const func2url = await import('../../backend/func2url.json');
-      console.log('Выдача доступа:', { email: manualEmail, plan_type: manualPlanType });
-      
-      const response = await fetch(func2url['admin-requests'], {
+      await fetch(func2url['admin-requests'], {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email: manualEmail, 
-          plan_type: manualPlanType,
-          action: 'grant' 
-        }),
+        body: JSON.stringify({ action: 'grant', email: manualEmail, plan_type: manualPlan }),
       });
-
-      console.log('📡 Ответ сервера:', response.status, 'ok:', response.ok);
-
-      const text = await response.text();
-      console.log('📄 Текст ответа:', text);
-
-      if (response.ok) {
-        let result;
-        
-        try {
-          result = text ? JSON.parse(text) : {};
-          console.log('✅ Успешный ответ:', result);
-        } catch (e) {
-          console.error('⚠️ Ошибка парсинга JSON:', e, 'Текст:', text);
-          result = {};
-        }
-        
-        toast({
-          title: '✅ Доступ выдан',
-          description: `Email ${manualEmail} получил доступ (${manualPlanType})`,
-        });
-        setManualEmail('');
-        
-        // Обновляем список заявок
-        setTimeout(() => fetchRequests(), 500);
-      } else {
-        let errorData;
-        
-        try {
-          errorData = text ? JSON.parse(text) : { error: 'Неизвестная ошибка' };
-        } catch (e) {
-          errorData = { error: text || 'Ошибка сервера' };
-        }
-        
-        console.error('❌ Ошибка от сервера:', errorData);
-        console.error('❌ HTTP статус:', response.status);
-        console.error('❌ Полный текст:', text);
-        
-        const errorMessage = errorData.error || text || 'Неизвестная ошибка сервера';
-        
-        toast({
-          title: `Ошибка (${response.status})`,
-          description: errorMessage.length > 150 ? errorMessage.substring(0, 150) + '...' : errorMessage,
-          variant: 'destructive',
-        });
-        
-        // Показываем детали в alert для отладки
-        if (response.status >= 500) {
-          console.error('FULL ERROR DETAILS:', {
-            status: response.status,
-            statusText: response.statusText,
-            body: text,
-            parsed: errorData
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Ошибка выдачи доступа:', error);
-      toast({
-        title: 'Ошибка',
-        description: `Не удалось выдать доступ: ${error}`,
-        variant: 'destructive',
-      });
+      toast({ title: '✅ Доступ выдан', description: `${manualEmail} получил ${manualPlan}` });
+      setManualEmail('');
+      loadRequests();
+    } catch {
+      toast({ title: 'Ошибка', variant: 'destructive' });
     }
   };
 
-  if (!isAuthenticated) {
+  if (!isAuth) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-end md:items-center justify-center px-3 md:px-4 pb-6 md:pb-0">
-        <Card className="w-full max-w-md mx-auto">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-xl md:text-2xl text-center">Вход в админ-панель</CardTitle>
+            <CardTitle>Админ-панель</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm md:text-base">Пароль</Label>
+              <div>
+                <Label>Пароль</Label>
                 <Input
                   type="password"
-                  id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Введите пароль"
                   required
-                  className="w-full text-base"
-                  inputMode="text"
                 />
               </div>
-              <Button type="submit" className="w-full text-base">
+              <Button type="submit" className="w-full">
                 <Icon name="LogIn" size={16} className="mr-2" />
                 Войти
               </Button>
@@ -264,73 +139,60 @@ const Admin = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Загрузка...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600" />
       </div>
     );
   }
 
-  const pendingRequests = requests.filter(r => r.status === 'pending');
-  const processedRequests = requests.filter(r => r.status !== 'pending');
+  const pending = requests.filter((r) => r.status === 'pending');
+  const processed = requests.filter((r) => r.status !== 'pending');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-6 md:py-12 px-3 md:px-4">
-      <div className="max-w-6xl mx-auto w-full">
-        <div className="flex items-center justify-between mb-6 md:mb-8">
-          <div className="text-center flex-1">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-1 md:mb-2">Админ-панель</h1>
-            <p className="text-sm md:text-base text-gray-600">Управление заявками на доступ</p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">Админ-панель</h1>
           <Button
             variant="outline"
-            size="sm"
             onClick={() => {
-              sessionStorage.removeItem('admin_auth');
-              setIsAuthenticated(false);
+              sessionStorage.removeItem('admin');
+              setIsAuth(false);
             }}
-            className="ml-2 flex-shrink-0"
           >
-            <Icon name="LogOut" size={16} className="mr-1 md:mr-2" />
-            <span className="hidden md:inline">Выйти</span>
+            <Icon name="LogOut" size={16} className="mr-2" />
+            Выйти
           </Button>
         </div>
-        
-        <Card className="w-full mb-6">
+
+        <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-              <Icon name="UserPlus" size={20} className="text-green-500 flex-shrink-0" />
-              <span>Выдать доступ вручную</span>
-            </CardTitle>
+            <CardTitle>Выдать доступ вручную</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleManualGrant} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="manual-email">Email</Label>
+            <form onSubmit={handleGrant} className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label>Email</Label>
                   <Input
                     type="email"
-                    id="manual-email"
                     value={manualEmail}
                     onChange={(e) => setManualEmail(e.target.value)}
                     placeholder="user@example.com"
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="manual-plan">Тип доступа</Label>
+                <div>
+                  <Label>Тариф</Label>
                   <select
-                    id="manual-plan"
-                    value={manualPlanType}
-                    onChange={(e) => setManualPlanType(e.target.value as any)}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    value={manualPlan}
+                    onChange={(e) => setManualPlan(e.target.value as any)}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                   >
                     <option value="single">Разовая расшифровка</option>
-                    <option value="month">1 месяц безлимит</option>
-                    <option value="half_year">6 месяцев безлимит</option>
-                    <option value="year">12 месяцев безлимит</option>
+                    <option value="month">1 месяц</option>
+                    <option value="half_year">6 месяцев</option>
+                    <option value="year">12 месяцев</option>
                   </select>
                 </div>
               </div>
@@ -342,132 +204,100 @@ const Admin = () => {
           </CardContent>
         </Card>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4 mb-4 md:mb-6 w-full overflow-hidden">
-          <div className="flex items-start gap-2 md:gap-3">
-            <Icon name="Info" size={18} className="text-blue-600 mt-0.5 flex-shrink-0" />
-            <div className="text-xs md:text-sm text-blue-900">
-              <strong>ℹ️ Рекомендация:</strong> Вы можете одобрять заявки прямо из Telegram — уведомления приходят автоматически с кнопками "Одобрить" / "Отклонить". 
-              Это быстрее и удобнее, чем через эту панель!
-            </div>
-          </div>
-        </div>
-
-        <div className="grid gap-4 md:gap-6 mb-6 md:mb-8">
-          <Card className="w-full overflow-hidden">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                <Icon name="Clock" size={20} className="text-orange-500 flex-shrink-0" />
-                <span className="truncate">Ожидают проверки ({pendingRequests.length})</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {pendingRequests.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">Нет новых заявок</p>
-              ) : (
-                <div className="space-y-4">
-                  {pendingRequests.map((request) => (
-                    <div
-                      key={request.id}
-                      className="border rounded-lg p-3 md:p-4 bg-white shadow-sm w-full overflow-hidden"
-                    >
-                      <div className="flex flex-col gap-3 w-full">
-                        <div className="flex-1 w-full">
-                          <div className="flex items-center gap-2 mb-2 flex-wrap break-all">
-                            <Icon name="Mail" size={16} className="text-gray-400 flex-shrink-0" />
-                            <span className="font-medium text-sm md:text-base break-all">{request.email}</span>
-                          </div>
-                          {request.phone && (
-                            <div className="flex items-center gap-2 mb-2">
-                              <Icon name="Phone" size={16} className="text-gray-400 flex-shrink-0" />
-                              <span className="text-sm text-gray-600">{request.phone}</span>
-                            </div>
-                          )}
-                          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500">
-                            <Icon name="Calendar" size={16} className="flex-shrink-0" />
-                            <span>{new Date(request.created_at).toLocaleString('ru-RU')}</span>
-                          </div>
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Ожидают проверки ({pending.length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {pending.length === 0 ? (
+              <p className="text-center text-gray-500 py-8">Нет новых заявок</p>
+            ) : (
+              <div className="space-y-4">
+                {pending.map((req) => (
+                  <div key={req.id} className="border rounded-lg p-4 bg-white">
+                    <div className="flex flex-col gap-3">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <Icon name="Mail" size={16} />
+                          <span className="font-medium">{req.email}</span>
                         </div>
-                        <div className="flex flex-col gap-2 w-full">
-                          {request.screenshot_url && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => window.open(request.screenshot_url, '_blank')}
-                              className="w-full"
-                            >
-                              <Icon name="Image" size={16} className="mr-2" />
-                              Скриншот
-                            </Button>
-                          )}
-                          <div className="flex gap-2 w-full">
-                            <Button
-                              onClick={() => handleApprove(request.id, request.email)}
-                              className="flex-1 bg-green-600 hover:bg-green-700 text-sm md:text-base"
-                              size="sm"
-                            >
-                              <Icon name="Check" size={16} className="mr-1 md:mr-2" />
-                              Одобрить
-                            </Button>
-                            <Button
-                              onClick={() => handleReject(request.id)}
-                              variant="destructive"
-                              className="flex-1 text-sm md:text-base"
-                              size="sm"
-                            >
-                              <Icon name="X" size={16} className="mr-1 md:mr-2" />
-                              Отклонить
-                            </Button>
+                        {req.phone && (
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Icon name="Phone" size={14} />
+                            {req.phone}
                           </div>
+                        )}
+                        <div className="text-xs text-gray-500 mt-1">
+                          {new Date(req.created_at).toLocaleString('ru')} • {req.plan_type} • {req.amount}₽
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="w-full overflow-hidden">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
-                <Icon name="CheckCircle" size={20} className="text-green-500 flex-shrink-0" />
-                <span className="truncate">Обработанные ({processedRequests.length})</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {processedRequests.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">Нет обработанных заявок</p>
-              ) : (
-                <div className="space-y-2">
-                  {processedRequests.map((request) => (
-                    <div
-                      key={request.id}
-                      className="border rounded-lg p-3 bg-gray-50 w-full overflow-hidden"
-                    >
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 w-full">
-                        <div className="flex-1 min-w-0">
-                          <span className="font-medium text-sm md:text-base break-all block">{request.email}</span>
-                          <span className="text-xs md:text-sm text-gray-500 block mt-1">
-                            {new Date(request.created_at).toLocaleDateString('ru-RU')}
-                          </span>
-                        </div>
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs md:text-sm font-medium whitespace-nowrap self-start md:self-center ${
-                            request.status === 'approved'
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-red-100 text-red-800'
-                          }`}
+                      <div className="flex gap-2">
+                        {req.screenshot_url && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => window.open(req.screenshot_url, '_blank')}
+                          >
+                            <Icon name="Image" size={14} className="mr-1" />
+                            Скриншот
+                          </Button>
+                        )}
+                        <Button
+                          size="sm"
+                          className="flex-1 bg-green-600 hover:bg-green-700"
+                          onClick={() => handleApprove(req.id, req.email)}
                         >
-                          {request.status === 'approved' ? 'Одобрено' : 'Отклонено'}
-                        </span>
+                          <Icon name="Check" size={14} className="mr-1" />
+                          Одобрить
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="flex-1"
+                          onClick={() => handleReject(req.id)}
+                        >
+                          <Icon name="X" size={14} className="mr-1" />
+                          Отклонить
+                        </Button>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Обработанные ({processed.length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {processed.length === 0 ? (
+              <p className="text-center text-gray-500 py-8">Нет обработанных заявок</p>
+            ) : (
+              <div className="space-y-2">
+                {processed.map((req) => (
+                  <div key={req.id} className="flex justify-between items-center border rounded p-3 bg-gray-50">
+                    <div>
+                      <span className="font-medium">{req.email}</span>
+                      <span className="text-xs text-gray-500 ml-2">
+                        {new Date(req.created_at).toLocaleDateString('ru')}
+                      </span>
+                    </div>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        req.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}
+                    >
+                      {req.status === 'approved' ? 'Одобрено' : 'Отклонено'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
