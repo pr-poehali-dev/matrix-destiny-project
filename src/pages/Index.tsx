@@ -69,6 +69,26 @@ export default function Index() {
     if (storedEmail) {
       setEmail(storedEmail);
       
+      // Загружаем последний расчёт пользователя
+      const savedCalculation = localStorage.getItem(`calculation_${storedEmail}`);
+      if (savedCalculation) {
+        try {
+          const calc = JSON.parse(savedCalculation);
+          setName(calc.name);
+          setBirthDate(calc.birthDate);
+          setResult({
+            personal: calc.personal,
+            destiny: calc.destiny,
+            social: calc.social,
+            spiritual: calc.spiritual,
+            name: calc.name
+          });
+          setShowPricing(true);
+        } catch (error) {
+          console.error('Failed to load saved calculation:', error);
+        }
+      }
+      
       // Автоматически проверяем доступ для подписчиков
       if (subscriberAuth === 'true') {
         setIsSubscriber(true);
@@ -109,6 +129,19 @@ export default function Index() {
 
       if (email) {
         localStorage.setItem('userEmail', email);
+        
+        // Сохраняем расчёт для этого пользователя
+        const calculationData = {
+          name,
+          birthDate,
+          personal: matrix.personal,
+          destiny: matrix.destiny,
+          social: matrix.social,
+          spiritual: matrix.spiritual,
+          calculatedAt: new Date().toISOString()
+        };
+        localStorage.setItem(`calculation_${email}`, JSON.stringify(calculationData));
+        
         try {
           const accessCheck = await checkAccess(email);
           setHasAccess(accessCheck.has_access);
@@ -242,6 +275,9 @@ export default function Index() {
       } catch (error) {
         console.error('Failed to logout on server:', error);
       }
+      
+      // Удаляем сохранённый расчёт пользователя
+      localStorage.removeItem(`calculation_${storedEmail}`);
     }
     
     localStorage.removeItem('subscriberAuth');
@@ -251,6 +287,10 @@ export default function Index() {
     setHasAccess(false);
     setEmail('');
     setAdminEmail('');
+    setResult(null);
+    setName('');
+    setBirthDate('');
+    setShowPricing(false);
     toast({
       title: 'Вы вышли из аккаунта',
       description: 'Сессия на этом устройстве завершена',
@@ -539,13 +579,33 @@ export default function Index() {
 
         <Card className="mb-8 shadow-xl border-2" ref={calculatorRef}>
           <CardHeader className="bg-gradient-to-r from-primary/10 via-purple-600/10 to-pink-600/10">
-            <CardTitle className="text-2xl flex items-center gap-2">
-              <Icon name="Calculator" size={24} />
-              Рассчитать вашу Матрицу Судьбы
-            </CardTitle>
-            <CardDescription className="text-base">
-              Введите данные для расчета вашей уникальной матрицы
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-2xl flex items-center gap-2">
+                  <Icon name="Calculator" size={24} />
+                  Рассчитать вашу Матрицу Судьбы
+                </CardTitle>
+                <CardDescription className="text-base mt-2">
+                  {result && hasAccess ? 'Рассчитайте матрицу для другого человека' : 'Введите данные для расчета вашей уникальной матрицы'}
+                </CardDescription>
+              </div>
+              {result && hasAccess && (
+                <Button
+                  onClick={() => {
+                    setName('');
+                    setBirthDate('');
+                    setResult(null);
+                    setShowPricing(false);
+                    calculatorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  variant="outline"
+                  className="gap-2"
+                >
+                  <Icon name="Plus" size={16} />
+                  Новый расчёт
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent className="space-y-4 pt-6">
             <div>
