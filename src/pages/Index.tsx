@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
 import { checkAccess } from '@/lib/api';
@@ -14,6 +13,7 @@ import { CTABlock } from '@/components/CTABlock';
 import { energyDescriptions } from '@/data/arcana-descriptions';
 import { UnifiedMatrixResult } from '@/components/UnifiedMatrixResult';
 import { ProfessionalPromo } from '@/components/ProfessionalPromo';
+import { ProfessionalPromoMain } from '@/components/ProfessionalPromoMain';
 import { ProfessionalCases } from '@/components/ProfessionalCases';
 import { ProfessionalTestimonials } from '@/components/ProfessionalTestimonials';
 
@@ -56,7 +56,6 @@ export default function Index() {
   const [subscriptionExpires, setSubscriptionExpires] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginEmail, setLoginEmail] = useState('');
-  const [activeTab, setActiveTab] = useState('personal');
   const { toast } = useToast();
   const navigate = useNavigate();
   const calculatorRef = useRef<HTMLDivElement>(null);
@@ -308,8 +307,8 @@ export default function Index() {
 
   const pricingPlans = [
     {
-      name: 'Разовый доступ',
-      price: '200₽',
+      name: 'Разовая расшифровка',
+      price: '300₽',
       type: 'single',
       description: 'Одноразовая полная расшифровка',
       features: ['Полная расшифровка всех энергий', 'Анализ предназначения', 'Рекомендации по здоровью', 'Анализ отношений и финансов', 'Копирование полного отчёта'],
@@ -319,7 +318,7 @@ export default function Index() {
       name: 'Месяц',
       price: '1000₽',
       type: 'month',
-      description: 'Безлимитный доступ на 30 дней',
+      description: 'одноразово',
       features: ['Безлимитные расчеты и расшифровки', 'Копирование полного отчёта', 'Полный анализ здоровья, отношений и финансов', 'Рекомендации по предназначению'],
       icon: 'Calendar'
     },
@@ -333,7 +332,7 @@ export default function Index() {
     },
     {
       name: 'Год',
-      price: '10000₽',
+      price: '8000₽',
       type: 'year',
       description: 'Выгода 30% — 833₽/месяц',
       features: ['Безлимитные расчеты и расшифровки', 'Копирование полного отчёта', 'Все возможности полугодового доступа', 'Индивидуальные консультации', 'Доступ к закрытому сообществу'],
@@ -501,6 +500,8 @@ export default function Index() {
         </div>
 
         <LiveStats />
+
+        <ProfessionalPromoMain />
 
         <Card className="mb-8 shadow-xl border-2" ref={calculatorRef}>
           <CardHeader className="bg-gradient-to-r from-primary/10 via-purple-600/10 to-pink-600/10">
@@ -735,158 +736,6 @@ export default function Index() {
                       </p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            )
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.destiny]?.description}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 rounded-lg shadow-md border-l-4 border-green-600">
-                          <h4 className="font-bold text-2xl mb-4 text-green-900 dark:text-green-100 flex items-center gap-2">
-                            <Icon name="Activity" size={24} />
-                            Здоровье и тело
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.destiny]?.health}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-6 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-950 dark:to-pink-900 rounded-lg shadow-md border-l-4 border-pink-600">
-                          <h4 className="font-bold text-2xl mb-4 text-pink-900 dark:text-pink-100 flex items-center gap-2">
-                            <Icon name="Heart" size={24} />
-                            Отношения и любовь
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.destiny]?.relationships}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-6 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 rounded-lg shadow-md border-l-4 border-amber-600">
-                          <h4 className="font-bold text-2xl mb-4 text-amber-900 dark:text-amber-100 flex items-center gap-2">
-                            <Icon name="DollarSign" size={24} />
-                            Деньги и финансы
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.destiny]?.finance}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </TabsContent>
-
-                    <TabsContent value="social" className="space-y-6 mt-6">
-                      <div className="space-y-6">
-                        <div className="p-6 bg-gradient-to-br from-white to-green-50 dark:from-gray-900 dark:to-green-950 rounded-lg shadow-md border-l-4 border-green-600">
-                          <h4 className="font-bold text-2xl mb-4 text-green-900 dark:text-green-100 flex items-center gap-2">
-                            <Icon name="Users" size={24} />
-                            Социальное: {energyDescriptions[result.social]?.title}
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.social]?.description}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 rounded-lg shadow-md border-l-4 border-green-600">
-                          <h4 className="font-bold text-2xl mb-4 text-green-900 dark:text-green-100 flex items-center gap-2">
-                            <Icon name="Activity" size={24} />
-                            Здоровье и тело
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.social]?.health}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-6 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-950 dark:to-pink-900 rounded-lg shadow-md border-l-4 border-pink-600">
-                          <h4 className="font-bold text-2xl mb-4 text-pink-900 dark:text-pink-100 flex items-center gap-2">
-                            <Icon name="Heart" size={24} />
-                            Отношения и любовь
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.social]?.relationships}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-6 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 rounded-lg shadow-md border-l-4 border-amber-600">
-                          <h4 className="font-bold text-2xl mb-4 text-amber-900 dark:text-amber-100 flex items-center gap-2">
-                            <Icon name="DollarSign" size={24} />
-                            Деньги и финансы
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.social]?.finance}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </TabsContent>
-
-                    <TabsContent value="spiritual" className="space-y-6 mt-6">
-                      <div className="space-y-6">
-                        <div className="p-6 bg-gradient-to-br from-white to-amber-50 dark:from-gray-900 dark:to-amber-950 rounded-lg shadow-md border-l-4 border-amber-600">
-                          <h4 className="font-bold text-2xl mb-4 text-amber-900 dark:text-amber-100 flex items-center gap-2">
-                            <Icon name="Sparkles" size={24} />
-                            Духовное: {energyDescriptions[result.spiritual]?.title}
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.spiritual]?.description}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 rounded-lg shadow-md border-l-4 border-green-600">
-                          <h4 className="font-bold text-2xl mb-4 text-green-900 dark:text-green-100 flex items-center gap-2">
-                            <Icon name="Activity" size={24} />
-                            Здоровье и тело
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.spiritual]?.health}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-6 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-950 dark:to-pink-900 rounded-lg shadow-md border-l-4 border-pink-600">
-                          <h4 className="font-bold text-2xl mb-4 text-pink-900 dark:text-pink-100 flex items-center gap-2">
-                            <Icon name="Heart" size={24} />
-                            Отношения и любовь
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.spiritual]?.relationships}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-6 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 rounded-lg shadow-md border-l-4 border-amber-600">
-                          <h4 className="font-bold text-2xl mb-4 text-amber-900 dark:text-amber-100 flex items-center gap-2">
-                            <Icon name="DollarSign" size={24} />
-                            Деньги и финансы
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.spiritual]?.finance}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </TabsContent>
-                  </Tabs>
                 </CardContent>
               </Card>
             ) : showPricing ? (

@@ -11,10 +11,10 @@ import { submitPayment } from '@/lib/api';
 type PlanType = 'single' | 'month' | 'half_year' | 'year';
 
 const plans = {
-  single: { price: 200, label: 'Разовая расшифровка', duration: null },
+  single: { price: 300, label: 'Разовая расшифровка', duration: null },
   month: { price: 1000, label: '1 месяц безлимит', duration: '1 месяц' },
   half_year: { price: 5000, label: '6 месяцев безлимит', duration: '6 месяцев' },
-  year: { price: 10000, label: '12 месяцев безлимит', duration: '12 месяцев' },
+  year: { price: 8000, label: '12 месяцев безлимит', duration: '12 месяцев' },
 };
 
 const Payment = () => {
