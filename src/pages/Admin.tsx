@@ -53,10 +53,15 @@ const Admin = () => {
   const fetchRequests = async () => {
     try {
       const func2url = await import('../../backend/func2url.json');
-      const url = func2url['admin-requests'];
+      const url = `${func2url['admin-requests']}?t=${Date.now()}`;
       console.log('🔄 Загрузка заявок с:', url);
       
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        cache: 'no-cache',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       console.log('📡 Ответ получен, status:', response.status, 'ok:', response.ok);
       
       if (!response.ok) {
