@@ -137,10 +137,10 @@ const Payment = () => {
             <CardHeader className="bg-gradient-to-r from-yellow-50 to-amber-50">
               <CardTitle className="flex items-center gap-2 text-2xl">
                 <div className="text-4xl">💳</div>
-                Оплата через Т-Банк
+                Оплата по номеру телефона
               </CardTitle>
               <CardDescription className="text-base">
-                Быстрый перевод в 1 клик через мобильное приложение
+                Переводите с любого банка через СБП на номер Т-Банка
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
