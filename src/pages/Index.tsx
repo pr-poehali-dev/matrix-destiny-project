@@ -702,110 +702,42 @@ export default function Index() {
             </div>
 
             {hasAccess ? (
-              <Card className="shadow-xl">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="text-2xl flex items-center gap-2">
-                        <Icon name="BookOpen" size={24} />
-                        Детальная расшифровка по каждой энергии
-                      </CardTitle>
-                      <CardDescription>
-                        Подробный анализ каждого аспекта отдельно
-                      </CardDescription>
+              <Card className="bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-300 shadow-2xl">
+                <CardContent className="p-8">
+                  <div className="text-center space-y-4">
+                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full mb-4">
+                      <Icon name="Share2" size={40} className="text-white" />
                     </div>
+                    
+                    <h3 className="text-3xl font-bold text-purple-900">
+                      📋 Скопировать весь отчёт
+                    </h3>
+                    
+                    <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+                      Нажмите кнопку ниже — скопируется <strong>ВСЯ информация</strong> выше: 
+                      все 4 энергии, здоровье, отношения, финансы, профессии, рекомендации 
+                      (~40-50 страниц текста). Затем вставьте в WhatsApp, Telegram или другой мессенджер.
+                    </p>
+
                     <Button
                       onClick={handleShare}
                       size="lg"
-                      className="gap-2 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 shadow-lg hover:shadow-xl transition-all"
+                      className="text-xl px-12 py-8 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-2xl hover:shadow-3xl transition-all hover:scale-105"
                     >
-                      <Icon name="Share2" size={18} />
-                      <span className="hidden sm:inline">Скопировать весь отчёт</span>
-                      <span className="sm:hidden">Копировать всё</span>
+                      <Icon name="Copy" size={24} className="mr-3" />
+                      Скопировать полный отчёт
                     </Button>
-                  </div>
-                  {hasAccess && (
-                    <div className="px-6 py-3 bg-gradient-to-r from-blue-50 to-purple-50 border-t">
-                      <div className="flex items-start gap-3 text-sm">
-                        <Icon name="Share2" size={20} className="text-primary mt-0.5 flex-shrink-0" />
-                        <div>
-                          <p className="font-semibold text-primary mb-1">📋 Скопировать весь отчёт:</p>
-                          <p className="text-muted-foreground">
-                            Нажмите кнопку выше — скопируется ВСЯ информация с экрана: все 4 энергии, здоровье, отношения, финансы, профессии (~40-50 страниц текста). Затем вставьте в WhatsApp, Telegram или другой мессенджер
-                          </p>
-                        </div>
-                      </div>
+
+                    <div className="bg-green-50 border-2 border-green-300 rounded-xl p-4 mt-6">
+                      <p className="text-sm text-green-900 flex items-center justify-center gap-2">
+                        <Icon name="CheckCircle2" size={18} />
+                        ✅ Скопируется весь портрет личности: характер, предназначение, здоровье, отношения, деньги, профессии, рекомендации
+                      </p>
                     </div>
-                  )}
-                </CardHeader>
-                <CardContent>
-                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                    <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2">
-                      <TabsTrigger value="personal" className="text-xs sm:text-sm">Личное</TabsTrigger>
-                      <TabsTrigger value="destiny" className="text-xs sm:text-sm">Предназначение</TabsTrigger>
-                      <TabsTrigger value="social" className="text-xs sm:text-sm">Социальное</TabsTrigger>
-                      <TabsTrigger value="spiritual" className="text-xs sm:text-sm">Духовное</TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="personal" className="space-y-6 mt-6">
-                      <div className="space-y-6">
-                        <div className="p-6 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-950 rounded-lg shadow-md border-l-4 border-primary">
-                          <h4 className="font-bold text-2xl mb-4 text-primary flex items-center gap-2">
-                            <Icon name="User" size={24} />
-                            Личное предназначение: {energyDescriptions[result.personal]?.title}
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.personal]?.description}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 rounded-lg shadow-md border-l-4 border-green-600">
-                          <h4 className="font-bold text-2xl mb-4 text-green-900 dark:text-green-100 flex items-center gap-2">
-                            <Icon name="Activity" size={24} />
-                            Здоровье и тело
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.personal]?.health}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-6 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-950 dark:to-pink-900 rounded-lg shadow-md border-l-4 border-pink-600">
-                          <h4 className="font-bold text-2xl mb-4 text-pink-900 dark:text-pink-100 flex items-center gap-2">
-                            <Icon name="Heart" size={24} />
-                            Отношения и любовь
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.personal]?.relationships}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="p-6 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 rounded-lg shadow-md border-l-4 border-amber-600">
-                          <h4 className="font-bold text-2xl mb-4 text-amber-900 dark:text-amber-100 flex items-center gap-2">
-                            <Icon name="DollarSign" size={24} />
-                            Деньги и финансы
-                          </h4>
-                          <div className="prose prose-base max-w-none dark:prose-invert">
-                            <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
-                              {energyDescriptions[result.personal]?.finance}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </TabsContent>
-
-                    <TabsContent value="destiny" className="space-y-6 mt-6">
-                      <div className="space-y-6">
-                        <div className="p-6 bg-gradient-to-br from-white to-purple-50 dark:from-gray-900 dark:to-purple-950 rounded-lg shadow-md border-l-4 border-purple-600">
-                          <h4 className="font-bold text-2xl mb-4 text-purple-900 dark:text-purple-100 flex items-center gap-2">
-                            <Icon name="Target" size={24} />
-                            Предназначение: {energyDescriptions[result.destiny]?.title}
-                          </h4>
+                  </div>
+                </CardContent>
+              </Card>
+            )
                           <div className="prose prose-base max-w-none dark:prose-invert">
                             <div className="whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-gray-200">
                               {energyDescriptions[result.destiny]?.description}
