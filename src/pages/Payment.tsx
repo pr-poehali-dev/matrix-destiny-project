@@ -205,9 +205,9 @@ const Payment = () => {
                 <p className="text-sm text-gray-700 mb-3 font-semibold">Отсканируйте QR-код в приложении Т-Банка:</p>
                 <div className="flex justify-center mb-3">
                   <img 
-                    src="https://qr.nspk.ru/AS1A00670TH6JRKFVTJNE4O2B82GF5DK?type=01&bank=100000000111&sum={plans[selectedPlan].price * 100}&cur=RUB&crc=5FE0"
+                    src="https://cdn.poehali.dev/files/1000038581.jpg"
                     alt="QR-код для оплаты"
-                    className="w-48 h-48 border-4 border-yellow-400 rounded-lg shadow-xl"
+                    className="w-64 h-auto border-4 border-yellow-400 rounded-lg shadow-xl"
                   />
                 </div>
                 <p className="text-xs text-gray-600">
