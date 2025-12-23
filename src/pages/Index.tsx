@@ -12,6 +12,8 @@ import { LiveNotifications } from '@/components/LiveNotifications';
 import { Testimonials } from '@/components/Testimonials';
 import { CTABlock } from '@/components/CTABlock';
 import { energyDescriptions } from '@/data/arcana-descriptions';
+import { UnifiedMatrixResult } from '@/components/UnifiedMatrixResult';
+import { ProfessionalPromo } from '@/components/ProfessionalPromo';
 
 const calculateDestinyMatrix = (birthDate: string, name: string) => {
   const date = new Date(birthDate);
@@ -692,17 +694,22 @@ export default function Index() {
               </CardContent>
             </Card>
 
+            <div ref={detailsRef}>
+              <UnifiedMatrixResult result={result} hasAccess={hasAccess} />
+              <ProfessionalPromo />
+            </div>
+
             {hasAccess ? (
-              <Card className="shadow-xl" ref={detailsRef}>
+              <Card className="shadow-xl">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
                       <CardTitle className="text-2xl flex items-center gap-2">
                         <Icon name="BookOpen" size={24} />
-                        Детальная расшифровка
+                        Детальная расшифровка по каждой энергии
                       </CardTitle>
                       <CardDescription>
-                        Полный анализ всех ваших энергий и рекомендации
+                        Подробный анализ каждого аспекта отдельно
                       </CardDescription>
                     </div>
                     <Button
