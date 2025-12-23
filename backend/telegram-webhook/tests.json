@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS request returns CORS",
+      "method": "OPTIONS",
+      "expectedStatus": 200,
+      "expectedHeaders": {
+        "Access-Control-Allow-Origin": "*"
+      }
+    }
+  ]
+}

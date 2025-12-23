@@ -136,7 +136,13 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'chat_id': chat_id,
                     'text': message,
                     'parse_mode': 'Markdown',
-                    'disable_web_page_preview': False
+                    'disable_web_page_preview': False,
+                    'reply_markup': {
+                        'inline_keyboard': [[
+                            {'text': '✅ Одобрить', 'callback_data': f'approve_{request_id}'},
+                            {'text': '❌ Отклонить', 'callback_data': f'reject_{request_id}'}
+                        ]]
+                    }
                 })
                 
                 print(f"DEBUG: Telegram response status: {response.status_code}, body: {response.text}")
