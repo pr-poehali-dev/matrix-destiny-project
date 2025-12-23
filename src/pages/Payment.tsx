@@ -205,13 +205,16 @@ const Payment = () => {
                 <p className="text-sm text-gray-700 mb-3 font-semibold">Отсканируйте QR-код в приложении Т-Банка:</p>
                 <div className="flex justify-center mb-3">
                   <img 
-                    src="https://cdn.poehali.dev/files/1000038581.jpg"
-                    alt="QR-код для оплаты"
-                    className="w-64 h-auto border-4 border-yellow-400 rounded-lg shadow-xl"
+                    src="https://cdn.poehali.dev/files/1000038229.jpg"
+                    alt="QR-код для оплаты Т-Банк СБП"
+                    className="w-72 h-72 object-contain border-4 border-yellow-400 rounded-xl shadow-2xl bg-white p-4"
                   />
                 </div>
-                <p className="text-xs text-gray-600">
-                  Сумма: <strong className="text-yellow-700">{plans[selectedPlan].price} ₽</strong>
+                <p className="text-sm text-gray-700 font-semibold">
+                  📱 Получатель: <strong className="text-yellow-800">+7 921 765-34-01</strong>
+                </p>
+                <p className="text-xs text-gray-600 mt-2">
+                  Укажите сумму: <strong className="text-yellow-700">{plans[selectedPlan].price} ₽</strong>
                 </p>
               </div>
 
