@@ -87,18 +87,29 @@ export interface PaymentSubmitRequest {
 }
 
 export const submitPayment = async (data: PaymentSubmitRequest): Promise<any> => {
-  const response = await fetch(PAYMENT_SUBMIT_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
+  try {
+    const response = await fetch(PAYMENT_SUBMIT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || 'Failed to submit payment');
+    if (!response.ok) {
+      let errorMessage = 'Failed to submit payment';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorMessage;
+      } catch {
+        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response.json();
+  } catch (error: any) {
+    console.error('submitPayment error:', error);
+    throw new Error(error.message || 'Не удалось отправить заявку. Проверьте интернет-соединение');
   }
-
-  return response.json();
 };
