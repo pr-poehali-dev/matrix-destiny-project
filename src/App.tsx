@@ -15,6 +15,7 @@ import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 import TimewebSetupGuide from "./components/TimewebSetupGuide";
 import VIP from "./pages/VIP";
+import TelegramSetup from "./pages/TelegramSetup";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogPost />} />
           <Route path="/timeweb-setup" element={<TimewebSetupGuide />} />
+          <Route path="/telegram-setup" element={<TelegramSetup />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
