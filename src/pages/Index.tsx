@@ -400,6 +400,16 @@ export default function Index() {
 
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="flex justify-between items-center mb-4">
+          <Link to="/admin">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs text-muted-foreground hover:text-primary"
+            >
+              <Icon name="Lock" size={14} className="mr-1" />
+              Админка
+            </Button>
+          </Link>
           <Button
             variant="ghost"
             size="sm"
