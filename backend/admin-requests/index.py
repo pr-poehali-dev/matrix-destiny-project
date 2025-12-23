@@ -74,6 +74,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             
             # Выдать доступ вручную
             if action == 'grant':
+                print(f"DEBUG grant: email={email}, plan_type={plan_type}")
+                
                 if not email:
                     cur.close()
                     conn.close()
@@ -96,18 +98,35 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 elif plan_type == 'year':
                     expires_at = datetime.now() + timedelta(days=365)
                 
-                cur.execute("""
-                    INSERT INTO active_access (email, plan_type, expires_at, downloads_left, granted_by)
-                    VALUES (%s, %s, %s, %s, 'admin_manual')
-                    ON CONFLICT (email) 
-                    DO UPDATE SET 
-                        plan_type = EXCLUDED.plan_type,
-                        expires_at = EXCLUDED.expires_at,
-                        downloads_left = EXCLUDED.downloads_left,
-                        granted_at = CURRENT_TIMESTAMP
-                """, (email, plan_type, expires_at, downloads_left))
+                print(f"DEBUG grant: expires_at={expires_at}, downloads_left={downloads_left}")
                 
-                conn.commit()
+                try:
+                    cur.execute("""
+                        INSERT INTO active_access (email, plan_type, expires_at, downloads_left, granted_by)
+                        VALUES (%s, %s, %s, %s, 'admin_manual')
+                        ON CONFLICT (email) 
+                        DO UPDATE SET 
+                            plan_type = EXCLUDED.plan_type,
+                            expires_at = EXCLUDED.expires_at,
+                            downloads_left = EXCLUDED.downloads_left,
+                            granted_at = CURRENT_TIMESTAMP
+                    """, (email, plan_type, expires_at, downloads_left))
+                    
+                    conn.commit()
+                    print(f"DEBUG grant: Success! Access granted to {email}")
+                except Exception as db_error:
+                    print(f"ERROR grant database: {str(db_error)}")
+                    import traceback
+                    traceback.print_exc()
+                    cur.close()
+                    conn.close()
+                    return {
+                        'statusCode': 500,
+                        'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                        'body': json.dumps({'error': f'Database error: {str(db_error)}'}),
+                        'isBase64Encoded': False
+                    }
+                
                 cur.close()
                 conn.close()
                 
