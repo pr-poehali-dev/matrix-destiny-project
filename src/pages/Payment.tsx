@@ -60,7 +60,7 @@ const Payment = () => {
     if (!screenshot) {
       toast({
         title: 'Ошибка',
-        description: 'Прикрепите скриншот оплаты',
+        description: 'Прикрепите скриншот или квитанцию об оплате',
         variant: 'destructive',
       });
       return;
@@ -122,7 +122,7 @@ const Payment = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <Button
           variant="ghost"
           onClick={() => navigate('/')}
@@ -132,286 +132,292 @@ const Payment = () => {
           Назад
         </Button>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+            💳 Оплата доступа к Матрице Судьбы
+          </h1>
+          <p className="text-lg text-gray-700">
+            Переводите с любого банка России через СБП • QR-код для Т-Банка • Мгновенный перевод
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          <Card className="border-2 border-blue-300 shadow-2xl">
+            <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
+              <CardTitle className="flex items-center gap-2 text-2xl">
+                <div className="text-4xl">📱</div>
+                Способ 1: По номеру телефона
+              </CardTitle>
+              <CardDescription className="text-base font-semibold text-blue-900">
+                ✅ С ЛЮБОГО банка (Сбер, Альфа, ВТБ и тд.) через СБП
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-4">
+              <div className="bg-white/80 backdrop-blur p-5 rounded-lg border-2 border-blue-200">
+                <p className="text-sm text-gray-600 mb-2">Получатель (Т-Банк):</p>
+                <div className="flex items-center justify-between mb-3">
+                  <p className="font-bold text-2xl text-blue-900">+7 921 765-34-01</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      navigator.clipboard.writeText('+79217653401');
+                      toast({ title: '✅ Номер скопирован' });
+                    }}
+                  >
+                    <Icon name="Copy" size={16} />
+                  </Button>
+                </div>
+                <p className="text-xs text-green-700 font-semibold bg-green-50 p-2 rounded border border-green-300">
+                  💡 СБП работает между всеми российскими банками мгновенно!
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 p-5 rounded-lg">
+                <p className="text-sm text-blue-900 font-bold mb-3 flex items-center gap-2">
+                  <Icon name="Smartphone" size={16} />
+                  📲 Как оплатить:
+                </p>
+                <ol className="text-sm text-blue-900 space-y-2 list-decimal ml-4">
+                  <li>Откройте ваше банковское приложение</li>
+                  <li>Выберите <strong>"Переводы"</strong> → <strong>"По номеру телефона"</strong></li>
+                  <li>Введите номер: <strong>+7 921 765-34-01</strong></li>
+                  <li>Укажите сумму: <strong className="text-blue-700">{plans[selectedPlan].price} ₽</strong></li>
+                  <li>Подтвердите перевод через СБП</li>
+                  <li className="font-bold text-green-700">Сделайте скриншот подтверждения!</li>
+                </ol>
+              </div>
+            </CardContent>
+          </Card>
+
           <Card className="border-2 border-yellow-300 shadow-2xl">
             <CardHeader className="bg-gradient-to-r from-yellow-50 to-amber-50">
               <CardTitle className="flex items-center gap-2 text-2xl">
-                <div className="text-4xl">💳</div>
-                Оплата по номеру телефона
+                <div className="text-4xl">📷</div>
+                Способ 2: QR-код
               </CardTitle>
-              <CardDescription className="text-base">
-                Переводите с любого банка через СБП на номер Т-Банка
+              <CardDescription className="text-base font-semibold text-yellow-900">
+                ✅ Только для Т-Банка (быстрая оплата)
               </CardDescription>
             </CardHeader>
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                <div className="space-y-3">
-                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                    <Icon name="Package" size={20} />
-                    Шаг 1: Выберите тариф
-                  </h3>
-                  {searchParams.get('plan') && (
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
-                      <p className="text-sm text-blue-900">
-                        ℹ️ <strong>Тариф выбран автоматически.</strong> Вы можете изменить его ниже.
-                      </p>
-                    </div>
-                  )}
-                  {(Object.keys(plans) as PlanType[]).map((plan) => (
-                    <button
-                      key={plan}
-                      type="button"
-                      onClick={() => setSelectedPlan(plan)}
-                      className={`w-full p-4 rounded-lg border-2 transition-all duration-300 ease-in-out text-left relative transform ${
-                        selectedPlan === plan
-                          ? 'border-yellow-600 bg-gradient-to-r from-yellow-100 to-yellow-50 shadow-lg ring-2 ring-yellow-300 scale-105'
-                          : 'border-gray-200 bg-white hover:border-yellow-300 hover:shadow-md hover:scale-102'
-                      }`}
-                    >
-                      {selectedPlan === plan && (
-                        <div className="absolute -top-2 -right-2 bg-yellow-600 text-white rounded-full p-1">
-                          <Icon name="Check" size={16} />
-                        </div>
-                      )}
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className={`font-semibold ${selectedPlan === plan ? 'text-yellow-900' : 'text-gray-900'}`}>
-                            {plans[plan].label}
-                          </p>
-                          {plans[plan].duration && (
-                            <p className={`text-sm ${selectedPlan === plan ? 'text-yellow-700' : 'text-gray-600'}`}>
-                              Безлимитные расчёты
-                            </p>
-                          )}
-                        </div>
-                        <p className={`text-lg font-bold ${selectedPlan === plan ? 'text-yellow-700' : 'text-yellow-600'}`}>
-                          {plans[plan].price} ₽
-                        </p>
-                      </div>
-                    </button>
-                  ))}
+            <CardContent className="pt-6 space-y-4">
+              <div className="bg-white/80 backdrop-blur p-5 rounded-lg border-2 border-yellow-200 text-center">
+                <p className="text-sm text-gray-700 mb-3 font-semibold">Отсканируйте QR-код в приложении Т-Банка:</p>
+                <div className="flex justify-center mb-3">
+                  <img 
+                    src="https://qr.nspk.ru/AS1A00670TH6JRKFVTJNE4O2B82GF5DK?type=01&bank=100000000111&sum={plans[selectedPlan].price * 100}&cur=RUB&crc=5FE0"
+                    alt="QR-код для оплаты"
+                    className="w-48 h-48 border-4 border-yellow-400 rounded-lg shadow-xl"
+                  />
                 </div>
+                <p className="text-xs text-gray-600">
+                  Сумма: <strong className="text-yellow-700">{plans[selectedPlan].price} ₽</strong>
+                </p>
+              </div>
 
-                <div className="bg-gradient-to-br from-yellow-50 to-amber-50 p-6 rounded-xl border-2 border-yellow-300 shadow-lg">
-                  <h3 className="font-bold text-xl text-yellow-900 mb-4 flex items-center gap-2">
-                    <div className="text-3xl">🚀</div>
-                    Шаг 2: Оплатите перевод
-                  </h3>
-                  
-                  <div className="space-y-4">
-                    <div className="bg-white/80 backdrop-blur p-4 rounded-lg">
-                      <p className="text-sm text-gray-600 mb-2">Получатель:</p>
-                      <div className="flex items-center justify-between">
-                        <p className="font-bold text-lg text-gray-900">+7 921 765-34-01</p>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            navigator.clipboard.writeText('79217653401');
-                            toast({ title: '✅ Номер скопирован' });
-                          }}
-                        >
-                          <Icon name="Copy" size={16} />
-                        </Button>
-                      </div>
-                      <p className="text-xs text-gray-500 mt-1">Роман (Т-Банк)</p>
-                    </div>
-
-                    <Button
-                      onClick={openPaymentLink}
-                      className="w-full h-14 text-lg font-bold bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 shadow-xl hover:shadow-2xl transition-all hover:scale-105"
-                    >
-                      <Icon name="Smartphone" size={24} className="mr-2" />
-                      Оплатить {plans[selectedPlan].price} ₽ через Т-Банк
-                    </Button>
-
-                    <div className="bg-green-50 border-2 border-green-300 rounded-lg p-4">
-                      <h4 className="font-semibold text-green-900 mb-2 flex items-center gap-2">
-                        <Icon name="CheckCircle2" size={18} />
-                        ✅ Автоматически откроется приложение Т-Банка
-                      </h4>
-                      <p className="text-sm text-green-800">
-                        Нажмите кнопку выше → откроется приложение Т-Банка → проверьте сумму → подтвердите оплату → сделайте скриншот → загрузите справа
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
-                    <Icon name="Info" size={18} />
-                    💡 Альтернативный способ
-                  </h3>
-                  <p className="text-sm text-blue-800 mb-3">
-                    Или переведите вручную через любой банк:
-                  </p>
-                  <ol className="space-y-2 text-sm text-blue-800">
-                    <li className="flex gap-2">
-                      <span className="font-bold">1.</span>
-                      <span>Откройте приложение своего банка</span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="font-bold">2.</span>
-                      <span>Выберите "Перевод по номеру телефона"</span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="font-bold">3.</span>
-                      <span>Введите: <strong>+7 921 765-34-01</strong></span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="font-bold">4.</span>
-                      <span>Сумма: <strong>{plans[selectedPlan].price} ₽</strong></span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="font-bold">5.</span>
-                      <span>Комментарий: ваш email</span>
-                    </li>
-                  </ol>
-                </div>
+              <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border-2 border-yellow-300 p-5 rounded-lg">
+                <p className="text-sm text-yellow-900 font-bold mb-3 flex items-center gap-2">
+                  <Icon name="Camera" size={16} />
+                  📸 Как оплатить QR-кодом:
+                </p>
+                <ol className="text-sm text-yellow-900 space-y-2 list-decimal ml-4">
+                  <li>Откройте приложение <strong>Т-Банк</strong></li>
+                  <li>Нажмите на значок <strong>"QR-код"</strong> сверху</li>
+                  <li>Наведите камеру на QR-код выше</li>
+                  <li>Подтвердите сумму: <strong className="text-yellow-700">{plans[selectedPlan].price} ₽</strong></li>
+                  <li>Оплатите перевод</li>
+                  <li className="font-bold text-green-700">Сделайте скриншот подтверждения!</li>
+                </ol>
+                <p className="text-xs text-yellow-800 mt-3 bg-white/60 p-2 rounded">
+                  💡 QR-код работает только в Т-Банке. Если у вас другой банк — используйте "По номеру телефона"
+                </p>
               </div>
             </CardContent>
           </Card>
+        </div>
 
-          <Card className="border-2 border-purple-300">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Icon name="Upload" size={24} />
-                Шаг 3: Подтверждение оплаты
-              </CardTitle>
-              <CardDescription>
-                Загрузите скриншот после оплаты
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="email">Email для доступа *</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
+        <Card className="border-2 border-purple-300 shadow-2xl mb-6">
+          <CardHeader className="bg-gradient-to-r from-purple-50 to-indigo-50">
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <div className="text-4xl">📦</div>
+              Шаг 1: Выберите тариф
+            </CardTitle>
+            <CardDescription className="text-base">
+              Выберите подходящий план подписки
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            {searchParams.get('plan') && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                <p className="text-sm text-blue-900">
+                  ℹ️ <strong>Тариф выбран автоматически.</strong> Вы можете изменить его ниже.
+                </p>
+              </div>
+            )}
+            <div className="grid md:grid-cols-4 gap-4">
+              {(Object.keys(plans) as PlanType[]).map((plan) => (
+                <button
+                  key={plan}
+                  type="button"
+                  onClick={() => setSelectedPlan(plan)}
+                  className={`p-4 rounded-lg border-2 transition-all duration-300 text-center relative ${
+                    selectedPlan === plan
+                      ? 'border-purple-600 bg-gradient-to-br from-purple-100 to-indigo-100 shadow-xl ring-2 ring-purple-300 scale-105'
+                      : 'border-gray-200 bg-white hover:border-purple-300 hover:shadow-md'
+                  }`}
+                >
+                  {selectedPlan === plan && (
+                    <div className="absolute -top-2 -right-2 bg-purple-600 text-white rounded-full p-1">
+                      <Icon name="Check" size={16} />
+                    </div>
+                  )}
+                  <p className={`font-bold text-lg mb-1 ${selectedPlan === plan ? 'text-purple-900' : 'text-gray-900'}`}>
+                    {plans[plan].label}
+                  </p>
+                  {plans[plan].duration && (
+                    <p className={`text-xs mb-2 ${selectedPlan === plan ? 'text-purple-700' : 'text-gray-600'}`}>
+                      Безлимит
+                    </p>
+                  )}
+                  <p className={`text-2xl font-bold ${selectedPlan === plan ? 'text-purple-700' : 'text-purple-600'}`}>
+                    {plans[plan].price} ₽
+                  </p>
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-2xl border-2 border-green-300">
+          <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <div className="text-4xl">📤</div>
+              Шаг 2: Подтверждение оплаты
+            </CardTitle>
+            <CardDescription className="text-base">
+              Загрузите скриншот или квитанцию о переводе
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-base font-semibold">Email для доступа *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="text-lg"
+                />
+                <p className="text-xs text-gray-600">
+                  На этот email активируется доступ
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="text-base font-semibold">Телефон (необязательно)</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="+7 900 123-45-67"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="text-lg"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="screenshot" className="text-base font-semibold">
+                  Скриншот или квитанция об оплате *
+                </Label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-500 transition-colors bg-gradient-to-br from-green-50 to-emerald-50">
+                  <input
+                    id="screenshot"
+                    type="file"
+                    accept="image/*,.pdf"
+                    onChange={handleFileChange}
+                    className="hidden"
                     required
                   />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    На этот email придёт доступ
-                  </p>
-                </div>
-
-                <div>
-                  <Label htmlFor="phone">Телефон (необязательно)</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+7 900 123-45-67"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="screenshot">Скриншот оплаты *</Label>
-                  <div className="mt-2">
-                    <Input
-                      id="screenshot"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      required
-                      className="cursor-pointer"
-                    />
-                  </div>
-                  {screenshot && (
-                    <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
-                      <Icon name="CheckCircle2" size={18} className="text-green-600" />
-                      <p className="text-sm text-green-800">
-                        Файл выбран: {screenshot.name}
-                      </p>
+                  <label htmlFor="screenshot" className="cursor-pointer">
+                    <div className="flex flex-col items-center gap-3">
+                      <Icon name="Upload" size={40} className="text-green-600" />
+                      {screenshot ? (
+                        <div className="space-y-2">
+                          <p className="font-semibold text-green-700 flex items-center gap-2">
+                            <Icon name="CheckCircle2" size={20} />
+                            Файл выбран: {screenshot.name}
+                          </p>
+                          <p className="text-xs text-gray-600">Нажмите, чтобы выбрать другой файл</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <p className="font-semibold text-gray-700">
+                            📸 Нажмите, чтобы выбрать файл
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Скриншот перевода или квитанция из банка
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            Форматы: JPG, PNG, PDF
+                          </p>
+                        </div>
+                      )}
                     </div>
-                  )}
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Загрузите скриншот успешной оплаты из вашего банка
-                  </p>
-                </div>
-
-                <div className="bg-amber-50 border border-amber-300 rounded-lg p-4">
-                  <h4 className="font-semibold text-amber-900 mb-2 flex items-center gap-2">
-                    <Icon name="Clock" size={18} />
-                    ⏱️ Активация доступа
-                  </h4>
-                  <p className="text-sm text-amber-800">
-                    После отправки заявка придёт админу в Telegram и в админ-панель. 
-                    Доступ будет активирован в течение <strong>1-3 часов</strong> после проверки.
-                  </p>
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={loading || !screenshot || !email}
-                  className="w-full h-12 text-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
-                >
-                  {loading ? (
-                    <>
-                      <Icon name="Loader2" size={20} className="mr-2 animate-spin" />
-                      Отправка...
-                    </>
-                  ) : (
-                    <>
-                      <Icon name="Send" size={20} className="mr-2" />
-                      Отправить заявку
-                    </>
-                  )}
-                </Button>
-
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-5 rounded-lg border-2 border-green-300 shadow-md">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Icon name="CheckCircle2" size={20} className="text-green-600" />
-                    <h3 className="font-semibold text-green-900">Что входит в подписку:</h3>
-                  </div>
-                  <ul className="space-y-2 text-sm text-green-800">
-                    <li className="flex items-start gap-2">
-                      <Icon name="Check" size={16} className="mt-0.5 flex-shrink-0" />
-                      <span>Безлимитные расчёты Матрицы Судьбы</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Icon name="Check" size={16} className="mt-0.5 flex-shrink-0" />
-                      <span>Полные расшифровки всех 4 энергий</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Icon name="Check" size={16} className="mt-0.5 flex-shrink-0" />
-                      <span>Анализ здоровья, отношений, финансов</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Icon name="Check" size={16} className="mt-0.5 flex-shrink-0" />
-                      <span>Копирование полного отчёта</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Icon name="Check" size={16} className="mt-0.5 flex-shrink-0" />
-                      <span>Профессиональные рекомендации</span>
-                    </li>
-                  </ul>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="mt-8 text-center">
-          <Card className="inline-block bg-gradient-to-r from-purple-100 to-blue-100 border-2 border-purple-300">
-            <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row items-center gap-4">
-                <Icon name="Shield" size={32} className="text-purple-600" />
-                <div className="text-left">
-                  <h3 className="font-bold text-purple-900 mb-1">Безопасная оплата</h3>
-                  <p className="text-sm text-purple-700">
-                    Переводы через СБП (Система Быстрых Платежей) защищены Центробанком РФ
-                  </p>
+                  </label>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+
+              <div className="bg-blue-50 border border-blue-300 rounded-lg p-4">
+                <p className="text-sm text-blue-900 font-semibold mb-2 flex items-center gap-2">
+                  <Icon name="Info" size={16} />
+                  💡 Что загружать:
+                </p>
+                <ul className="text-sm text-blue-900 space-y-1 list-disc ml-5">
+                  <li><strong>Скриншот</strong> экрана с подтверждением перевода из вашего банка</li>
+                  <li><strong>Квитанцию</strong> об оплате (если банк создаёт документ)</li>
+                  <li>На скриншоте должна быть видна <strong>сумма {plans[selectedPlan].price} ₽</strong> и номер <strong>+7 921 765-34-01</strong></li>
+                </ul>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={loading}
+                size="lg"
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold shadow-xl hover:shadow-2xl transition-all text-lg py-6"
+              >
+                {loading ? (
+                  <>
+                    <Icon name="Loader2" size={20} className="mr-2 animate-spin" />
+                    Отправка...
+                  </>
+                ) : (
+                  <>
+                    <Icon name="Send" size={20} className="mr-2" />
+                    Отправить подтверждение
+                  </>
+                )}
+              </Button>
+
+              <div className="bg-green-50 border border-green-300 rounded-lg p-4">
+                <p className="text-sm text-green-900 font-semibold mb-2 flex items-center gap-2">
+                  <Icon name="CheckCircle2" size={16} />
+                  ⏱️ Активация доступа:
+                </p>
+                <ul className="text-sm text-green-900 space-y-1 list-disc ml-5">
+                  <li>Проверка платежа: до 1-3 часов</li>
+                  <li>В рабочее время (9:00-21:00 МСК): обычно 15-30 минут</li>
+                  <li>Доступ активируется автоматически на ваш email</li>
+                </ul>
+                <p className="text-xs text-green-800 mt-3 bg-white/60 p-2 rounded">
+                  💡 Переводы через СБП проходят мгновенно между всеми банками России
+                </p>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
