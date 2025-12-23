@@ -698,7 +698,7 @@ export default function Index() {
 
             <div ref={detailsRef}>
               <UnifiedMatrixResult result={result} hasAccess={hasAccess} />
-              <ProfessionalPromo />
+              {hasAccess && <ProfessionalPromo />}
             </div>
 
             {hasAccess ? (
@@ -1031,13 +1031,13 @@ export default function Index() {
                 </CardContent>
               </Card>
             ) : null}
+            
+            {hasAccess && <ProfessionalCases />}
+            
+            {hasAccess && <ProfessionalTestimonials />}
           </div>
         )}
 
-        <ProfessionalCases />
-        
-        <ProfessionalTestimonials />
-        
         <CTABlock onCalculate={scrollToCalculator} />
         
         <Testimonials />
