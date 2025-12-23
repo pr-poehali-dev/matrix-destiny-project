@@ -7,8 +7,11 @@ from datetime import datetime, timedelta
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
     Админ API: GET - список заявок, POST - одобрение/отклонение/выдача доступа
+    Публичный доступ без авторизации
     """
     method: str = event.get('httpMethod', 'GET')
+    
+    print(f"[ADMIN] Request: method={method}, event={json.dumps(event)[:500]}")
     
     if method == 'OPTIONS':
         return {
@@ -74,7 +77,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             
             # Выдать доступ вручную
             if action == 'grant':
-                print(f"DEBUG grant: email={email}, plan_type={plan_type}")
+                print(f"[ADMIN GRANT] email={email}, plan_type={plan_type}")
                 
                 if not email:
                     cur.close()
@@ -98,7 +101,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 elif plan_type == 'year':
                     expires_at = datetime.now() + timedelta(days=365)
                 
-                print(f"DEBUG grant: expires_at={expires_at}, downloads_left={downloads_left}")
+                print(f"[ADMIN GRANT] expires_at={expires_at}, downloads_left={downloads_left}")
                 
                 try:
                     cur.execute("""
@@ -113,9 +116,9 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     """, (email, plan_type, expires_at, downloads_left))
                     
                     conn.commit()
-                    print(f"DEBUG grant: Success! Access granted to {email}")
+                    print(f"[ADMIN GRANT] ✅ SUCCESS! Access granted to {email}")
                 except Exception as db_error:
-                    print(f"ERROR grant database: {str(db_error)}")
+                    print(f"[ADMIN GRANT] ❌ DATABASE ERROR: {str(db_error)}")
                     import traceback
                     traceback.print_exc()
                     cur.close()
