@@ -15,6 +15,7 @@ import { energyDescriptions } from '@/data/arcana-descriptions';
 import { UnifiedMatrixResult } from '@/components/UnifiedMatrixResult';
 import { ProfessionalPromo } from '@/components/ProfessionalPromo';
 import { ProfessionalCases } from '@/components/ProfessionalCases';
+import { ProfessionalTestimonials } from '@/components/ProfessionalTestimonials';
 
 const calculateDestinyMatrix = (birthDate: string, name: string) => {
   const date = new Date(birthDate);
@@ -1034,6 +1035,8 @@ export default function Index() {
         )}
 
         <ProfessionalCases />
+        
+        <ProfessionalTestimonials />
         
         <CTABlock onCalculate={scrollToCalculator} />
         
