@@ -60,8 +60,8 @@ export const ProfessionalPromo = () => {
             <div className="flex items-start gap-3">
               <span className="text-2xl">✅</span>
               <div>
-                <p className="font-semibold mb-1">Все расчёты сохраняются автоматически</p>
-                <p className="text-purple-100">Открывайте во время сессии или приёма — все матрицы клиентов всегда под рукой</p>
+                <p className="font-semibold mb-1">Безлимитная подписка: все расчёты сохраняются</p>
+                <p className="text-purple-100">От 1000₽/мес — рассчитывайте сколько угодно клиентов, все матрицы доступны во время сессий</p>
               </div>
             </div>
             
