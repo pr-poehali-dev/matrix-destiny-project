@@ -60,6 +60,14 @@ export const ProfessionalPromo = () => {
             <div className="flex items-start gap-3">
               <span className="text-2xl">✅</span>
               <div>
+                <p className="font-semibold mb-1">Все расчёты сохраняются автоматически</p>
+                <p className="text-purple-100">Открывайте во время сессии или приёма — все матрицы клиентов всегда под рукой</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">✅</span>
+              <div>
                 <p className="font-semibold mb-1">Прогноз совместимости</p>
                 <p className="text-purple-100">В команде, в паре, в бизнесе. Предотвращайте конфликты до их возникновения</p>
               </div>

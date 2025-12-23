@@ -90,6 +90,14 @@ export const ProfessionalPromoMain = () => {
                   </div>
 
                   <div className="flex items-start gap-4 bg-white/10 p-4 rounded-xl">
+                    <div className="flex-shrink-0 w-10 h-10 bg-green-500 rounded-full flex items-center font-bold text-white">✓</div>
+                    <div>
+                      <p className="font-semibold text-lg text-white">Все расчёты всегда под рукой</p>
+                      <p className="text-white/90 text-sm">Открывайте во время сессии расчёты всех клиентов — всё сохраняется автоматически</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4 bg-white/10 p-4 rounded-xl">
                     <div className="flex-shrink-0 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center font-bold text-white">✓</div>
                     <div>
                       <p className="font-semibold text-lg text-white">Совместимость и предсказания</p>
