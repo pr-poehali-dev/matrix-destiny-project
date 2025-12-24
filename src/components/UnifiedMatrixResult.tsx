@@ -268,9 +268,12 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
 
             <div className="space-y-4">
               <div className="p-5 bg-red-50 rounded-lg border-l-4 border-red-500">
-                <p className="font-bold text-red-900 mb-3 text-lg">❌ ПРОБЛЕМА #1: Вы слишком {personal?.title}</p>
+                <p className="font-bold text-red-900 mb-3 text-lg">❌ ПРОБЛЕМА #1: Вы слишком {personal?.title} (аркан {result.personal})</p>
                 <p className="text-gray-800 mb-2">
-                  Вы застряли в своем характере <strong>{personal?.title}</strong> и не развиваетесь дальше.
+                  Вы застряли в своем характере <strong>{personal?.title} (аркан {result.personal})</strong> и не развиваетесь дальше.
+                </p>
+                <p className="text-gray-700 mb-2">
+                  <strong>Что это значит:</strong> {personal?.description?.split('.').slice(0, 1).join('.')}
                 </p>
                 <p className="text-sm text-gray-700 mb-2">Что происходит:</p>
                 <ul className="text-sm text-gray-700 space-y-1 ml-4 list-disc">
@@ -282,9 +285,12 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
               </div>
               
               <div className="p-5 bg-orange-50 rounded-lg border-l-4 border-orange-500">
-                <p className="font-bold text-orange-900 mb-3 text-lg">❌ ПРОБЛЕМА #2: Вы НЕ делаете {destiny?.title}</p>
+                <p className="font-bold text-orange-900 mb-3 text-lg">❌ ПРОБЛЕМА #2: Вы НЕ делаете {destiny?.title} (аркан {result.destiny})</p>
                 <p className="text-gray-800 mb-2">
-                  Ваше предназначение — <strong>{destiny?.title}</strong>, но вы этим не занимаетесь!
+                  Ваше предназначение — <strong>{destiny?.title} (аркан {result.destiny})</strong>, но вы этим не занимаетесь!
+                </p>
+                <p className="text-gray-700 mb-2">
+                  <strong>Что это значит:</strong> {destiny?.career?.split(',').slice(0, 2).join(', ')}
                 </p>
                 <p className="text-sm text-gray-700 mb-2">Что происходит:</p>
                 <ul className="text-sm text-gray-700 space-y-1 ml-4 list-disc">
@@ -296,9 +302,12 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
               </div>
               
               <div className="p-5 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
-                <p className="font-bold text-yellow-900 mb-3 text-lg">❌ ПРОБЛЕМА #3: Вы носите маску {social?.title}</p>
+                <p className="font-bold text-yellow-900 mb-3 text-lg">❌ ПРОБЛЕМА #3: Вы носите маску {social?.title} (аркан {result.social})</p>
                 <p className="text-gray-800 mb-2">
-                  Люди видят вас как <strong>{social?.title}</strong>, но это НЕ настоящий вы! Это маска.
+                  Люди видят вас как <strong>{social?.title} (аркан {result.social})</strong>, но это НЕ настоящий вы! Это маска.
+                </p>
+                <p className="text-gray-700 mb-2">
+                  <strong>Что это значит:</strong> {social?.description?.split('.').slice(0, 1).join('.')}
                 </p>
                 <p className="text-sm text-gray-700 mb-2">Что происходит:</p>
                 <ul className="text-sm text-gray-700 space-y-1 ml-4 list-disc">
@@ -311,9 +320,12 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
               </div>
               
               <div className="p-5 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                <p className="font-bold text-purple-900 mb-3 text-lg">❌ ПРОБЛЕМА #4: У вас нет смысла жизни</p>
+                <p className="font-bold text-purple-900 mb-3 text-lg">❌ ПРОБЛЕМА #4: У вас нет смысла жизни — не развиваете {spiritual?.title} (аркан {result.spiritual})</p>
                 <p className="text-gray-800 mb-2">
-                  Ваша душа — <strong>{spiritual?.title}</strong>, но вы не развиваете эту часть себя.
+                  Ваша душа — <strong>{spiritual?.title} (аркан {result.spiritual})</strong>, но вы не развиваете эту часть себя.
+                </p>
+                <p className="text-gray-700 mb-2">
+                  <strong>Что это значит:</strong> {spiritual?.description?.split('.').slice(0, 1).join('.')}
                 </p>
                 <p className="text-sm text-gray-700 mb-2">Что происходит:</p>
                 <ul className="text-sm text-gray-700 space-y-1 ml-4 list-disc">
