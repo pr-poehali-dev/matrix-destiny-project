@@ -9,13 +9,15 @@ import ReactMarkdown from 'react-markdown';
 const categoryLabels = {
   psychology: 'Психология',
   coaching: 'Коучинг',
-  practice: 'Практика'
+  practice: 'Практика',
+  nutrition: 'Нутрициология'
 };
 
 const categoryColors = {
   psychology: 'bg-blue-500/10 text-blue-700 border-blue-500/20',
   coaching: 'bg-purple-500/10 text-purple-700 border-purple-500/20',
-  practice: 'bg-green-500/10 text-green-700 border-green-500/20'
+  practice: 'bg-green-500/10 text-green-700 border-green-500/20',
+  nutrition: 'bg-orange-500/10 text-orange-700 border-orange-500/20'
 };
 
 export default function BlogPost() {
