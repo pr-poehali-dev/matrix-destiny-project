@@ -762,7 +762,7 @@ export default function Index() {
               </div>
               {result && hasAccess && (
                 <div className="flex gap-2">
-                  {calculationHistory.length > 1 && (
+                  {calculationHistory.length >= 1 && (
                     <Button
                       onClick={() => setShowHistory(!showHistory)}
                       variant="outline"
@@ -791,7 +791,7 @@ export default function Index() {
             </div>
           </CardHeader>
           <CardContent className="space-y-4 pt-6">
-            {showHistory && calculationHistory.length > 1 && hasAccess && (
+            {showHistory && calculationHistory.length >= 1 && hasAccess && (
               <div className="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-950 dark:to-amber-950 rounded-lg border-2 border-amber-200 dark:border-amber-800">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-bold text-lg flex items-center gap-2">
