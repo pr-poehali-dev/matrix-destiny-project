@@ -137,6 +137,10 @@ export default function Index() {
       setResult(matrix);
       setShowPricing(true);
 
+      console.log('🔍 handleCalculate: email =', email);
+      console.log('🔍 handleCalculate: name =', name);
+      console.log('🔍 handleCalculate: birthDate =', birthDate);
+
       if (email) {
         localStorage.setItem('userEmail', email);
         
@@ -152,15 +156,21 @@ export default function Index() {
           calculatedAt: new Date().toISOString()
         };
         
+        console.log('💾 Saving calculation:', calculationData);
+        
         // Загружаем существующую историю
         const savedHistory = localStorage.getItem(`calculations_history_${email}`);
         let history = [];
         if (savedHistory) {
           try {
             history = JSON.parse(savedHistory);
+            console.log('📜 Loaded existing history:', history.length, 'items');
           } catch (e) {
+            console.error('❌ Failed to parse history:', e);
             history = [];
           }
+        } else {
+          console.log('📜 No existing history found');
         }
         
         // Добавляем новый расчёт в историю
@@ -168,12 +178,17 @@ export default function Index() {
         localStorage.setItem(`calculations_history_${email}`, JSON.stringify(history));
         setCalculationHistory(history);
         
+        console.log('✅ History saved! Total items:', history.length);
+        console.log('✅ localStorage key:', `calculations_history_${email}`);
+        
         try {
           const accessCheck = await checkAccess(email);
           setHasAccess(accessCheck.has_access);
         } catch (error) {
           console.error('Failed to check access:', error);
         }
+      } else {
+        console.warn('⚠️ Email is empty, history not saved!');
       }
     }
   };
