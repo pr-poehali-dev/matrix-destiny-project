@@ -1,14 +1,45 @@
+User-agent: *
+Allow: /
+Allow: /blog
+Allow: /blog/*
+Allow: /payment
+
+Disallow: /admin
+Disallow: /admin/*
+
+Sitemap: https://о-тебе.рф/sitemap.xml
+
+# Для Яндекса (важно для российской аудитории)
+User-agent: Yandex
+Allow: /
+Allow: /blog
+Allow: /blog/*
+Allow: /payment
+Disallow: /admin
+Disallow: /admin/*
+Crawl-delay: 0
+
+# Для Google
 User-agent: Googlebot
 Allow: /
+Allow: /blog
+Allow: /blog/*
+Allow: /payment
+Disallow: /admin
+Disallow: /admin/*
 
+# Для Bing
 User-agent: Bingbot
 Allow: /
+Allow: /blog
+Allow: /blog/*
+Allow: /payment
+Disallow: /admin
+Disallow: /admin/*
 
+# Для социальных сетей
 User-agent: Twitterbot
 Allow: /
 
 User-agent: facebookexternalhit
-Allow: /
-
-User-agent: *
 Allow: /

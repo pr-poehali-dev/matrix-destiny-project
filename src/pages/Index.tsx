@@ -16,6 +16,7 @@ import { ProfessionalPromo } from '@/components/ProfessionalPromo';
 import { ProfessionalPromoMain } from '@/components/ProfessionalPromoMain';
 import { ProfessionalCases } from '@/components/ProfessionalCases';
 import { ProfessionalTestimonials } from '@/components/ProfessionalTestimonials';
+import { SEOContent } from '@/components/SEOContent';
 
 const calculateDestinyMatrix = (birthDate: string, name: string) => {
   const date = new Date(birthDate);
@@ -1143,6 +1144,8 @@ export default function Index() {
         <CTABlock onCalculate={scrollToCalculator} />
         
         <Testimonials />
+        
+        <SEOContent />
         
         {/* Футер с ссылкой на админ-панель */}
         <footer className="mt-16 py-8 border-t">
