@@ -142,21 +142,21 @@ const Payment = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <Card className="border-2 border-blue-300 shadow-2xl">
-            <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
+          <Card className="border-2 border-amber-300 shadow-2xl">
+            <CardHeader className="bg-gradient-to-r from-amber-50 to-yellow-50">
               <CardTitle className="flex items-center gap-2 text-2xl">
                 <div className="text-4xl">📱</div>
                 Способ 1: По номеру телефона
               </CardTitle>
-              <CardDescription className="text-base font-semibold text-blue-900">
+              <CardDescription className="text-base font-semibold text-amber-900">
                 ✅ С ЛЮБОГО банка (Сбер, Альфа, ВТБ и тд.) через СБП
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6 space-y-4">
-              <div className="bg-white/80 backdrop-blur p-5 rounded-lg border-2 border-blue-200">
+              <div className="bg-white/80 backdrop-blur p-5 rounded-lg border-2 border-amber-200">
                 <p className="text-sm text-gray-600 mb-2">Получатель (Т-Банк):</p>
                 <div className="flex items-center justify-between mb-3">
-                  <p className="font-bold text-2xl text-blue-900">+7 921 765-34-01</p>
+                  <p className="font-bold text-2xl text-amber-900">+7 921 765-34-01</p>
                   <Button
                     variant="outline"
                     size="sm"
@@ -173,16 +173,16 @@ const Payment = () => {
                 </p>
               </div>
 
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 p-5 rounded-lg">
-                <p className="text-sm text-blue-900 font-bold mb-3 flex items-center gap-2">
+              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-300 p-5 rounded-lg">
+                <p className="text-sm text-amber-900 font-bold mb-3 flex items-center gap-2">
                   <Icon name="Smartphone" size={16} />
                   📲 Как оплатить:
                 </p>
-                <ol className="text-sm text-blue-900 space-y-2 list-decimal ml-4">
+                <ol className="text-sm text-amber-900 space-y-2 list-decimal ml-4">
                   <li>Откройте ваше банковское приложение</li>
                   <li>Выберите <strong>"Переводы"</strong> → <strong>"По номеру телефона"</strong></li>
                   <li>Введите номер: <strong>+7 921 765-34-01</strong></li>
-                  <li>Укажите сумму: <strong className="text-blue-700">{plans[selectedPlan].price} ₽</strong></li>
+                  <li>Укажите сумму: <strong className="text-amber-700">{plans[selectedPlan].price} ₽</strong></li>
                   <li>Подтвердите перевод через СБП</li>
                   <li className="font-bold text-green-700">Сделайте скриншот подтверждения!</li>
                 </ol>

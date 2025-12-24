@@ -3,12 +3,12 @@ import Icon from '@/components/ui/icon';
 
 export const ProfessionalPromo = () => {
   return (
-    <Card className="bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-2xl mb-8">
+    <Card className="bg-gradient-to-br from-amber-600 to-yellow-600 text-white shadow-2xl mb-8">
       <CardContent className="p-8">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
           🎯 Матрица Судьбы — Универсальный Инструмент для Профессионалов
         </h2>
-        <p className="text-lg text-center mb-8 text-purple-100">
+        <p className="text-lg text-center mb-8 text-amber-50">
           Узнайте о человеке ВСЁ за 5 минут: характер, таланты, здоровье, отношения, деньги, предназначение
         </p>
         
@@ -16,7 +16,7 @@ export const ProfessionalPromo = () => {
           <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl hover:bg-white/20 transition-all">
             <div className="text-5xl mb-4 text-center">👨‍💼</div>
             <h3 className="font-bold text-xl mb-3 text-center">HR и Рекрутеры</h3>
-            <p className="text-sm text-purple-100">
+            <p className="text-sm text-amber-50">
               Подбирайте идеальных кандидатов, оценивайте совместимость команды, предсказывайте успешность в должности. Снижайте текучесть кадров на 40%.
             </p>
           </div>
@@ -24,7 +24,7 @@ export const ProfessionalPromo = () => {
           <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl hover:bg-white/20 transition-all">
             <div className="text-5xl mb-4 text-center">🧠</div>
             <h3 className="font-bold text-xl mb-3 text-center">Психологи и Коучи</h3>
-            <p className="text-sm text-purple-100">
+            <p className="text-sm text-amber-50">
               Мгновенно определяйте блоки клиента, кармические задачи, сильные стороны и точки роста для терапии. Первая консультация становится прорывной.
             </p>
           </div>
@@ -32,7 +32,7 @@ export const ProfessionalPromo = () => {
           <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl hover:bg-white/20 transition-all">
             <div className="text-5xl mb-4 text-center">🥗</div>
             <h3 className="font-bold text-xl mb-3 text-center">Нутрициологи</h3>
-            <p className="text-sm text-purple-100">
+            <p className="text-sm text-amber-50">
               Выявляйте слабые органы, склонности к болезням, психосоматические причины проблем со здоровьем. Составляйте персонализированные планы питания.
             </p>
           </div>
@@ -45,7 +45,7 @@ export const ProfessionalPromo = () => {
               <span className="text-2xl">✅</span>
               <div>
                 <p className="font-semibold mb-1">Глубинное понимание человека</p>
-                <p className="text-purple-100">Его истинная природа, таланты, блоки, кармические задачи — всё на основе даты рождения</p>
+                <p className="text-amber-50">Его истинная природа, таланты, блоки, кармические задачи — всё на основе даты рождения</p>
               </div>
             </div>
             
@@ -53,7 +53,7 @@ export const ProfessionalPromo = () => {
               <span className="text-2xl">✅</span>
               <div>
                 <p className="font-semibold mb-1">Точная диагностика</p>
-                <p className="text-purple-100">По 4 аспектам: личность, предназначение, социум, духовность. Полная картина за минуты</p>
+                <p className="text-amber-50">По 4 аспектам: личность, предназначение, социум, духовность. Полная картина за минуты</p>
               </div>
             </div>
             
@@ -61,7 +61,7 @@ export const ProfessionalPromo = () => {
               <span className="text-2xl">✅</span>
               <div>
                 <p className="font-semibold mb-1">Безлимитная подписка: все расчёты сохраняются</p>
-                <p className="text-purple-100">От 1000₽/мес — рассчитывайте сколько угодно клиентов, все матрицы доступны во время сессий</p>
+                <p className="text-amber-50">От 1000₽/мес — рассчитывайте сколько угодно клиентов, все матрицы доступны во время сессий</p>
               </div>
             </div>
             
@@ -69,7 +69,7 @@ export const ProfessionalPromo = () => {
               <span className="text-2xl">✅</span>
               <div>
                 <p className="font-semibold mb-1">Прогноз совместимости</p>
-                <p className="text-purple-100">В команде, в паре, в бизнесе. Предотвращайте конфликты до их возникновения</p>
+                <p className="text-amber-50">В команде, в паре, в бизнесе. Предотвращайте конфликты до их возникновения</p>
               </div>
             </div>
             
@@ -77,7 +77,7 @@ export const ProfessionalPromo = () => {
               <span className="text-2xl">✅</span>
               <div>
                 <p className="font-semibold mb-1">Карта здоровья</p>
-                <p className="text-purple-100">Слабые органы, психосоматика, зоны риска. Превентивный подход к лечению</p>
+                <p className="text-amber-50">Слабые органы, психосоматика, зоны риска. Превентивный подход к лечению</p>
               </div>
             </div>
             
@@ -85,7 +85,7 @@ export const ProfessionalPromo = () => {
               <span className="text-2xl">✅</span>
               <div>
                 <p className="font-semibold mb-1">Финансовый потенциал</p>
-                <p className="text-purple-100">Как человеку лучше зарабатывать и в какой сфере. Раскрывайте денежный код</p>
+                <p className="text-amber-50">Как человеку лучше зарабатывать и в какой сфере. Раскрывайте денежный код</p>
               </div>
             </div>
             
@@ -93,7 +93,7 @@ export const ProfessionalPromo = () => {
               <span className="text-2xl">✅</span>
               <div>
                 <p className="font-semibold mb-1">Сильные и слабые стороны</p>
-                <p className="text-purple-100">Что развивать, что компенсировать. Персональная стратегия роста</p>
+                <p className="text-amber-50">Что развивать, что компенсировать. Персональная стратегия роста</p>
               </div>
             </div>
           </div>
@@ -116,15 +116,15 @@ export const ProfessionalPromo = () => {
               <div className="grid md:grid-cols-3 gap-4 mt-4 text-sm">
                 <div className="bg-white/10 p-3 rounded-lg">
                   <p className="font-bold mb-1">⚡ Экономия времени</p>
-                  <p className="text-purple-100">Анализ за 5 минут vs 3-5 сессий</p>
+                  <p className="text-amber-50">Анализ за 5 минут vs 3-5 сессий</p>
                 </div>
                 <div className="bg-white/10 p-3 rounded-lg">
                   <p className="font-bold mb-1">🎯 Точность 95%+</p>
-                  <p className="text-purple-100">Проверено тысячами кейсов</p>
+                  <p className="text-amber-50">Проверено тысячами кейсов</p>
                 </div>
                 <div className="bg-white/10 p-3 rounded-lg">
                   <p className="font-bold mb-1">💎 Конкурентное преимущество</p>
-                  <p className="text-purple-100">Уникальный подход в работе</p>
+                  <p className="text-amber-50">Уникальный подход в работе</p>
                 </div>
               </div>
             </div>
