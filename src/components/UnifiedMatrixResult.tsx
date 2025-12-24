@@ -34,7 +34,7 @@ const extractSources = (finance: string | undefined) => {
   return sourcesSection?.split('\n\n')[0]?.trim() || '';
 };
 
-export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultProps) => {
+export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMatrixResultProps) => {
   if (!hasAccess) return null;
 
   const personal = energyDescriptions[result.personal];
