@@ -839,6 +839,12 @@ export default function Index() {
                 placeholder="Введите ваше имя"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (name && birthDate && email) handleCalculate();
+                  }
+                }}
                 className="text-lg"
               />
             </div>
@@ -849,6 +855,12 @@ export default function Index() {
                 placeholder="your@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (name && birthDate && email) handleCalculate();
+                  }
+                }}
                 className="text-lg"
               />
             </div>
@@ -858,12 +870,19 @@ export default function Index() {
                 type="date"
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (name && birthDate && email) handleCalculate();
+                  }
+                }}
                 max={new Date().toISOString().split('T')[0]}
                 className="text-lg"
               />
             </div>
             <Button 
               onClick={handleCalculate}
+              type="button"
               disabled={!name || !birthDate || !email}
               className="w-full hover-scale text-lg py-6 relative overflow-hidden group"
               size="lg"
