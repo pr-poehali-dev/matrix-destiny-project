@@ -136,9 +136,6 @@ export default function BlogPost() {
               <CardTitle className="text-2xl mb-2">
                 Готовы попробовать на практике?
               </CardTitle>
-              <CardDescription className="text-base">
-                Получите 7 дней бесплатного доступа ко всем функциям
-              </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-4">
               <Link to="/payment">

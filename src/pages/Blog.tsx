@@ -111,9 +111,6 @@ export default function Blog() {
             <CardTitle className="text-3xl mb-4">
               Начните использовать матрицу в работе
             </CardTitle>
-            <CardDescription className="text-base">
-              Получите 7 дней бесплатного доступа ко всем функциям сервиса
-            </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center gap-4">
             <div className="grid md:grid-cols-3 gap-4 w-full mb-6">
