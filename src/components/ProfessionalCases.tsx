@@ -102,7 +102,7 @@ export const ProfessionalCases = () => {
     <div className="py-12 bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
             📚 Реальные Кейсы Применения Матрицы Судьбы
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -157,14 +157,14 @@ export const ProfessionalCases = () => {
           })}
         </div>
 
-        <div className="mt-12 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-8 text-white shadow-2xl">
+        <div className="mt-12 bg-gradient-to-r from-amber-600 to-yellow-600 rounded-2xl p-8 text-white shadow-2xl">
           <div className="text-center max-w-4xl mx-auto">
             <h3 className="text-3xl font-bold mb-4">🚀 Почему матрица работает в каждом кейсе?</h3>
             <div className="grid md:grid-cols-3 gap-6 text-left">
               <div className="bg-white/10 backdrop-blur-sm p-5 rounded-xl">
                 <div className="text-3xl mb-3">⚡</div>
                 <h4 className="font-bold text-lg mb-2">Скорость диагностики</h4>
-                <p className="text-purple-100 text-sm">
+                <p className="text-amber-100 text-sm">
                   5 минут на расчёт vs недели наблюдений. Сразу видны глубинные паттерны и блоки.
                 </p>
               </div>
@@ -172,7 +172,7 @@ export const ProfessionalCases = () => {
               <div className="bg-white/10 backdrop-blur-sm p-5 rounded-xl">
                 <div className="text-3xl mb-3">🎯</div>
                 <h4 className="font-bold text-lg mb-2">Точность попадания</h4>
-                <p className="text-purple-100 text-sm">
+                <p className="text-amber-100 text-sm">
                   95%+ совпадений по отзывам. Матрица основана на дате рождения — неизменной константе.
                 </p>
               </div>
@@ -180,7 +180,7 @@ export const ProfessionalCases = () => {
               <div className="bg-white/10 backdrop-blur-sm p-5 rounded-xl">
                 <div className="text-3xl mb-3">🔑</div>
                 <h4 className="font-bold text-lg mb-2">Ключ к решению</h4>
-                <p className="text-purple-100 text-sm">
+                <p className="text-amber-100 text-sm">
                   Показывает не только проблему, но и путь решения через энергии предназначения.
                 </p>
               </div>

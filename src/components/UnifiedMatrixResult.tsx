@@ -22,12 +22,12 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
   const spiritual = energyDescriptions[result.spiritual];
 
   return (
-    <Card className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-2 border-indigo-300 shadow-2xl mb-8">
+    <Card className="bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 border-2 border-amber-300 shadow-2xl mb-8">
       <CardHeader className="text-center space-y-4 pb-8">
-        <CardTitle className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+        <CardTitle className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-yellow-600">
           🎯 ПОЛНЫЙ ПОРТРЕТ ЛИЧНОСТИ
         </CardTitle>
-        <p className="text-xl text-indigo-900 font-semibold">
+        <p className="text-xl text-amber-900 font-semibold">
           {result.name} — Кто вы, что делать, как жить
         </p>
         <p className="text-base text-gray-700 max-w-3xl mx-auto">
@@ -38,8 +38,8 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
 
       <CardContent className="space-y-8">
         {/* ГЛАВНОЕ: КТО ЭТОТ ЧЕЛОВЕК */}
-        <div className="bg-gradient-to-r from-indigo-100 to-purple-100 p-6 rounded-2xl border-2 border-indigo-300 shadow-xl">
-          <h3 className="text-2xl font-bold text-indigo-900 mb-4 flex items-center gap-3">
+        <div className="bg-gradient-to-r from-amber-100 to-yellow-100 p-6 rounded-2xl border-2 border-amber-300 shadow-xl">
+          <h3 className="text-2xl font-bold text-amber-900 mb-4 flex items-center gap-3">
             <Icon name="User" size={28} />
             👤 КТО ЭТОТ ЧЕЛОВЕК
           </h3>
@@ -47,14 +47,14 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
           <div className="space-y-4 text-base leading-relaxed">
             <div className="bg-white/80 p-5 rounded-xl shadow-md">
               <p className="text-gray-800">
-                <strong className="text-indigo-900 text-lg">Личная энергия ({result.personal} - {personal?.title}):</strong><br/>
+                <strong className="text-amber-900 text-lg">Личная энергия ({result.personal} - {personal?.title}):</strong><br/>
                 {personal?.description}
               </p>
             </div>
 
             <div className="bg-white/80 p-5 rounded-xl shadow-md">
               <p className="text-gray-800">
-                <strong className="text-purple-900 text-lg">Предназначение ({result.destiny} - {destiny?.title}):</strong><br/>
+                <strong className="text-amber-900 text-lg">Предназначение ({result.destiny} - {destiny?.title}):</strong><br/>
                 {destiny?.description}
               </p>
             </div>

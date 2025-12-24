@@ -97,14 +97,14 @@ export const ProfessionalTestimonials = () => {
   };
 
   return (
-    <div className="py-16 bg-gradient-to-b from-white via-purple-50/30 to-white">
+    <div className="py-16 bg-gradient-to-b from-white via-amber-50/30 to-white">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 text-purple-800 text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 text-amber-800 text-sm font-medium mb-4">
             <Icon name="Star" size={16} />
             <span>Проверено профессионалами</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
             💬 Отзывы Профессионалов о Матрице Судьбы
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -154,7 +154,7 @@ export const ProfessionalTestimonials = () => {
           })}
         </div>
 
-        <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white shadow-2xl">
+        <div className="bg-gradient-to-r from-amber-600 via-yellow-600 to-amber-600 rounded-2xl p-8 md:p-12 text-white shadow-2xl">
           <div className="max-w-5xl mx-auto">
             <h3 className="text-3xl md:text-4xl font-bold text-center mb-8">
               🏆 Почему профессионалы выбирают Матрицу Судьбы
@@ -166,7 +166,7 @@ export const ProfessionalTestimonials = () => {
                   <div className="text-4xl">⚡</div>
                   <div>
                     <h4 className="font-bold text-xl mb-2">Мгновенная диагностика</h4>
-                    <p className="text-purple-100 text-sm">
+                    <p className="text-amber-100 text-sm">
                       5 минут vs недели наблюдений. Сразу видны глубинные паттерны, блоки, таланты и задачи клиента. Экономия времени в 10-20 раз.
                     </p>
                   </div>
@@ -178,7 +178,7 @@ export const ProfessionalTestimonials = () => {
                   <div className="text-4xl">🎯</div>
                   <div>
                     <h4 className="font-bold text-xl mb-2">Точность 95%+</h4>
-                    <p className="text-purple-100 text-sm">
+                    <p className="text-amber-100 text-sm">
                       Основано на дате рождения — неизменной константе. Тысячи проверенных кейсов. Клиенты подтверждают точность описания в 95% случаев.
                     </p>
                   </div>
@@ -190,7 +190,7 @@ export const ProfessionalTestimonials = () => {
                   <div className="text-4xl">💎</div>
                   <div>
                     <h4 className="font-bold text-xl mb-2">Глубина анализа</h4>
-                    <p className="text-purple-100 text-sm">
+                    <p className="text-amber-100 text-sm">
                       22 аркана × 4 аспекта × 4 сферы = полная карта личности. Здоровье, отношения, финансы, предназначение — всё в одном расчёте.
                     </p>
                   </div>
@@ -202,7 +202,7 @@ export const ProfessionalTestimonials = () => {
                   <div className="text-4xl">🚀</div>
                   <div>
                     <h4 className="font-bold text-xl mb-2">Конкурентное преимущество</h4>
-                    <p className="text-purple-100 text-sm">
+                    <p className="text-amber-100 text-sm">
                       Уникальный подход в работе. Повышение стоимости услуг на 30-50%. Рост лояльности клиентов и количества рекомендаций.
                     </p>
                   </div>
