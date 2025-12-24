@@ -582,8 +582,8 @@ export default function Index() {
               <h3 className="font-bold mb-2">Финансы</h3>
               <p className="text-sm text-muted-foreground">Денежное предназначение</p>
             </div>
-            <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-blue-100 dark:border-blue-900">
-              <Icon name="Activity" size={32} className="text-blue-600 mx-auto mb-3" />
+            <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-amber-100 dark:border-amber-900">
+              <Icon name="Activity" size={32} className="text-amber-600 mx-auto mb-3" />
               <h3 className="font-bold mb-2">Здоровье</h3>
               <p className="text-sm text-muted-foreground">Зоны внимания и рекомендации</p>
             </div>
@@ -595,7 +595,7 @@ export default function Index() {
         <ProfessionalPromoMain />
 
         <Card className="mb-8 shadow-xl border-2" ref={calculatorRef}>
-          <CardHeader className="bg-gradient-to-r from-primary/10 via-purple-600/10 to-pink-600/10">
+          <CardHeader className="bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 dark:from-yellow-950 dark:via-amber-950 dark:to-orange-950">
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-2xl flex items-center gap-2">
@@ -638,10 +638,10 @@ export default function Index() {
           </CardHeader>
           <CardContent className="space-y-4 pt-6">
             {showHistory && calculationHistory.length > 1 && hasAccess && (
-              <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950 dark:to-indigo-950 rounded-lg border-2 border-purple-200 dark:border-purple-800">
+              <div className="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-950 dark:to-amber-950 rounded-lg border-2 border-amber-200 dark:border-amber-800">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-bold text-lg flex items-center gap-2">
-                    <Icon name="History" size={20} className="text-purple-600" />
+                    <Icon name="History" size={20} className="text-amber-600" />
                     История расчётов ({calculationHistory.length})
                   </h3>
                   <Button
@@ -670,11 +670,11 @@ export default function Index() {
                         setShowHistory(false);
                         detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                       }}
-                      className="p-3 text-left bg-white dark:bg-gray-800 rounded-lg border border-purple-200 dark:border-purple-700 hover:border-purple-400 hover:shadow-md transition-all"
+                      className="p-3 text-left bg-white dark:bg-gray-800 rounded-lg border border-amber-200 dark:border-amber-700 hover:border-amber-400 hover:shadow-md transition-all"
                     >
                       <p className="font-semibold text-sm">{calc.name}</p>
                       <p className="text-xs text-muted-foreground">{new Date(calc.birthDate).toLocaleDateString('ru-RU')}</p>
-                      <p className="text-xs text-purple-600 dark:text-purple-400 mt-1">
+                      <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
                         {new Date(calc.calculatedAt).toLocaleDateString('ru-RU')} в {new Date(calc.calculatedAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </button>
@@ -752,7 +752,7 @@ export default function Index() {
         {result && (
           <div className="space-y-8">
             <Card className="shadow-xl border-2 border-primary/20">
-              <CardHeader className="bg-gradient-to-r from-primary/10 via-purple-600/10 to-pink-600/10">
+              <CardHeader className="bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 dark:from-yellow-950 dark:via-amber-950 dark:to-orange-950">
                 <CardTitle className="text-2xl flex items-center gap-2">
                   <Icon name="User" size={24} />
                   Ваша Матрица Судьбы, {result.name}
@@ -770,16 +770,16 @@ export default function Index() {
                         detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                       }
                     }}
-                    className={`p-6 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900 border-2 border-blue-200 dark:border-blue-800 text-left transition-all ${hasAccess ? 'hover:shadow-xl hover:scale-105 cursor-pointer' : 'cursor-default'}`}
+                    className={`p-6 rounded-lg bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900 border-2 border-amber-200 dark:border-amber-800 text-left transition-all ${hasAccess ? 'hover:shadow-xl hover:scale-105 cursor-pointer' : 'cursor-default'}`}
                   >
                     <div className="flex items-center gap-2 mb-2">
-                      <Icon name="User" size={20} className="text-blue-600" />
-                      <h3 className="font-bold text-blue-900 dark:text-blue-100">Личное</h3>
+                      <Icon name="User" size={20} className="text-amber-600" />
+                      <h3 className="font-bold text-amber-900 dark:text-amber-100">Личное</h3>
                     </div>
-                    <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">{result.personal}</p>
-                    <p className="text-sm text-blue-700 dark:text-blue-300 mt-2">Ваше истинное Я</p>
+                    <p className="text-4xl font-bold text-amber-600 dark:text-amber-400">{result.personal}</p>
+                    <p className="text-sm text-amber-700 dark:text-amber-300 mt-2">Ваше истинное Я</p>
                     {hasAccess && (
-                      <p className="text-xs text-blue-600 dark:text-blue-400 mt-2 flex items-center gap-1">
+                      <p className="text-xs text-amber-600 dark:text-amber-400 mt-2 flex items-center gap-1">
                         <Icon name="ChevronDown" size={14} />
                         Нажмите для подробностей
                       </p>
@@ -793,16 +793,16 @@ export default function Index() {
                         detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                       }
                     }}
-                    className={`p-6 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-2 border-purple-200 dark:border-purple-800 text-left transition-all ${hasAccess ? 'hover:shadow-xl hover:scale-105 cursor-pointer' : 'cursor-default'}`}
+                    className={`p-6 rounded-lg bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-950 dark:to-yellow-900 border-2 border-yellow-200 dark:border-yellow-800 text-left transition-all ${hasAccess ? 'hover:shadow-xl hover:scale-105 cursor-pointer' : 'cursor-default'}`}
                   >
                     <div className="flex items-center gap-2 mb-2">
-                      <Icon name="Target" size={20} className="text-purple-600" />
-                      <h3 className="font-bold text-purple-900 dark:text-purple-100">Предназначение</h3>
+                      <Icon name="Target" size={20} className="text-yellow-600" />
+                      <h3 className="font-bold text-yellow-900 dark:text-yellow-100">Предназначение</h3>
                     </div>
-                    <p className="text-4xl font-bold text-purple-600 dark:text-purple-400">{result.destiny}</p>
-                    <p className="text-sm text-purple-700 dark:text-purple-300 mt-2">Ваша миссия</p>
+                    <p className="text-4xl font-bold text-yellow-600 dark:text-yellow-400">{result.destiny}</p>
+                    <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-2">Ваша миссия</p>
                     {hasAccess && (
-                      <p className="text-xs text-purple-600 dark:text-purple-400 mt-2 flex items-center gap-1">
+                      <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-2 flex items-center gap-1">
                         <Icon name="ChevronDown" size={14} />
                         Нажмите для подробностей
                       </p>
@@ -871,14 +871,14 @@ export default function Index() {
             </div>
 
             {hasAccess ? (
-              <Card className="bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-300 shadow-2xl">
+              <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-amber-300 shadow-2xl">
                 <CardContent className="p-8">
                   <div className="text-center space-y-4">
-                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full mb-4">
+                    <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full mb-4">
                       <Icon name="Share2" size={40} className="text-white" />
                     </div>
                     
-                    <h3 className="text-3xl font-bold text-purple-900">
+                    <h3 className="text-3xl font-bold text-amber-900">
                       📋 Скопировать весь отчёт
                     </h3>
                     
@@ -891,7 +891,7 @@ export default function Index() {
                     <Button
                       onClick={handleShare}
                       size="lg"
-                      className="text-xl px-12 py-8 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-2xl hover:shadow-3xl transition-all hover:scale-105"
+                      className="text-xl px-12 py-8 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 shadow-2xl hover:shadow-3xl transition-all hover:scale-105"
                     >
                       <Icon name="Copy" size={24} className="mr-3" />
                       Скопировать полный отчёт
@@ -908,7 +908,7 @@ export default function Index() {
               </Card>
             ) : showPricing ? (
               <Card className="shadow-xl border-2 border-primary">
-                <CardHeader className="bg-gradient-to-r from-primary/10 via-purple-600/10 to-pink-600/10">
+                <CardHeader className="bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 dark:from-yellow-950 dark:via-amber-950 dark:to-orange-950">
                   <CardTitle className="text-2xl flex items-center gap-2">
                     <Icon name="Sparkles" size={24} />
                     Получить полную расшифровку
@@ -962,12 +962,12 @@ export default function Index() {
                     ))}
                   </div>
 
-                  <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <div className="mt-8 p-4 bg-amber-50 dark:bg-amber-950 rounded-lg border border-amber-200 dark:border-amber-800">
                     <div className="flex items-start gap-3">
-                      <Icon name="Info" size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
-                      <div className="text-sm text-blue-900 dark:text-blue-100">
+                      <Icon name="Info" size={20} className="text-amber-600 flex-shrink-0 mt-0.5" />
+                      <div className="text-sm text-amber-900 dark:text-amber-100">
                         <p className="font-medium mb-1">Что входит в полную расшифровку:</p>
-                        <ul className="space-y-1 text-blue-800 dark:text-blue-200">
+                        <ul className="space-y-1 text-amber-800 dark:text-amber-200">
                           <li>• Детальный анализ всех 4 энергий (личной, предназначения, социальной, духовной)</li>
                           <li>• Рекомендации по здоровью с указанием слабых зон</li>
                           <li>• Анализ отношений и совместимости</li>
