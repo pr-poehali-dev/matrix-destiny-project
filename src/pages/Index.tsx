@@ -435,8 +435,10 @@ export default function Index() {
       <LiveNotifications />
       
       {/* Профессиональный баннер */}
-      <div className="bg-gradient-to-r from-yellow-600 via-amber-600 to-orange-600 text-gray-900 py-3 shadow-lg">
-        <div className="container mx-auto px-4">
+      <div className="relative overflow-hidden bg-gradient-to-r from-yellow-600 via-amber-600 to-orange-600 text-gray-900 py-3 shadow-lg">
+        {/* Золотой блеск */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer"></div>
+        <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col md:flex-row items-center justify-center gap-3 text-center">
             <div className="flex items-center gap-2 bg-white/30 backdrop-blur-sm px-4 py-1.5 rounded-full">
               <Icon name="Briefcase" size={18} />
