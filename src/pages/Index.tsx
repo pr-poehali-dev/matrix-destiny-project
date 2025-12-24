@@ -1140,9 +1140,9 @@ export default function Index() {
           </div>
         )}
 
-        <ProfessionalTestimonials />
+        {/* <ProfessionalTestimonials /> */}
 
-        <TestimonialsStats />
+        {/* <TestimonialsStats /> */}
 
         <CTABlock onCalculate={scrollToCalculator} />
         
