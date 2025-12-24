@@ -4,7 +4,7 @@ import Icon from '@/components/ui/icon';
 export const ProfessionalPromoMain = () => {
   return (
     <div className="my-16">
-      <Card className="bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 text-white shadow-2xl border-none overflow-hidden relative">
+      <Card className="bg-gradient-to-br from-amber-600 via-yellow-600 to-orange-600 text-white shadow-2xl border-none overflow-hidden relative">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzBoMnYyaC0yVjMwem0tMiAwaDJ2MmgtMlYzMHptLTIgMGgydjJoLTJWMzB6bS0yIDBoMnYyaC0yVjMwem0tMiAwaDJ2MmgtMlYzMHptLTIgMGgydjJoLTJWMzB6bS0yIDBoMnYyaC0yVjMwem0tMiAwaDJ2MmgtMlYzMHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-20"></div>
         
         <CardContent className="relative p-8 md:p-12">
@@ -18,7 +18,7 @@ export const ProfessionalPromoMain = () => {
                 💼 Для Профессионалов
               </h2>
               
-              <p className="text-xl md:text-2xl text-purple-100 max-w-4xl mx-auto leading-relaxed">
+              <p className="text-xl md:text-2xl text-amber-50 max-w-4xl mx-auto leading-relaxed">
                 <strong>Матрица Судьбы</strong> — незаменимый инструмент для HR, психологов, нутрициологов и коучей. 
                 Узнайте о человеке <strong className="text-yellow-300">ВСЁ за 5 минут</strong> и помогайте клиентам быстрее и эффективнее!
               </p>
@@ -27,17 +27,17 @@ export const ProfessionalPromoMain = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
               <div className="bg-white/15 backdrop-blur-md p-6 rounded-2xl border-2 border-white/30 hover:bg-white/25 hover:scale-105 transition-all duration-300 shadow-xl">
                 <div className="text-6xl mb-4 text-center">👨‍💼</div>
-                <h3 className="font-bold text-2xl mb-3 text-center text-yellow-300">HR и Рекрутеры</h3>
+                <h3 className="font-bold text-2xl mb-3 text-center text-white">HR и Рекрутеры</h3>
                 <p className="text-white/95 text-center leading-relaxed">
                   <strong>Подбирайте идеальных кандидатов</strong> за 5 минут! 
                   Видите совместимость с командой, мотивацию, потенциал роста. 
-                  Снижайте текучесть на <strong className="text-yellow-300">40%</strong>.
+                  Снижайте текучесть на <strong className="text-white">40%</strong>.
                 </p>
               </div>
 
               <div className="bg-white/15 backdrop-blur-md p-6 rounded-2xl border-2 border-white/30 hover:bg-white/25 hover:scale-105 transition-all duration-300 shadow-xl">
                 <div className="text-6xl mb-4 text-center">🧠</div>
-                <h3 className="font-bold text-2xl mb-3 text-center text-yellow-300">Психологи и Коучи</h3>
+                <h3 className="font-bold text-2xl mb-3 text-center text-white">Психологи и Коучи</h3>
                 <p className="text-white/95 text-center leading-relaxed">
                   <strong>Мгновенная диагностика</strong> глубинных блоков клиента! 
                   Первая консультация становится прорывной. 
@@ -47,27 +47,27 @@ export const ProfessionalPromoMain = () => {
 
               <div className="bg-white/15 backdrop-blur-md p-6 rounded-2xl border-2 border-white/30 hover:bg-white/25 hover:scale-105 transition-all duration-300 shadow-xl">
                 <div className="text-6xl mb-4 text-center">🍎</div>
-                <h3 className="font-bold text-2xl mb-3 text-center text-yellow-300">Нутрициологи</h3>
+                <h3 className="font-bold text-2xl mb-3 text-center text-white">Нутрициологи</h3>
                 <p className="text-white/95 text-center leading-relaxed">
                   <strong>Видите все слабые зоны</strong> здоровья сразу! 
                   Понимаете, почему клиент не худеет (психосоматика, блоки). 
-                  Результаты в <strong className="text-yellow-300">3 раза быстрее</strong>.
+                  Результаты в <strong className="text-white">3 раза быстрее</strong>.
                 </p>
               </div>
 
               <div className="bg-white/15 backdrop-blur-md p-6 rounded-2xl border-2 border-white/30 hover:bg-white/25 hover:scale-105 transition-all duration-300 shadow-xl">
                 <div className="text-6xl mb-4 text-center">📈</div>
-                <h3 className="font-bold text-2xl mb-3 text-center text-yellow-300">Бизнес-Коучи</h3>
+                <h3 className="font-bold text-2xl mb-3 text-center text-white">Бизнес-Коучи</h3>
                 <p className="text-white/95 text-center leading-relaxed">
                   <strong>Находите зону гениальности</strong> клиента мгновенно! 
                   Видите, почему нет денег и как их привлечь. 
-                  Выводите на <strong className="text-yellow-300">×10 доход</strong>.
+                  Выводите на <strong className="text-white">×10 доход</strong>.
                 </p>
               </div>
             </div>
 
             <div className="bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-md p-8 rounded-2xl border-2 border-yellow-300/50 shadow-2xl">
-              <h3 className="text-3xl font-bold text-center mb-6 text-yellow-300">
+              <h3 className="text-3xl font-bold text-center mb-6 text-white">
                 ⚡ Что Даёт Матрица Профессионалам:
               </h3>
               
@@ -136,11 +136,11 @@ export const ProfessionalPromoMain = () => {
 
             <div className="mt-10 text-center">
               <div className="bg-white/20 backdrop-blur-md p-6 rounded-2xl border-2 border-white/40 inline-block shadow-2xl">
-                <p className="text-2xl font-bold mb-2 text-yellow-300">
+                <p className="text-2xl font-bold mb-2 text-white">
                   🎯 Уже <span className="text-4xl">10,000+</span> профессионалов используют Матрицу
                 </p>
                 <p className="text-xl text-white/95">
-                  Психологи, HR, нутрициологи, коучи экономят <strong className="text-yellow-300">часы</strong> времени на диагностике
+                  Психологи, HR, нутрициологи, коучи экономят <strong className="text-white">часы</strong> времени на диагностике
                 </p>
               </div>
             </div>
@@ -149,11 +149,11 @@ export const ProfessionalPromoMain = () => {
               <p className="text-lg text-white/90 mb-4">
                 💡 <strong>Это не гадание, а научный инструмент</strong> на основе нумерологии и психологии
               </p>
-              <p className="text-3xl font-bold text-yellow-300 drop-shadow-lg">
+              <p className="text-3xl font-bold text-white drop-shadow-lg">
                 ⏱️ Всего от 300₽ — и вы видите полную картину личности клиента!
               </p>
               <p className="text-xl text-white/90 mt-4">
-                💼 <strong className="text-yellow-300">Безлимитная подписка от 1000₽/мес</strong> — рассчитывайте матрицы всех клиентов, все расчёты сохраняются и всегда под рукой
+                💼 <strong className="text-white">Безлимитная подписка от 1000₽/мес</strong> — рассчитывайте матрицы всех клиентов, все расчёты сохраняются и всегда под рукой
               </p>
             </div>
           </div>
