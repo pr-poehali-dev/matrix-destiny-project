@@ -716,11 +716,13 @@ export default function Index() {
             <Button 
               onClick={handleCalculate}
               disabled={!name || !birthDate || !email}
-              className="w-full hover-scale text-lg py-6"
+              className="w-full hover-scale text-lg py-6 relative overflow-hidden group"
               size="lg"
             >
-              <Icon name="Sparkles" size={20} className="mr-2" />
-              Рассчитать матрицу
+              {/* Золотой блеск */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+              <Icon name="Sparkles" size={20} className="mr-2 relative z-10" />
+              <span className="relative z-10">Рассчитать матрицу</span>
             </Button>
 
             {/* Админ доступ (скрытая секция) */}
