@@ -435,23 +435,23 @@ export default function Index() {
       <LiveNotifications />
       
       {/* Профессиональный баннер */}
-      <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white py-3 shadow-lg">
+      <div className="bg-gradient-to-r from-yellow-600 via-amber-600 to-orange-600 text-gray-900 py-3 shadow-lg">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-center gap-3 text-center">
-            <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-1.5 rounded-full">
+            <div className="flex items-center gap-2 bg-white/30 backdrop-blur-sm px-4 py-1.5 rounded-full">
               <Icon name="Briefcase" size={18} />
               <span className="font-bold text-sm">ДЛЯ ПРОФЕССИОНАЛОВ</span>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
               <span className="font-semibold">👨‍💼 HR</span>
-              <span className="text-white/60">•</span>
+              <span className="text-gray-700">•</span>
               <span className="font-semibold">🧠 Психологи</span>
-              <span className="text-white/60">•</span>
+              <span className="text-gray-700">•</span>
               <span className="font-semibold">📈 Коучи</span>
-              <span className="text-white/60">•</span>
+              <span className="text-gray-700">•</span>
               <span className="font-semibold">🍎 Нутрициологи</span>
             </div>
-            <div className="hidden md:block text-white/40">•</div>
+            <div className="hidden md:block text-gray-700">•</div>
             <p className="text-sm font-semibold">
               🎯 Полный анализ клиента за 5 минут • От 300₽
             </p>
@@ -484,7 +484,7 @@ export default function Index() {
           <Button 
             onClick={scrollToCalculator}
             size="lg"
-            className="text-lg px-8 py-6 bg-white text-primary hover:bg-white/90 shadow-2xl hover:scale-105 transition-all"
+            className="text-lg px-8 py-6 bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 text-gray-900 hover:from-yellow-400 hover:via-amber-400 hover:to-orange-400 shadow-2xl hover:scale-105 transition-all font-bold"
           >
             <Icon name="Calculator" size={20} className="mr-2" />
             Рассчитать свою матрицу
