@@ -760,7 +760,7 @@ export default function Index() {
                   {result && hasAccess ? 'Рассчитайте матрицу для другого человека' : 'Введите данные для расчета вашей уникальной матрицы'}
                 </CardDescription>
               </div>
-              {result && hasAccess && (
+              {hasAccess && (
                 <div className="flex gap-2">
                   {calculationHistory.length >= 1 && (
                     <Button
@@ -772,20 +772,22 @@ export default function Index() {
                       История ({calculationHistory.length})
                     </Button>
                   )}
-                  <Button
-                    onClick={() => {
-                      setName('');
-                      setBirthDate('');
-                      setResult(null);
-                      setShowPricing(false);
-                      calculatorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }}
-                    variant="outline"
-                    className="gap-2"
-                  >
-                    <Icon name="Plus" size={16} />
-                    Новый расчёт
-                  </Button>
+                  {result && (
+                    <Button
+                      onClick={() => {
+                        setName('');
+                        setBirthDate('');
+                        setResult(null);
+                        setShowPricing(false);
+                        calculatorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <Icon name="Plus" size={16} />
+                      Новый расчёт
+                    </Button>
+                  )}
                 </div>
               )}
             </div>
