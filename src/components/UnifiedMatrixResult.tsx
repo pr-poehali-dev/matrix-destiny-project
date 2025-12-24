@@ -120,64 +120,302 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
         <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50">
           <CardTitle className="flex items-center gap-2 text-2xl">
             <Icon name="Brain" size={24} />
-            🧠 Для психологов и коучей
+            🧠 Для психологов и коучей — полное профессиональное пособие
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-6 space-y-4">
-          <div className="bg-purple-50 p-4 rounded-lg">
-            <p className="font-bold text-purple-900 mb-2">🎯 Главная проблема клиента:</p>
-            <p className="text-sm text-gray-800 mb-3">Внутренний конфликт 4-х энергий:</p>
-            <ul className="text-sm text-gray-700 space-y-1 ml-4">
-              <li>• Аркан {result.personal} ({personal?.title}) — как он себя ощущает, его эго</li>
-              <li>• Аркан {result.destiny} ({destiny?.title}) — чего от него ждёт жизнь</li>
-              <li>• Аркан {result.social} ({social?.title}) — маска для общества</li>
-              <li>• Аркан {result.spiritual} ({spiritual?.title}) — его глубинная суть</li>
-            </ul>
-            <p className="text-sm text-gray-800 mt-3">
-              Человек живёт через <strong>{personal?.title}</strong>, общество видит <strong>{social?.title}</strong>, 
-              но жизнь требует <strong>{destiny?.title}</strong>, а душа тянется к <strong>{spiritual?.title}</strong>. Отсюда внутренний разлад.
-            </p>
-          </div>
-
-          <div className="bg-amber-50 p-4 rounded-lg">
-            <p className="font-bold text-amber-900 mb-2">📿 Кармические задачи:</p>
-            <ol className="text-sm text-gray-700 space-y-1 ml-5 list-decimal">
-              <li>Принять Аркан {result.destiny} ({destiny?.title}) как истинное предназначение</li>
-              <li>Интегрировать {personal?.title} с {destiny?.title} — использовать личные качества для предназначения</li>
-              <li>Разоблачить {social?.title} как ложную идентичность — снять маску</li>
-              <li>Активировать {spiritual?.title} — это связь с высшим и смысл жизни</li>
-            </ol>
-          </div>
-
-          <div className="bg-green-50 p-4 rounded-lg">
-            <p className="font-bold text-green-900 mb-2">💬 Как говорить с клиентом:</p>
-            <ul className="text-sm text-gray-700 space-y-1 ml-4">
-              <li>✅ Используйте язык {personal?.title} — это его родной язык</li>
-              <li>⚠️ НЕ давите на {destiny?.title} напрямую — он убежит</li>
-              <li>🎭 Разоблачите {social?.title} как маску: "Это не ты, это защита"</li>
-              <li>🙏 Активируйте {spiritual?.title} через духовные практики</li>
-            </ul>
-          </div>
-
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <p className="font-bold text-blue-900 mb-2">📋 План терапии (пошагово):</p>
-            <div className="text-sm text-gray-700 space-y-2">
-              <p><strong>ШАГ 1 (Сессии 1-3):</strong> Принятие {personal?.title} — это его данность, не враг</p>
-              <p><strong>ШАГ 2 (Сессии 4-6):</strong> Разоблачение {social?.title} — когда и зачем появилась маска</p>
-              <p><strong>ШАГ 3 (Сессии 7-10):</strong> Интеграция {destiny?.title} — принять как истинный путь</p>
-              <p><strong>ШАГ 4 (Сессии 11-15):</strong> Активация {spiritual?.title} — духовные практики</p>
-              <p><strong>ШАГ 5 (Сессии 16+):</strong> Жизнь из Единства — все 4 аркана работают вместе</p>
+          {/* ДИАГНОСТИКА */}
+          <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+            <p className="font-bold text-purple-900 mb-3 text-lg">🎯 ДИАГНОСТИКА: Главная проблема клиента</p>
+            <p className="text-sm text-gray-800 mb-3 font-semibold">Внутренний конфликт 4-х энергий:</p>
+            <div className="space-y-2 mb-4">
+              <div className="bg-white p-3 rounded border-l-2 border-red-400">
+                <p className="text-sm font-bold text-red-900">Аркан {result.personal} ({personal?.title}) — ЭГО</p>
+                <p className="text-xs text-gray-700 mt-1">Как он себя ощущает, его идентичность. Это его "Я-реальное"</p>
+              </div>
+              <div className="bg-white p-3 rounded border-l-2 border-green-400">
+                <p className="text-sm font-bold text-green-900">Аркан {result.destiny} ({destiny?.title}) — ПРЕДНАЗНАЧЕНИЕ</p>
+                <p className="text-xs text-gray-700 mt-1">Чего от него ждёт жизнь. Это его "Я-должен стать"</p>
+              </div>
+              <div className="bg-white p-3 rounded border-l-2 border-blue-400">
+                <p className="text-sm font-bold text-blue-900">Аркан {result.social} ({social?.title}) — МАСКА</p>
+                <p className="text-xs text-gray-700 mt-1">Как его видит общество. Это его "Я-для-людей"</p>
+              </div>
+              <div className="bg-white p-3 rounded border-l-2 border-purple-400">
+                <p className="text-sm font-bold text-purple-900">Аркан {result.spiritual} ({spiritual?.title}) — ДУША</p>
+                <p className="text-xs text-gray-700 mt-1">Его глубинная суть. Это его "Я-истинное"</p>
+              </div>
+            </div>
+            <div className="bg-red-100 p-3 rounded">
+              <p className="text-sm text-gray-800 font-semibold mb-2">⚠️ КОРЕНЬ ПРОБЛЕМЫ:</p>
+              <p className="text-sm text-gray-800">
+                Человек живёт через <strong>{personal?.title}</strong>, общество видит <strong>{social?.title}</strong>, 
+                но жизнь требует <strong>{destiny?.title}</strong>, а душа тянется к <strong>{spiritual?.title}</strong>. 
+              </p>
+              <p className="text-sm text-red-900 font-bold mt-2">→ Все 4 "Я" конфликтуют между собой = внутренний разлад</p>
             </div>
           </div>
 
-          <div className="bg-red-50 p-4 rounded-lg">
-            <p className="font-bold text-red-900 mb-2">🔮 Прогноз:</p>
-            <p className="text-sm text-gray-700 mb-2">
-              <strong>✅ ЕСЛИ ПРИМЕТ:</strong> через 6-12 месяцев выход на предназначение ({professions}), деньги потоком, гармония в отношениях
-            </p>
-            <p className="text-sm text-gray-700">
-              <strong>⚠️ ЕСЛИ НЕ ПРИМЕТ:</strong> кризисы, болезни, потеря работы, разрывы — судьба будет ломать до принятия {destiny?.title}
-            </p>
+          {/* ЗАЩИТНЫЕ МЕХАНИЗМЫ */}
+          <div className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+            <p className="font-bold text-yellow-900 mb-3 text-lg">🛡️ ЗАЩИТНЫЕ МЕХАНИЗМЫ И СОПРОТИВЛЕНИЕ</p>
+            <div className="space-y-3 text-sm">
+              <div>
+                <p className="font-semibold text-yellow-900">1. Защита через {personal?.title}:</p>
+                <p className="text-gray-700">Клиент будет цепляться за привычную идентичность. "Я такой, какой есть" — это его комфорт-зона</p>
+                <p className="text-xs text-yellow-800 italic mt-1">Техника: не атакуйте {personal?.title}, а покажите как он помогает реализовать {destiny?.title}</p>
+              </div>
+              <div>
+                <p className="font-semibold text-yellow-900">2. Защита через {social?.title}:</p>
+                <p className="text-gray-700">Маска настолько срослась с личностью, что клиент думает "это и есть я". Он боится её снять</p>
+                <p className="text-xs text-yellow-800 italic mt-1">Техника: покажите разницу между маской и истинным Я через телесные практики</p>
+              </div>
+              <div>
+                <p className="font-semibold text-yellow-900">3. Сопротивление {destiny?.title}:</p>
+                <p className="text-gray-700">Страх предназначения = страх ответственности. "Я не смогу", "Это не моё", "Я недостоин"</p>
+                <p className="text-xs text-yellow-800 italic mt-1">Техника: микрошаги к предназначению, не требуйте сразу глобальных изменений</p>
+              </div>
+              <div>
+                <p className="font-semibold text-yellow-900">4. Отрицание {spiritual?.title}:</p>
+                <p className="text-gray-700">Духовная пустота заполняется суррогатами: алкоголь, работа, зависимости</p>
+                <p className="text-xs text-yellow-800 italic mt-1">Техника: не навязывайте духовность, дайте почувствовать смысл через практики</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ПСИХОТЕРАПЕВТИЧЕСКИЕ ТЕХНИКИ */}
+          <div className="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+            <p className="font-bold text-indigo-900 mb-3 text-lg">🔧 ПСИХОТЕРАПЕВТИЧЕСКИЕ ТЕХНИКИ (пошагово)</p>
+            <div className="space-y-4">
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-indigo-900 mb-2">ТЕХНИКА 1: "Встреча 4-х Я" (гештальт)</p>
+                <p className="text-sm text-gray-700 mb-2">Посадите клиента на 4 стула по очереди. На каждом стуле он говорит от лица одного аркана:</p>
+                <ul className="text-xs text-gray-700 space-y-1 ml-4">
+                  <li>• Стул 1: "Я {personal?.title}, и я чувствую..."</li>
+                  <li>• Стул 2: "Я {destiny?.title}, и моя задача..."</li>
+                  <li>• Стул 3: "Я {social?.title}, и люди видят меня как..."</li>
+                  <li>• Стул 4: "Я {spiritual?.title}, и моя глубинная потребность..."</li>
+                </ul>
+                <p className="text-xs text-indigo-800 mt-2 italic">→ Клиент осознаёт конфликт энергий телесно</p>
+              </div>
+
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-indigo-900 mb-2">ТЕХНИКА 2: "Снятие маски" (психодрама)</p>
+                <p className="text-sm text-gray-700 mb-2">Работа с {social?.title} как ложной идентичностью:</p>
+                <ol className="text-xs text-gray-700 space-y-1 ml-5 list-decimal">
+                  <li>Спросите: "Когда ты впервые надел маску {social?.title}?"</li>
+                  <li>Клиент вспоминает травматичное событие детства</li>
+                  <li>Проработайте это событие: "Маска защитила тебя ТОГДА"</li>
+                  <li>Спросите: "Нужна ли она тебе СЕЙЧАС?"</li>
+                  <li>Ритуал снятия: клиент символически снимает невидимую маску</li>
+                </ol>
+                <p className="text-xs text-indigo-800 mt-2 italic">→ Освобождение от ложной идентичности</p>
+              </div>
+
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-indigo-900 mb-2">ТЕХНИКА 3: "Интеграция через тело" (телесная терапия)</p>
+                <p className="text-sm text-gray-700 mb-2">Где в теле живут конфликтующие энергии:</p>
+                <ul className="text-xs text-gray-700 space-y-1 ml-4">
+                  <li>• {personal?.title} → где ты это чувствуешь? (обычно солнечное сплетение)</li>
+                  <li>• {destiny?.title} → где страх предназначения? (грудь, горло)</li>
+                  <li>• {social?.title} → где живёт маска? (лицо, плечи)</li>
+                  <li>• {spiritual?.title} → где пустота? (сердце, макушка)</li>
+                </ul>
+                <p className="text-xs text-gray-700 mt-2">Работайте с каждой зоной: дыхание, прикосновение, движение</p>
+                <p className="text-xs text-indigo-800 mt-2 italic">→ Соматическое освобождение блоков</p>
+              </div>
+
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-indigo-900 mb-2">ТЕХНИКА 4: "Письмо предназначению" (когнитивная терапия)</p>
+                <p className="text-sm text-gray-700 mb-2">Домашнее задание между сессиями:</p>
+                <div className="text-xs text-gray-700 space-y-1">
+                  <p className="font-semibold">Неделя 1: "Письмо от {personal?.title} к {destiny?.title}"</p>
+                  <p className="ml-4">"Дорогое предназначение {destiny?.title}, я боюсь тебя, потому что..."</p>
+                  <p className="font-semibold mt-2">Неделя 2: "Письмо от {destiny?.title} к {personal?.title}"</p>
+                  <p className="ml-4">"Дорогой {personal?.title}, я не враг тебе. Я пришёл чтобы..."</p>
+                  <p className="font-semibold mt-2">Неделя 3: "Письмо от {spiritual?.title} всем"</p>
+                  <p className="ml-4">"Я ваша душа. Я хочу, чтобы вы все работали вместе..."</p>
+                </div>
+                <p className="text-xs text-indigo-800 mt-2 italic">→ Диалог между частями личности</p>
+              </div>
+
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-indigo-900 mb-2">ТЕХНИКА 5: "Активация {spiritual?.title}" (трансперсональная психология)</p>
+                <p className="text-sm text-gray-700 mb-2">Духовные практики (не религия!):</p>
+                <ul className="text-xs text-gray-700 space-y-1 ml-4">
+                  <li>• Медитация: "Я есть больше, чем мои роли"</li>
+                  <li>• Дыхание: холотропное или ребёфинг для доступа к духовному Я</li>
+                  <li>• Природа: прогулки в одиночестве, связь с землёй</li>
+                  <li>• Молчание: 1 день в неделю минимум слов</li>
+                  <li>• Служение: бескорыстная помощь активирует {spiritual?.title}</li>
+                </ul>
+                <p className="text-xs text-indigo-800 mt-2 italic">→ Выход за пределы эго</p>
+              </div>
+            </div>
+          </div>
+
+          {/* КАРМИЧЕСКИЕ ЗАДАЧИ */}
+          <div className="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-500">
+            <p className="font-bold text-amber-900 mb-3 text-lg">📿 КАРМИЧЕСКИЕ ЗАДАЧИ И УРОКИ ДУШИ</p>
+            <div className="space-y-3">
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-amber-900 text-sm">ЗАДАЧА 1: Принять {destiny?.title} как предназначение</p>
+                <p className="text-xs text-gray-700 mt-1">Не просто знать, а ЖИТЬ через него. Каждое решение проверять: "Это в духе {destiny?.title}?"</p>
+                <p className="text-xs text-amber-800 mt-1"><strong>Маркер принятия:</strong> деньги начинают приходить легче, появляется энергия</p>
+              </div>
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-amber-900 text-sm">ЗАДАЧА 2: Интегрировать {personal?.title} с {destiny?.title}</p>
+                <p className="text-xs text-gray-700 mt-1">Не убить {personal?.title}, а использовать его ДЛЯ {destiny?.title}. Личность — инструмент предназначения</p>
+                <p className="text-xs text-amber-800 mt-1"><strong>Маркер интеграции:</strong> внутренний конфликт уходит, появляется целостность</p>
+              </div>
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-amber-900 text-sm">ЗАДАЧА 3: Разоблачить {social?.title} как маску</p>
+                <p className="text-xs text-gray-700 mt-1">Осознать: "Это не я, это защита". Снять маску и показать истинное лицо миру</p>
+                <p className="text-xs text-amber-800 mt-1"><strong>Маркер снятия:</strong> приходят "свои" люди, уходят "чужие"</p>
+              </div>
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-amber-900 text-sm">ЗАДАЧА 4: Активировать {spiritual?.title}</p>
+                <p className="text-xs text-gray-700 mt-1">Найти связь с высшим, смысл жизни. Без этого всё остальное бессмысленно</p>
+                <p className="text-xs text-amber-800 mt-1"><strong>Маркер активации:</strong> появляется глубокий смысл, внутренний покой</p>
+              </div>
+            </div>
+          </div>
+
+          {/* КАК ГОВОРИТЬ С КЛИЕНТОМ */}
+          <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+            <p className="font-bold text-green-900 mb-3 text-lg">💬 ЯЗЫК ТЕРАПИИ: Как говорить с клиентом</p>
+            <div className="space-y-3">
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-green-900 text-sm">✅ ЧТО ГОВОРИТЬ:</p>
+                <ul className="text-xs text-gray-700 space-y-1 mt-2">
+                  <li>• "Ты {personal?.title} — это твоя сила, не слабость"</li>
+                  <li>• "{destiny?.title} — это не чужое, это твоё истинное Я"</li>
+                  <li>• "{social?.title} защищал тебя, но сейчас он мешает"</li>
+                  <li>• "{spiritual?.title} — это твоя связь с чем-то большим"</li>
+                </ul>
+              </div>
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-red-900 text-sm">❌ ЧТО НЕ ГОВОРИТЬ:</p>
+                <ul className="text-xs text-gray-700 space-y-1 mt-2">
+                  <li>• "Твой {personal?.title} — это проблема" (он закроется)</li>
+                  <li>• "Ты ДОЛЖЕН стать {destiny?.title}" (сопротивление)</li>
+                  <li>• "Твоя маска {social?.title} — фальшивая" (защита усилится)</li>
+                  <li>• "Тебе нужна духовность" (навязывание)</li>
+                </ul>
+              </div>
+              <div className="bg-green-100 p-3 rounded">
+                <p className="font-bold text-green-900 text-sm mb-2">🎯 ТЕРАПЕВТИЧЕСКИЕ ФРАЗЫ:</p>
+                <div className="text-xs text-gray-700 space-y-1">
+                  <p>→ "Что если {personal?.title} и {destiny?.title} не враги, а команда?"</p>
+                  <p>→ "Когда ты в последний раз был собой без маски {social?.title}?"</p>
+                  <p>→ "Что чувствует твоя душа ({spiritual?.title}), когда ты живёшь не своей жизнью?"</p>
+                  <p>→ "Представь: все 4 части работают вместе. Как выглядит твоя жизнь?"</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ПЛАН ТЕРАПИИ */}
+          <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+            <p className="font-bold text-blue-900 mb-3 text-lg">📋 ПЛАН ТЕРАПИИ (16+ сессий)</p>
+            <div className="space-y-3">
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-blue-900 text-sm">ШАГ 1 (Сессии 1-3): Принятие {personal?.title}</p>
+                <p className="text-xs text-gray-700 mt-1"><strong>Цель:</strong> клиент перестаёт воевать с собой</p>
+                <p className="text-xs text-gray-700 mt-1"><strong>Техники:</strong> работа с самокритикой, практика самопринятия</p>
+                <p className="text-xs text-blue-800 mt-1"><strong>Результат:</strong> "Я {personal?.title}, и это нормально"</p>
+              </div>
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-blue-900 text-sm">ШАГ 2 (Сессии 4-6): Разоблачение {social?.title}</p>
+                <p className="text-xs text-gray-700 mt-1"><strong>Цель:</strong> клиент видит свою маску</p>
+                <p className="text-xs text-gray-700 mt-1"><strong>Техники:</strong> психодрама "снятие маски", работа с детской травмой</p>
+                <p className="text-xs text-blue-800 mt-1"><strong>Результат:</strong> "Я играл роль {social?.title}, но это не я"</p>
+              </div>
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-blue-900 text-sm">ШАГ 3 (Сессии 7-10): Интеграция {destiny?.title}</p>
+                <p className="text-xs text-gray-700 mt-1"><strong>Цель:</strong> клиент принимает предназначение</p>
+                <p className="text-xs text-gray-700 mt-1"><strong>Техники:</strong> работа со страхами, микрошаги к предназначению</p>
+                <p className="text-xs text-blue-800 mt-1"><strong>Результат:</strong> "Я начинаю жить как {destiny?.title}"</p>
+              </div>
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-blue-900 text-sm">ШАГ 4 (Сессии 11-15): Активация {spiritual?.title}</p>
+                <p className="text-xs text-gray-700 mt-1"><strong>Цель:</strong> клиент находит смысл</p>
+                <p className="text-xs text-gray-700 mt-1"><strong>Техники:</strong> медитации, духовные практики, работа со смыслом</p>
+                <p className="text-xs text-blue-800 mt-1"><strong>Результат:</strong> "Я чувствую связь с {spiritual?.title}"</p>
+              </div>
+              <div className="bg-white p-3 rounded">
+                <p className="font-bold text-blue-900 text-sm">ШАГ 5 (Сессии 16+): Жизнь из Единства</p>
+                <p className="text-xs text-gray-700 mt-1"><strong>Цель:</strong> все 4 аркана работают как команда</p>
+                <p className="text-xs text-gray-700 mt-1"><strong>Техники:</strong> интеграция через жизненные ситуации</p>
+                <p className="text-xs text-blue-800 mt-1"><strong>Результат:</strong> "Я целостный, все части во мне гармоничны"</p>
+              </div>
+            </div>
+          </div>
+
+          {/* МАРКЕРЫ ПРОГРЕССА */}
+          <div className="bg-teal-50 p-4 rounded-lg border-l-4 border-teal-500">
+            <p className="font-bold text-teal-900 mb-3 text-lg">📊 МАРКЕРЫ ПРОГРЕССА (как понять, что терапия работает)</p>
+            <div className="space-y-2">
+              <div className="bg-white p-2 rounded">
+                <p className="font-bold text-teal-900 text-xs">Месяц 1-2:</p>
+                <p className="text-xs text-gray-700">→ Клиент меньше критикует себя, принимает {personal?.title}</p>
+              </div>
+              <div className="bg-white p-2 rounded">
+                <p className="font-bold text-teal-900 text-xs">Месяц 3-4:</p>
+                <p className="text-xs text-gray-700">→ Видит свою маску {social?.title}, начинает снимать её</p>
+              </div>
+              <div className="bg-white p-2 rounded">
+                <p className="font-bold text-teal-900 text-xs">Месяц 5-6:</p>
+                <p className="text-xs text-gray-700">→ Делает первые шаги к {destiny?.title}, меняет работу/хобби</p>
+              </div>
+              <div className="bg-white p-2 rounded">
+                <p className="font-bold text-teal-900 text-xs">Месяц 7-9:</p>
+                <p className="text-xs text-gray-700">→ Находит смысл через {spiritual?.title}, спокойствие внутри</p>
+              </div>
+              <div className="bg-white p-2 rounded">
+                <p className="font-bold text-teal-900 text-xs">Месяц 10-12:</p>
+                <p className="text-xs text-gray-700">→ Живёт целостно, деньги/отношения/здоровье улучшаются</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ПРОГНОЗ */}
+          <div className="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+            <p className="font-bold text-red-900 mb-3 text-lg">🔮 ПРОГНОЗ И РИСКИ</p>
+            <div className="space-y-3">
+              <div className="bg-green-100 p-3 rounded">
+                <p className="font-bold text-green-900 text-sm mb-2">✅ ЕСЛИ КЛИЕНТ ПРИНИМАЕТ ТЕРАПИЮ:</p>
+                <ul className="text-xs text-gray-800 space-y-1">
+                  <li>→ Через 3-6 месяцев: внутренний конфликт ослабевает, появляется ясность</li>
+                  <li>→ Через 6-12 месяцев: выход на предназначение ({professions})</li>
+                  <li>→ Через 12+ месяцев: деньги потоком, гармония в отношениях, здоровье улучшается</li>
+                </ul>
+              </div>
+              <div className="bg-red-100 p-3 rounded">
+                <p className="font-bold text-red-900 text-sm mb-2">⚠️ ЕСЛИ КЛИЕНТ СОПРОТИВЛЯЕТСЯ:</p>
+                <ul className="text-xs text-gray-800 space-y-1">
+                  <li>→ Кризисы усиливаются (работа, деньги, отношения)</li>
+                  <li>→ Болезни как сигнал от тела: {personal?.health?.split('.')[0]}</li>
+                  <li>→ Депрессия от жизни "не своей жизнью"</li>
+                  <li>→ Судьба будет "ломать" до принятия {destiny?.title}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* ПРОТИВОПОКАЗАНИЯ */}
+          <div className="bg-gray-50 p-4 rounded-lg border-l-4 border-gray-500">
+            <p className="font-bold text-gray-900 mb-3 text-lg">⚠️ ПРОТИВОПОКАЗАНИЯ И ОГРАНИЧЕНИЯ</p>
+            <div className="text-xs text-gray-700 space-y-2">
+              <p><strong>НЕ работайте с матрицей, если:</strong></p>
+              <ul className="space-y-1 ml-4">
+                <li>• Острый психоз или обострение психического расстройства</li>
+                <li>• Суицидальные намерения (сначала стабилизация!)</li>
+                <li>• Клиент в активной зависимости (алкоголь, наркотики)</li>
+                <li>• Недавняя тяжёлая травма (смерть близкого, изнасилование)</li>
+              </ul>
+              <p className="mt-2"><strong>В этих случаях:</strong> сначала базовая стабилизация, потом работа с матрицей</p>
+            </div>
           </div>
         </CardContent>
       </Card>
