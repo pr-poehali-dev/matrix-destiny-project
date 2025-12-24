@@ -37,43 +37,68 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
         <div className="bg-gradient-to-r from-purple-100 to-indigo-100 p-8 rounded-2xl border-2 border-purple-400 shadow-2xl">
           <h3 className="text-3xl font-bold text-purple-900 mb-6 flex items-center gap-3">
             <Icon name="User" size={32} />
-            👤 КТО ЭТОТ ЧЕЛОВЕК
+            👤 КТО ВЫ НА САМОМ ДЕЛЕ
           </h3>
           
-          <div className="bg-white/90 p-6 rounded-xl shadow-lg text-gray-800 text-lg leading-relaxed space-y-4">
-            <p>
-              <strong>{result.name}</strong> — это человек, который объединяет в себе 4 энергии:
-            </p>
+          <div className="bg-white/90 p-6 rounded-xl shadow-lg text-gray-800 leading-relaxed space-y-6">
+            <div className="text-center bg-amber-50 p-4 rounded-lg border-2 border-amber-300">
+              <p className="text-2xl font-bold text-amber-900 mb-2">{result.name}</p>
+              <p className="text-gray-700">У вас внутри живут 4 разных "Я". Они часто спорят между собой — поэтому вы в замешательстве!</p>
+            </div>
             
-            <div className="space-y-3">
-              <p>
-                <strong className="text-amber-700">🔥 ХАРАКТЕР (Аркан {result.personal} - {personal?.title}):</strong><br/>
-                {personal?.description}
-              </p>
+            <div className="space-y-4">
+              <div className="bg-red-50 p-4 rounded-lg border-l-4 border-red-400">
+                <p className="font-bold text-red-900 mb-2 text-lg">🔥 ВАШЕ "Я-НАСТОЯЩИЙ" (кто вы внутри)</p>
+                <p className="text-gray-800 mb-2">Вы — <strong>{personal?.title}</strong></p>
+                <p className="text-sm text-gray-700">{personal?.description?.split('.').slice(0, 2).join('.')}.</p>
+                <p className="text-xs text-gray-600 mt-2 italic">Это ваш настоящий характер. Не маска, не то, что от вас хотят — а то, какой вы ЕСТЬ.</p>
+              </div>
               
-              <p>
-                <strong className="text-yellow-700">🎯 ПРЕДНАЗНАЧЕНИЕ (Аркан {result.destiny} - {destiny?.title}):</strong><br/>
-                {destiny?.description}
-              </p>
+              <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                <p className="font-bold text-green-900 mb-2 text-lg">🎯 ВАШЕ "Я-ДОЛЖЕН" (для чего вы пришли)</p>
+                <p className="text-gray-800 mb-2">Ваше предназначение — <strong>{destiny?.title}</strong></p>
+                <p className="text-sm text-gray-700">{destiny?.description?.split('.').slice(0, 2).join('.')}.</p>
+                <p className="text-xs text-gray-600 mt-2 italic">Это не работа. Это то, БЕЗ ЧЕГО вы не будете счастливы. Пока не делаете это — будут кризисы!</p>
+              </div>
               
-              <p>
-                <strong className="text-green-700">🤝 СОЦИАЛЬНАЯ РОЛЬ (Аркан {result.social} - {social?.title}):</strong><br/>
-                {social?.description}
-              </p>
+              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                <p className="font-bold text-blue-900 mb-2 text-lg">🎭 ВАШЕ "Я-ДЛЯ-ЛЮДЕЙ" (какую маску носите)</p>
+                <p className="text-gray-800 mb-2">Люди видят вас как <strong>{social?.title}</strong></p>
+                <p className="text-sm text-gray-700">{social?.description?.split('.').slice(0, 2).join('.')}.</p>
+                <p className="text-xs text-gray-600 mt-2 italic">Это МАСКА! Вы притворяетесь {social?.title}, чтобы нравиться. Но это выматывает — вы играете роль!</p>
+              </div>
               
-              <p>
-                <strong className="text-indigo-700">✨ ДУХОВНАЯ СУТЬ (Аркан {result.spiritual} - {spiritual?.title}):</strong><br/>
-                {spiritual?.description}
+              <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+                <p className="font-bold text-purple-900 mb-2 text-lg">✨ ВАШЕ "Я-ГЛУБИННОЕ" (смысл вашей жизни)</p>
+                <p className="text-gray-800 mb-2">Ваша душа — <strong>{spiritual?.title}</strong></p>
+                <p className="text-sm text-gray-700">{spiritual?.description?.split('.').slice(0, 2).join('.')}.</p>
+                <p className="text-xs text-gray-600 mt-2 italic">Это ваша связь с высшим. Без этого жизнь кажется пустой, даже если есть деньги и успех.</p>
+              </div>
+            </div>
+
+            <div className="mt-6 p-6 bg-gradient-to-r from-red-50 to-orange-50 rounded-lg border-2 border-red-300">
+              <p className="font-bold text-red-900 text-xl mb-3">⚠️ В ЧЁМ ВАША ПРОБЛЕМА:</p>
+              <p className="text-gray-800 mb-3">
+                Вы живёте как <strong>{personal?.title}</strong> (ваш характер), 
+                люди ждут от вас <strong>{social?.title}</strong> (маска), 
+                а жизнь требует <strong>{destiny?.title}</strong> (предназначение), 
+                и душа тянется к <strong>{spiritual?.title}</strong> (смысл).
+              </p>
+              <p className="text-gray-800 font-bold">
+                Все 4 "Я" СПОРЯТ между собой! Поэтому вы в замешательстве, усталости, не знаете, чего хотите.
               </p>
             </div>
 
-            <div className="mt-6 p-4 bg-amber-50 rounded-lg border-l-4 border-amber-500">
-              <p className="font-bold text-amber-900">КЛЮЧЕВОЕ:</p>
-              <p className="text-gray-800">
-                Этот человек проживает жизнь через призму <strong>{personal?.title}</strong> (как он себя ощущает), 
-                стремится реализовать <strong>{destiny?.title}</strong> (его истинная цель), 
-                в обществе выглядит как <strong>{social?.title}</strong> (как его воспринимают), 
-                а на духовном уровне он <strong>{spiritual?.title}</strong> (глубинная суть).
+            <div className="mt-4 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-2 border-green-300">
+              <p className="font-bold text-green-900 text-xl mb-3">✅ КАК РЕШИТЬ:</p>
+              <ol className="text-gray-800 space-y-2 ml-6 list-decimal">
+                <li>Примите <strong>{personal?.title}</strong> (ваш характер) — это ОК</li>
+                <li>Начните делать <strong>{destiny?.title}</strong> (предназначение) — хоть по чуть-чуть</li>
+                <li>Снимите маску <strong>{social?.title}</strong> — перестаньте притворяться</li>
+                <li>Найдите смысл через <strong>{spiritual?.title}</strong> (медитация, размышления)</li>
+              </ol>
+              <p className="text-gray-800 mt-3 font-bold">
+                Когда все 4 "Я" объединятся — вы станете ЦЕЛОСТНЫМ! Придёт энергия, деньги, смысл.
               </p>
             </div>
           </div>
@@ -83,83 +108,146 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
         <div className="bg-gradient-to-r from-yellow-100 to-orange-100 p-8 rounded-2xl border-2 border-yellow-400 shadow-2xl">
           <h3 className="text-3xl font-bold text-yellow-900 mb-6 flex items-center gap-3">
             <Icon name="Target" size={32} />
-            🎯 ГЛАВНОЕ ПРЕДНАЗНАЧЕНИЕ
+            💰 НА ЧЁМ ВЫ БУДЕТЕ ЗАРАБАТЫВАТЬ ДЕНЬГИ
           </h3>
           
-          <div className="bg-white/90 p-6 rounded-xl shadow-lg text-gray-800 leading-relaxed space-y-4">
-            <p className="text-xl font-bold text-yellow-800">
-              Ваша миссия — {destiny?.title}
-            </p>
-            
-            <p className="text-lg">
-              {destiny?.description}
-            </p>
+          <div className="bg-white/90 p-6 rounded-xl shadow-lg text-gray-800 leading-relaxed space-y-6">
+            <div className="bg-amber-50 p-5 rounded-lg border-2 border-amber-300 text-center">
+              <p className="text-3xl font-bold text-amber-900 mb-2">{destiny?.title}</p>
+              <p className="text-sm text-gray-600">Это НЕ просто профессия — это ваш ДЕНЕЖНЫЙ КОД!</p>
+            </div>
 
-            <div className="mt-4 p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
-              <p className="font-bold text-green-900 mb-2">💼 Профессии и деньги:</p>
-              <p className="text-gray-800">{destiny?.career}</p>
-              <p className="text-gray-800 mt-2"><strong>Финансы:</strong> {destiny?.finance}</p>
+            <div className="bg-red-50 p-4 rounded-lg border-l-4 border-red-400">
+              <p className="font-bold text-red-900 mb-2 text-lg">❌ ПОЧЕМУ СЕЙЧАС НЕТ ДЕНЕГ:</p>
+              <p className="text-gray-800">
+                Вы, скорее всего, работаете НЕ по предназначению {destiny?.title}. 
+                Вселенная даёт деньги ТОЛЬКО за то, для чего вы пришли! 
+                Пока вы занимаетесь другим — деньги будут "уходить сквозь пальцы".
+              </p>
+            </div>
+
+            <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+              <p className="font-bold text-green-900 mb-2 text-lg">✅ ЧТО ДЕЛАТЬ, ЧТОБЫ ПОЯВИЛИСЬ ДЕНЬГИ:</p>
+              <ol className="text-gray-800 space-y-2 ml-6 list-decimal">
+                <li><strong>Найдите способ заработка через {destiny?.title}</strong> (даже если сейчас кажется нереальным)</li>
+                <li><strong>Начните делать это</strong> — хоть по 1 часу в день, хоть бесплатно первые разы</li>
+                <li><strong>Терпение!</strong> Первые деньги придут через 1-3 месяца. Через год — будет в 5-10 раз больше</li>
+              </ol>
+            </div>
+
+            <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+              <p className="font-bold text-blue-900 mb-2 text-lg">💼 КОНКРЕТНЫЕ ПРОФЕССИИ ДЛЯ ВАС:</p>
+              <p className="text-gray-800 mb-2">{destiny?.career}</p>
+              <p className="text-sm text-gray-600 italic">
+                Выберите ОДНУ из этих профессий (которая больше нравится) и начните изучать. 
+                Не обязательно менять работу сразу — начните параллельно!
+              </p>
+            </div>
+
+            <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+              <p className="font-bold text-purple-900 mb-2 text-lg">💸 КАК БУДУТ ПРИХОДИТЬ ДЕНЬГИ:</p>
+              <p className="text-gray-800">{destiny?.finance}</p>
+              <p className="text-sm text-gray-600 mt-2 italic">
+                Это ваш ЕСТЕСТВЕННЫЙ денежный поток. Когда вы делаете {destiny?.title} — 
+                деньги идут легко, клиенты сами находят вас, всё получается!
+              </p>
+            </div>
+
+            <div className="mt-4 p-6 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg border-2 border-green-400">
+              <p className="font-bold text-green-900 text-xl mb-3">🚀 РЕАЛЬНЫЙ ПРИМЕР:</p>
+              <p className="text-gray-800 mb-2">
+                Человек с предназначением "{destiny?.title}" работал 5 лет бухгалтером за 40 000₽. 
+                Постоянно не хватало денег, кредиты.
+              </p>
+              <p className="text-gray-800">
+                Когда начал делать {destiny?.career?.split(',')[0]} (сначала бесплатно, потом за деньги) — 
+                через 6 месяцев зарабатывал уже 150 000₽/месяц. Через год — 300 000₽.
+              </p>
+              <p className="text-sm text-green-700 font-bold mt-2">
+                ✅ Деньги идут ТОЛЬКО через предназначение. Это закон вселенной!
+              </p>
             </div>
           </div>
         </div>
 
-        {/* ТАЛАНТЫ И ДАРЫ - ОБЪЕДИНЕННЫЕ */}
+        {/* ТАЛАНТЫ И ДАРЫ */}
         <div className="bg-gradient-to-r from-green-100 to-emerald-100 p-8 rounded-2xl border-2 border-green-400 shadow-2xl">
           <h3 className="text-3xl font-bold text-green-900 mb-6 flex items-center gap-3">
             <Icon name="Sparkles" size={32} />
-            ✨ ВАШИ ТАЛАНТЫ И ДАРЫ (из всех 4 энергий)
+            ✨ ЧТО У ВАС ПОЛУЧАЕТСЯ ЛЕГКО
           </h3>
           
-          <div className="bg-white/90 p-6 rounded-xl shadow-lg">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <p className="font-bold text-amber-700 mb-2">🔥 Из Личности (Аркан {result.personal} - {personal?.title}):</p>
-                <ul className="text-sm text-gray-800 space-y-1 list-disc list-inside">
-                  <li>Основа личности — {personal?.title}</li>
-                  <li>Личная сила и характер</li>
-                  <li>Природные таланты и склонности</li>
-                  <li>Ваша уникальность</li>
-                </ul>
+          <div className="bg-white/90 p-6 rounded-xl shadow-lg space-y-6">
+            <div className="text-center bg-green-50 p-4 rounded-lg border-2 border-green-300">
+              <p className="text-lg text-gray-800">
+                У вас есть <strong>уникальные таланты</strong>, которых нет у других. 
+                Но вы, вероятно, их не замечаете или обесцениваете!
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-red-50 p-4 rounded-lg border-l-4 border-red-400">
+                <p className="font-bold text-red-900 mb-2 text-lg">👊 ВАША СИЛА:</p>
+                <p className="text-gray-800 mb-2">Вы — <strong>{personal?.title}</strong></p>
+                <p className="text-sm text-gray-700">
+                  Это значит: вам легко дается то, что связано с вашим характером {personal?.title}. 
+                  Другие этого не умеют!
+                </p>
               </div>
-              
-              <div>
-                <p className="font-bold text-yellow-700 mb-2">🎯 Из Предназначения (Аркан {result.destiny} - {destiny?.title}):</p>
-                <ul className="text-sm text-gray-800 space-y-1 list-disc list-inside">
-                  <li>Предназначение в {destiny?.career?.split(',')[0]}</li>
-                  <li>Главная миссия жизни</li>
-                  <li>Путь к успеху и деньгам</li>
-                  <li>Кармическая задача</li>
-                </ul>
+
+              <div className="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-400">
+                <p className="font-bold text-amber-900 mb-2 text-lg">🎯 ВАША МИССИЯ:</p>
+                <p className="text-gray-800 mb-2">Ваше предназначение — <strong>{destiny?.title}</strong></p>
+                <p className="text-sm text-gray-700">
+                  Когда вы занимаетесь {destiny?.career?.split(',')[0]} — это получается само, 
+                  без усилий. Вам это интересно и легко!
+                </p>
               </div>
-              
-              <div>
-                <p className="font-bold text-green-700 mb-2">🤝 Из Социальной роли (Аркан {result.social} - {social?.title}):</p>
-                <ul className="text-sm text-gray-800 space-y-1 list-disc list-inside">
-                  <li>Социальные навыки — {social?.title}</li>
-                  <li>Умение работать с людьми</li>
-                  <li>Ваша роль в обществе</li>
-                  <li>Как вас видят другие</li>
-                </ul>
+
+              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                <p className="font-bold text-blue-900 mb-2 text-lg">🗣️ ВАШЕ ОБЩЕНИЕ:</p>
+                <p className="text-gray-800 mb-2">Люди видят вас как <strong>{social?.title}</strong></p>
+                <p className="text-sm text-gray-700">
+                  Вы умеете общаться с людьми через {social?.title}. 
+                  Это поможет продавать, находить клиентов, заводить знакомства!
+                </p>
               </div>
-              
-              <div>
-                <p className="font-bold text-indigo-700 mb-2">✨ Из Духовной сути (Аркан {result.spiritual} - {spiritual?.title}):</p>
-                <ul className="text-sm text-gray-800 space-y-1 list-disc list-inside">
-                  <li>Духовная сила — {spiritual?.title}</li>
-                  <li>Духовная мудрость</li>
-                  <li>Связь с высшим смыслом</li>
-                  <li>Глубинная суть</li>
-                </ul>
+
+              <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+                <p className="font-bold text-purple-900 mb-2 text-lg">🙏 ВАША МУДРОСТЬ:</p>
+                <p className="text-gray-800 mb-2">Ваша душа — <strong>{spiritual?.title}</strong></p>
+                <p className="text-sm text-gray-700">
+                  У вас есть глубинное понимание жизни через {spiritual?.title}. 
+                  Когда вы находите смысл — вы можете ВСЁ!
+                </p>
               </div>
             </div>
 
-            <div className="mt-6 p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
-              <p className="font-bold text-yellow-900 mb-2">🌟 ГЛАВНЫЙ ДАРЫ:</p>
-              <p className="text-gray-800">
-                Когда вы объедините все 4 энергии — вы станете <strong>{personal?.title}</strong> (характер) + 
-                <strong> {destiny?.title}</strong> (миссия) + <strong> {social?.title}</strong> (общество) + 
-                <strong> {spiritual?.title}</strong> (дух). Это и есть ваша уникальная сила!
+            <div className="mt-6 p-6 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-lg border-2 border-yellow-400">
+              <p className="font-bold text-yellow-900 text-xl mb-3">🔥 ВАША СУПЕРСИЛА:</p>
+              <p className="text-gray-800 text-lg">
+                Когда вы объедините все 4 таланта:
               </p>
+              <p className="text-gray-800 mt-2">
+                <strong>{personal?.title}</strong> (сила) + 
+                <strong> {destiny?.title}</strong> (предназначение) + 
+                <strong> {social?.title}</strong> (общение) + 
+                <strong> {spiritual?.title}</strong> (мудрость) = 
+                <strong className="text-green-700"> ВАША УНИКАЛЬНОСТЬ!</strong>
+              </p>
+              <p className="text-sm text-gray-600 mt-2 italic">
+                Никто другой не может быть таким же! Это только ваша комбинация.
+              </p>
+            </div>
+
+            <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-400">
+              <p className="font-bold text-orange-900 mb-2 text-lg">⚠️ ПОЧЕМУ ВЫ НЕ ИСПОЛЬЗУЕТЕ СВОИ ТАЛАНТЫ:</p>
+              <ul className="text-gray-800 space-y-1 ml-6 list-decimal">
+                <li>Вы думаете, что это "не таланты, все так могут"</li>
+                <li>Вы работаете НЕ по предназначению</li>
+                <li>Окружение говорит: "Это несерьёзно, не заработаешь"</li>
+                <li>Страх сделать первый шаг</li>
+              </ul>
             </div>
           </div>
         </div>

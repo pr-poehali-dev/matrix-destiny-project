@@ -16,6 +16,7 @@ import { ProfessionalPromo } from '@/components/ProfessionalPromo';
 import { ProfessionalPromoMain } from '@/components/ProfessionalPromoMain';
 import { ProfessionalCases } from '@/components/ProfessionalCases';
 import { SEOContent } from '@/components/SEOContent';
+import { RealCasesPreview } from '@/components/RealCasesPreview';
 
 const calculateDestinyMatrix = (birthDate: string, name: string) => {
   const date = new Date(birthDate);
@@ -742,6 +743,8 @@ export default function Index() {
         </div>
 
         <LiveStats />
+
+        <RealCasesPreview />
 
         <ProfessionalPromoMain />
 
