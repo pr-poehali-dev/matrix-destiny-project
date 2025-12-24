@@ -1049,7 +1049,7 @@ export default function Index() {
             </Card>
 
             <div ref={detailsRef}>
-              <UnifiedMatrixResult result={result} hasAccess={hasAccess} />
+              <UnifiedMatrixResult result={result} hasAccess={hasAccess} birthDate={birthDate} />
               {hasAccess && <ProfessionalPromo />}
             </div>
 

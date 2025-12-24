@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { energyDescriptions } from '@/data/arcana-descriptions';
+import { ShareButtons } from '@/components/ShareButtons';
 
 interface UnifiedMatrixResultProps {
   result: {
@@ -11,6 +12,7 @@ interface UnifiedMatrixResultProps {
     name: string;
   };
   hasAccess: boolean;
+  birthDate: string;
 }
 
 const extractProfessions = (finance: string | undefined) => {
@@ -56,61 +58,144 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
       </div>
 
       {/* КТО ВЫ НА САМОМ ДЕЛЕ */}
-      <Card>
+      <Card id="personal-profile">
         <CardHeader className="bg-gradient-to-r from-purple-50 to-indigo-50">
           <CardTitle className="flex items-center gap-2 text-2xl">
             <Icon name="User" size={24} />
-            Кто вы на самом деле
+            Полный портрет личности — кто вы на самом деле
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-6 space-y-4">
-          <p className="text-gray-700 leading-relaxed">
-            У вас внутри живут 4 разных "Я". Они часто спорят между собой — поэтому вы в замешательстве!
+          <p className="text-gray-700 leading-relaxed text-base">
+            У вас внутри живут <strong>4 разных "Я"</strong>. Они часто спорят между собой — поэтому вы в замешательстве!
           </p>
           
-          <div className="space-y-3">
-            <div className="border-l-4 border-red-400 pl-4 py-2">
-              <p className="font-bold text-red-900 mb-1">🔥 Ваше "Я-настоящий"</p>
-              <p className="text-gray-800 mb-1">Вы — <strong>{personal?.title}</strong></p>
-              <p className="text-sm text-gray-600">{personal?.description?.split('.').slice(0, 2).join('.')}.</p>
+          <div className="space-y-4">
+            {/* ЛИЧНОЕ Я */}
+            <div className="bg-gradient-to-r from-red-50 to-orange-50 p-4 rounded-lg border-l-4 border-red-500">
+              <div className="flex items-center gap-2 mb-3">
+                <Icon name="Heart" size={20} className="text-red-600" />
+                <p className="font-bold text-red-900 text-lg">🔥 Ваше "Я-настоящий" — Аркан {result.personal}</p>
+              </div>
+              <div className="bg-white p-3 rounded mb-3">
+                <p className="text-gray-900 font-bold mb-2">Вы — <strong>{personal?.title}</strong></p>
+                <p className="text-sm text-gray-700 mb-2">{personal?.description}</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="bg-white p-3 rounded">
+                  <p className="font-semibold text-red-900 text-sm mb-1">💊 Здоровье:</p>
+                  <p className="text-xs text-gray-700">{personal?.health?.split('.').slice(0, 3).join('.')}.</p>
+                </div>
+                <div className="bg-white p-3 rounded">
+                  <p className="font-semibold text-red-900 text-sm mb-1">💕 Отношения:</p>
+                  <p className="text-xs text-gray-700">{personal?.relationships?.split('.').slice(0, 3).join('.')}.</p>
+                </div>
+              </div>
+              <div className="bg-white p-3 rounded mt-3">
+                <p className="font-semibold text-red-900 text-sm mb-1">💰 Финансы:</p>
+                <p className="text-xs text-gray-700 mb-1">{personal?.finance?.split('.').slice(0, 2).join('.')}.</p>
+                <p className="text-xs text-gray-700"><strong>Источники дохода:</strong> {sources || personal?.finance?.split('💸')[1]?.split('•').slice(1, 4).join(', ').substring(0, 100)}</p>
+              </div>
             </div>
             
-            <div className="border-l-4 border-green-400 pl-4 py-2">
-              <p className="font-bold text-green-900 mb-1">🎯 Ваше "Я-должен"</p>
-              <p className="text-gray-800 mb-1">Предназначение — <strong>{destiny?.title}</strong></p>
-              <p className="text-sm text-gray-600">{destiny?.description?.split('.').slice(0, 2).join('.')}.</p>
+            {/* ПРЕДНАЗНАЧЕНИЕ */}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border-l-4 border-green-500">
+              <div className="flex items-center gap-2 mb-3">
+                <Icon name="Target" size={20} className="text-green-600" />
+                <p className="font-bold text-green-900 text-lg">🎯 Ваше "Я-должен" — Аркан {result.destiny}</p>
+              </div>
+              <div className="bg-white p-3 rounded mb-3">
+                <p className="text-gray-900 font-bold mb-2">Предназначение — <strong>{destiny?.title}</strong></p>
+                <p className="text-sm text-gray-700 mb-2">{destiny?.description}</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="bg-white p-3 rounded">
+                  <p className="font-semibold text-green-900 text-sm mb-1">💊 Здоровье:</p>
+                  <p className="text-xs text-gray-700">{destiny?.health?.split('.').slice(0, 3).join('.')}.</p>
+                </div>
+                <div className="bg-white p-3 rounded">
+                  <p className="font-semibold text-green-900 text-sm mb-1">💕 Отношения:</p>
+                  <p className="text-xs text-gray-700">{destiny?.relationships?.split('.').slice(0, 3).join('.')}.</p>
+                </div>
+              </div>
+              <div className="bg-white p-3 rounded mt-3">
+                <p className="font-semibold text-green-900 text-sm mb-1">💰 Профессии и деньги:</p>
+                <p className="text-xs text-gray-700 mb-1"><strong>Лучшие роли:</strong> {professions}</p>
+                <p className="text-xs text-gray-700"><strong>Денежный код:</strong> {destiny?.finance?.split('.').slice(0, 2).join('.')}.</p>
+              </div>
             </div>
             
-            <div className="border-l-4 border-blue-400 pl-4 py-2">
-              <p className="font-bold text-blue-900 mb-1">🎭 Ваше "Я-для-людей"</p>
-              <p className="text-gray-800 mb-1">Люди видят — <strong>{social?.title}</strong></p>
-              <p className="text-sm text-gray-600">{social?.description?.split('.').slice(0, 2).join('.')}.</p>
+            {/* СОЦИАЛЬНАЯ МАСКА */}
+            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border-l-4 border-blue-500">
+              <div className="flex items-center gap-2 mb-3">
+                <Icon name="Users" size={20} className="text-blue-600" />
+                <p className="font-bold text-blue-900 text-lg">🎭 Ваше "Я-для-людей" — Аркан {result.social}</p>
+              </div>
+              <div className="bg-white p-3 rounded mb-3">
+                <p className="text-gray-900 font-bold mb-2">Люди видят — <strong>{social?.title}</strong></p>
+                <p className="text-sm text-gray-700 mb-2">{social?.description}</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="bg-white p-3 rounded">
+                  <p className="font-semibold text-blue-900 text-sm mb-1">💊 Здоровье:</p>
+                  <p className="text-xs text-gray-700">{social?.health?.split('.').slice(0, 3).join('.')}.</p>
+                </div>
+                <div className="bg-white p-3 rounded">
+                  <p className="font-semibold text-blue-900 text-sm mb-1">💕 Отношения:</p>
+                  <p className="text-xs text-gray-700">{social?.relationships?.split('.').slice(0, 3).join('.')}.</p>
+                </div>
+              </div>
+              <div className="bg-white p-3 rounded mt-3">
+                <p className="font-semibold text-blue-900 text-sm mb-1">⚠️ Важно понимать:</p>
+                <p className="text-xs text-gray-700">Это НЕ ваше истинное лицо, а адаптация к обществу. Под этой маской скрывается ваш настоящий {personal?.title}</p>
+              </div>
             </div>
             
-            <div className="border-l-4 border-purple-400 pl-4 py-2">
-              <p className="font-bold text-purple-900 mb-1">✨ Ваше "Я-глубинное"</p>
-              <p className="text-gray-800 mb-1">Ваша душа — <strong>{spiritual?.title}</strong></p>
-              <p className="text-sm text-gray-600">{spiritual?.description?.split('.').slice(0, 2).join('.')}.</p>
+            {/* ДУХОВНОЕ Я */}
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <div className="flex items-center gap-2 mb-3">
+                <Icon name="Sparkles" size={20} className="text-purple-600" />
+                <p className="font-bold text-purple-900 text-lg">✨ Ваше "Я-глубинное" — Аркан {result.spiritual}</p>
+              </div>
+              <div className="bg-white p-3 rounded mb-3">
+                <p className="text-gray-900 font-bold mb-2">Ваша душа — <strong>{spiritual?.title}</strong></p>
+                <p className="text-sm text-gray-700 mb-2">{spiritual?.description}</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="bg-white p-3 rounded">
+                  <p className="font-semibold text-purple-900 text-sm mb-1">💊 Здоровье:</p>
+                  <p className="text-xs text-gray-700">{spiritual?.health?.split('.').slice(0, 3).join('.')}.</p>
+                </div>
+                <div className="bg-white p-3 rounded">
+                  <p className="font-semibold text-purple-900 text-sm mb-1">💕 Отношения:</p>
+                  <p className="text-xs text-gray-700">{spiritual?.relationships?.split('.').slice(0, 3).join('.')}.</p>
+                </div>
+              </div>
+              <div className="bg-white p-3 rounded mt-3">
+                <p className="font-semibold text-purple-900 text-sm mb-1">🙏 Духовный путь:</p>
+                <p className="text-xs text-gray-700">{spiritual?.finance?.split('.').slice(0, 2).join('.')}.</p>
+              </div>
             </div>
           </div>
 
-          <div className="bg-red-50 p-4 rounded-lg mt-4">
-            <p className="font-bold text-red-900 mb-2">⚠️ В чём ваша проблема:</p>
-            <p className="text-gray-800">
+          <div className="bg-red-50 p-4 rounded-lg mt-4 border-l-4 border-red-500">
+            <p className="font-bold text-red-900 mb-3 text-lg">⚠️ В чём ваша проблема:</p>
+            <p className="text-gray-800 mb-3">
               Вы живёте как <strong>{personal?.title}</strong>, люди ждут <strong>{social?.title}</strong>, 
               а жизнь требует <strong>{destiny?.title}</strong>, и душа тянется к <strong>{spiritual?.title}</strong>. 
-              Все 4 "Я" спорят между собой!
             </p>
+            <p className="text-red-900 font-bold">→ Все 4 "Я" конфликтуют между собой = внутренний разлад, кризисы, болезни!</p>
           </div>
 
-          <div className="bg-green-50 p-4 rounded-lg">
-            <p className="font-bold text-green-900 mb-2">✅ Как решить:</p>
-            <ol className="text-gray-800 space-y-1 ml-5 list-decimal">
-              <li>Примите <strong>{personal?.title}</strong> — это ваш характер</li>
-              <li>Начните делать <strong>{destiny?.title}</strong> — хоть по чуть-чуть</li>
-              <li>Снимите маску <strong>{social?.title}</strong> — перестаньте притворяться</li>
-              <li>Найдите смысл через <strong>{spiritual?.title}</strong></li>
+          <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+            <p className="font-bold text-green-900 mb-3 text-lg">✅ Как решить (пошаговый план):</p>
+            <ol className="text-gray-800 space-y-2 ml-5 list-decimal">
+              <li><strong>Примите {personal?.title}</strong> — это ваш характер, не воюйте с собой</li>
+              <li><strong>Начните делать {destiny?.title}</strong> — хоть по чуть-чуть, микрошаги каждый день</li>
+              <li><strong>Снимите маску {social?.title}</strong> — перестаньте притворяться, будьте собой</li>
+              <li><strong>Найдите смысл через {spiritual?.title}</strong> — медитации, природа, духовные практики</li>
             </ol>
+            <p className="text-green-900 font-semibold mt-3">→ Когда все 4 "Я" работают вместе — вы становитесь целостным!</p>
           </div>
         </CardContent>
       </Card>
@@ -1061,6 +1146,9 @@ border-l-4 border-blue-500">
           </div>
         </CardContent>
       </Card>
+
+      {/* КНОПКИ СКАЧИВАНИЯ ПРОФИЛЕЙ */}
+      <ShareButtons result={result} birthDate={birthDate} />
     </div>
   );
 };
