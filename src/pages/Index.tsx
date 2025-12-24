@@ -762,16 +762,14 @@ export default function Index() {
               </div>
               {hasAccess && (
                 <div className="flex gap-2">
-                  {calculationHistory.length >= 1 && (
-                    <Button
-                      onClick={() => setShowHistory(!showHistory)}
-                      variant="outline"
-                      className="gap-2"
-                    >
-                      <Icon name="History" size={16} />
-                      История ({calculationHistory.length})
-                    </Button>
-                  )}
+                  <Button
+                    onClick={() => setShowHistory(!showHistory)}
+                    variant="outline"
+                    className="gap-2"
+                  >
+                    <Icon name="History" size={16} />
+                    История {calculationHistory.length > 0 && `(${calculationHistory.length})`}
+                  </Button>
                   {result && (
                     <Button
                       onClick={() => {
@@ -793,12 +791,12 @@ export default function Index() {
             </div>
           </CardHeader>
           <CardContent className="space-y-4 pt-6">
-            {showHistory && calculationHistory.length >= 1 && hasAccess && (
+            {showHistory && hasAccess && (
               <div className="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-950 dark:to-amber-950 rounded-lg border-2 border-amber-200 dark:border-amber-800">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-bold text-lg flex items-center gap-2">
                     <Icon name="History" size={20} className="text-amber-600" />
-                    История расчётов ({calculationHistory.length})
+                    История расчётов {calculationHistory.length > 0 && `(${calculationHistory.length})`}
                   </h3>
                   <Button
                     variant="ghost"
@@ -808,34 +806,42 @@ export default function Index() {
                     <Icon name="X" size={16} />
                   </Button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto">
-                  {calculationHistory.slice().reverse().map((calc) => (
-                    <button
-                      key={calc.id}
-                      onClick={() => {
-                        setName(calc.name);
-                        setBirthDate(calc.birthDate);
-                        setResult({
-                          personal: calc.personal,
-                          destiny: calc.destiny,
-                          social: calc.social,
-                          spiritual: calc.spiritual,
-                          name: calc.name
-                        });
-                        setShowPricing(true);
-                        setShowHistory(false);
-                        detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }}
-                      className="p-3 text-left bg-white dark:bg-gray-800 rounded-lg border border-amber-200 dark:border-amber-700 hover:border-amber-400 hover:shadow-md transition-all"
-                    >
-                      <p className="font-semibold text-sm">{calc.name}</p>
-                      <p className="text-xs text-muted-foreground">{new Date(calc.birthDate).toLocaleDateString('ru-RU')}</p>
-                      <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
-                        {new Date(calc.calculatedAt).toLocaleDateString('ru-RU')} в {new Date(calc.calculatedAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
-                      </p>
-                    </button>
-                  ))}
-                </div>
+                {calculationHistory.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto">
+                    {calculationHistory.slice().reverse().map((calc) => (
+                      <button
+                        key={calc.id}
+                        onClick={() => {
+                          setName(calc.name);
+                          setBirthDate(calc.birthDate);
+                          setResult({
+                            personal: calc.personal,
+                            destiny: calc.destiny,
+                            social: calc.social,
+                            spiritual: calc.spiritual,
+                            name: calc.name
+                          });
+                          setShowPricing(true);
+                          setShowHistory(false);
+                          detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }}
+                        className="p-3 text-left bg-white dark:bg-gray-800 rounded-lg border border-amber-200 dark:border-amber-700 hover:border-amber-400 hover:shadow-md transition-all"
+                      >
+                        <p className="font-semibold text-sm">{calc.name}</p>
+                        <p className="text-xs text-muted-foreground">{new Date(calc.birthDate).toLocaleDateString('ru-RU')}</p>
+                        <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                          {new Date(calc.calculatedAt).toLocaleDateString('ru-RU')} в {new Date(calc.calculatedAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    <Icon name="History" size={48} className="mx-auto mb-3 opacity-30" />
+                    <p className="text-sm">История расчётов пока пуста</p>
+                    <p className="text-xs mt-1">Сделайте первый расчёт, и он появится здесь</p>
+                  </div>
+                )}
               </div>
             )}
             <div>
