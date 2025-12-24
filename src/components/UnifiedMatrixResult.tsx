@@ -314,6 +314,176 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
             </div>
           </div>
         </div>
+
+        {/* КОНКРЕТНЫЙ ПЛАН ДЕЙСТВИЙ */}
+        <div className="bg-gradient-to-r from-indigo-100 to-purple-100 p-8 rounded-2xl border-2 border-indigo-400 shadow-2xl">
+          <h3 className="text-3xl font-bold text-indigo-900 mb-6 flex items-center gap-3">
+            <Icon name="CheckSquare" size={32} />
+            📋 ЧТО ДЕЛАТЬ ПРЯМО СЕЙЧАС — КОНКРЕТНЫЙ ПЛАН
+          </h3>
+          
+          <div className="bg-white/90 p-6 rounded-xl shadow-lg space-y-6">
+            {/* НЕДЕЛЯ 1 */}
+            <div className="p-6 bg-green-50 rounded-xl border-2 border-green-300">
+              <p className="font-bold text-green-900 text-xl mb-4">✅ НЕДЕЛЯ 1 — Принятие себя</p>
+              
+              <div className="space-y-3">
+                <div>
+                  <p className="font-bold text-gray-900 mb-2">🔥 ШАГ 1: Примите свой характер (Аркан {result.personal} - {personal?.title})</p>
+                  <ul className="text-sm text-gray-800 space-y-1 ml-4">
+                    <li>• <strong>ЧТО ДЕЛАТЬ:</strong> Каждый день записывайте 3 проявления вашего {personal?.title} — когда вы были собой</li>
+                    <li>• <strong>ПРИМЕР:</strong> "Сегодня я проявил {personal?.title}, когда..." (запишите ситуацию)</li>
+                    <li>• <strong>ЗАЧЕМ:</strong> Чтобы принять себя таким, какой вы есть. Это основа!</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <p className="font-bold text-gray-900 mb-2">🩺 ШАГ 2: Проверьте здоровье</p>
+                  <ul className="text-sm text-gray-800 space-y-1 ml-4">
+                    <li>• <strong>СЛАБЫЕ ЗОНЫ:</strong> {personal?.health?.split('•')[0]}</li>
+                    <li>• <strong>ЧТО ДЕЛАТЬ:</strong> Запишитесь на обследование этих зон (анализы, УЗИ, врач)</li>
+                    <li>• <strong>ЗАЧЕМ:</strong> Предупредить болезни, пока они не начались</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* НЕДЕЛЯ 2-4 */}
+            <div className="p-6 bg-yellow-50 rounded-xl border-2 border-yellow-300">
+              <p className="font-bold text-yellow-900 text-xl mb-4">🎯 НЕДЕЛЯ 2-4 — Поиск предназначения</p>
+              
+              <div className="space-y-3">
+                <div>
+                  <p className="font-bold text-gray-900 mb-2">🔍 ШАГ 3: Найдите свое предназначение (Аркан {result.destiny} - {destiny?.title})</p>
+                  <ul className="text-sm text-gray-800 space-y-1 ml-4">
+                    <li>• <strong>ВАШЕ ПРЕДНАЗНАЧЕНИЕ:</strong> {destiny?.career?.split('.')[0]}</li>
+                    <li>• <strong>ЧТО ДЕЛАТЬ:</strong> Выпишите 10 способов, как заработать на {destiny?.title}</li>
+                    <li>• <strong>ПРИМЕР:</strong> Если предназначение "психолог" → консультации, курсы, статьи, книги...</li>
+                    <li>• <strong>ПРАКТИКА:</strong> Выберите 1 способ и сделайте первый шаг (создайте аккаунт, напишите пост, найдите клиента)</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <p className="font-bold text-gray-900 mb-2">💰 ШАГ 4: Откройте денежный поток</p>
+                  <ul className="text-sm text-gray-800 space-y-1 ml-4">
+                    <li>• <strong>ДЕНЕЖНЫЙ КОД:</strong> {destiny?.finance?.split('.')[0]}</li>
+                    <li>• <strong>ЧТО ДЕЛАТЬ:</strong> Сделайте первую продажу через свое предназначение (даже за 500₽)</li>
+                    <li>• <strong>ЗАЧЕМ:</strong> Доказать себе, что деньги идут через {destiny?.title}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* МЕСЯЦ 2 */}
+            <div className="p-6 bg-orange-50 rounded-xl border-2 border-orange-300">
+              <p className="font-bold text-orange-900 text-xl mb-4">🎭 МЕСЯЦ 2 — Снятие маски</p>
+              
+              <div className="space-y-3">
+                <div>
+                  <p className="font-bold text-gray-900 mb-2">🎭 ШАГ 5: Снимите социальную маску (Аркан {result.social} - {social?.title})</p>
+                  <ul className="text-sm text-gray-800 space-y-1 ml-4">
+                    <li>• <strong>ПРОБЛЕМА:</strong> Вы притворяетесь {social?.title} для общества, но это не вы</li>
+                    <li>• <strong>ЧТО ДЕЛАТЬ:</strong> Скажите правду 3 людям — кто вы на самом деле ({personal?.title})</li>
+                    <li>• <strong>ПРИМЕР:</strong> "Я не {social?.title}, я {personal?.title}. Вот что я хочу делать..."</li>
+                    <li>• <strong>ЗАЧЕМ:</strong> Жить не "на публику", а для себя</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <p className="font-bold text-gray-900 mb-2">🤝 ШАГ 6: Найдите свою команду</p>
+                  <ul className="text-sm text-gray-800 space-y-1 ml-4">
+                    <li>• <strong>ЧТО ДЕЛАТЬ:</strong> Найдите 3 людей, которые поддержат ваше предназначение ({destiny?.title})</li>
+                    <li>• <strong>ГДЕ ИСКАТЬ:</strong> Сообщества, курсы, конференции по вашей теме</li>
+                    <li>• <strong>ЗАЧЕМ:</strong> Окружение решает всё. Без поддержки не удержитесь</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* МЕСЯЦ 3 */}
+            <div className="p-6 bg-purple-50 rounded-xl border-2 border-purple-300">
+              <p className="font-bold text-purple-900 text-xl mb-4">✨ МЕСЯЦ 3 — Духовная активация</p>
+              
+              <div className="space-y-3">
+                <div>
+                  <p className="font-bold text-gray-900 mb-2">🙏 ШАГ 7: Активируйте духовность (Аркан {result.spiritual} - {spiritual?.title})</p>
+                  <ul className="text-sm text-gray-800 space-y-1 ml-4">
+                    <li>• <strong>ПРОБЛЕМА:</strong> {spiritual?.health?.split('•')[0]}</li>
+                    <li>• <strong>ЧТО ДЕЛАТЬ:</strong> Медитация 10 минут каждый день (утром или вечером)</li>
+                    <li>• <strong>КАК:</strong> Сядьте тихо, закройте глаза, дышите. Спросите: "В чем смысл моей жизни?"</li>
+                    <li>• <strong>ЗАЧЕМ:</strong> Подключиться к высшему. Без духовности нет энергии</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <p className="font-bold text-gray-900 mb-2">🧘 ШАГ 8: Очистите денежные блоки</p>
+                  <ul className="text-sm text-gray-800 space-y-1 ml-4">
+                    <li>• <strong>УПРАЖНЕНИЕ:</strong> Напишите ответ на вопрос: "Что плохого случится, если я стану богатым через {destiny?.title}?"</li>
+                    <li>• <strong>ПРИМЕР БЛОКОВ:</strong> "Потеряю друзей", "Стану плохим", "Меня ограбят"</li>
+                    <li>• <strong>ЧТО ДЕЛАТЬ:</strong> Для каждого блока напишите: "Это не правда, потому что..."</li>
+                    <li>• <strong>ЗАЧЕМ:</strong> Убрать подсознательные страхи денег</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* ИТОГОВЫЙ ЧЕКЛИСТ */}
+            <div className="p-6 bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl border-2 border-green-400">
+              <p className="font-bold text-green-900 text-xl mb-4">✅ ЧЕКЛИСТ НА 90 ДНЕЙ</p>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <p className="font-bold text-gray-900 mb-2">📝 ЕЖЕДНЕВНО:</p>
+                  <ul className="text-sm text-gray-800 space-y-1">
+                    <li>✅ Записать 3 проявления {personal?.title}</li>
+                    <li>✅ Медитация 10 минут</li>
+                    <li>✅ Действие по {destiny?.title}</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <p className="font-bold text-gray-900 mb-2">📅 ЕЖЕНЕДЕЛЬНО:</p>
+                  <ul className="text-sm text-gray-800 space-y-1">
+                    <li>✅ Встреча с поддерживающими людьми</li>
+                    <li>✅ Продажа через {destiny?.title}</li>
+                    <li>✅ Работа с денежными блоками</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <p className="font-bold text-gray-900 mb-2">📆 ЕЖЕМЕСЯЧНО:</p>
+                  <ul className="text-sm text-gray-800 space-y-1">
+                    <li>✅ Проверка здоровья (слабые зоны)</li>
+                    <li>✅ Анализ дохода через {destiny?.title}</li>
+                    <li>✅ Оценка: живу ли я из маски?</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <p className="font-bold text-gray-900 mb-2">🎯 ЧЕРЕЗ 90 ДНЕЙ:</p>
+                  <ul className="text-sm text-gray-800 space-y-1">
+                    <li>✅ Доход через {destiny?.title} вырос</li>
+                    <li>✅ Здоровье улучшилось</li>
+                    <li>✅ Появились правильные люди</li>
+                    <li>✅ Жизнь обрела смысл</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* ФИНАЛЬНЫЙ ПРИЗЫВ К ДЕЙСТВИЮ */}
+            <div className="p-6 bg-gradient-to-r from-amber-100 to-yellow-100 rounded-xl border-2 border-amber-400">
+              <p className="font-bold text-amber-900 text-2xl mb-3 text-center">🔥 НАЧНИТЕ ПРЯМО СЕЙЧАС!</p>
+              <p className="text-gray-800 text-center text-lg">
+                <strong>ШАГ 1 СЕГОДНЯ:</strong> Возьмите лист бумаги и напишите: "Я {result.name}, мой характер — {personal?.title}, 
+                моя миссия — {destiny?.title}. Сегодня я делаю первый шаг: ____________" (впишите конкретное действие)
+              </p>
+              <p className="text-center text-sm text-gray-600 mt-3">
+                Пока не напишете — ничего не изменится. <strong>Действие решает всё!</strong>
+              </p>
+            </div>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
