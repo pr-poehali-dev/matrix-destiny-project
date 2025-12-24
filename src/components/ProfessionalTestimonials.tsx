@@ -1,7 +1,98 @@
 import { Card, CardContent } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
+import { useEffect } from 'react';
 
 export const ProfessionalTestimonials = () => {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": [
+        {
+          "@type": "Review",
+          "position": 1,
+          "author": {
+            "@type": "Person",
+            "name": "Александра Волкова",
+            "jobTitle": "HR-директор, Sber"
+          },
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+          },
+          "reviewBody": "Использую Матрицу Судьбы для подбора персонала уже 2 года. Это революция в HR! За 5 минут вижу, подходит ли кандидат для роли, как впишется в команду, какие у него мотиваторы. Процент успешных наймов вырос с 60% до 92%."
+        },
+        {
+          "@type": "Review",
+          "position": 2,
+          "author": {
+            "@type": "Person",
+            "name": "Дмитрий Соколов",
+            "jobTitle": "Психолог-психотерапевт"
+          },
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+          },
+          "reviewBody": "Матрица — мой главный инструмент диагностики. На первой сессии уже понимаю корень проблемы клиента. Раньше на это уходило 5-7 встреч. Особенно точно работает в выявлении глубинных страхов и кармических задач."
+        },
+        {
+          "@type": "Review",
+          "position": 3,
+          "author": {
+            "@type": "Person",
+            "name": "Елена Михайлова",
+            "jobTitle": "Нутрициолог, эндокринолог"
+          },
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+          },
+          "reviewBody": "Матрица показывает психосоматические причины проблем с весом и здоровьем. У 80% моих клиентов проблемы были не в питании, а в блокировке определённых энергий. Результаты в 3 раза лучше, чем просто диеты."
+        },
+        {
+          "@type": "Review",
+          "position": 4,
+          "author": {
+            "@type": "Person",
+            "name": "Игорь Петров",
+            "jobTitle": "Бизнес-коуч, Forbes Top-100"
+          },
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+          },
+          "reviewBody": "Консультирую предпринимателей от 10 лет. Матрица — это рентген для бизнеса. Она показывает, почему человек не может пробить потолок дохода, в какой нише он достигнет успеха. Мои клиенты удваивают выручку за 6 месяцев."
+        },
+        {
+          "@type": "Review",
+          "position": 5,
+          "author": {
+            "@type": "Person",
+            "name": "Мария Новикова",
+            "jobTitle": "Семейный психолог, сексолог"
+          },
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+          },
+          "reviewBody": "Работаю с парами на грани развода. Матрица показывает совместимость партнёров, их базовые различия в энергиях. Когда пара понимает, что их конфликты — это не злой умысел, а разные арканы, всё меняется. Спасла 47 браков из 50!"
+        }
+      ]
+    });
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   const testimonials = [
     {
       name: 'Александра Волкова',
@@ -119,14 +210,20 @@ export const ProfessionalTestimonials = () => {
               <Card 
                 key={index}
                 className={`bg-gradient-to-br ${colors.bg} border-2 ${colors.border} shadow-lg hover:shadow-2xl transition-all hover:-translate-y-1`}
+                itemScope
+                itemType="https://schema.org/Review"
               >
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4 mb-4">
                     <div className="text-5xl">{testimonial.avatar}</div>
                     <div className="flex-1">
-                      <h3 className="font-bold text-lg text-gray-900">{testimonial.name}</h3>
+                      <h3 className="font-bold text-lg text-gray-900" itemProp="author" itemScope itemType="https://schema.org/Person">
+                        <span itemProp="name">{testimonial.name}</span>
+                      </h3>
                       <p className="text-sm text-gray-700 font-medium">{testimonial.position}</p>
-                      <div className="flex gap-1 mt-1">
+                      <div className="flex gap-1 mt-1" itemProp="reviewRating" itemScope itemType="https://schema.org/Rating">
+                        <meta itemProp="ratingValue" content="5" />
+                        <meta itemProp="bestRating" content="5" />
                         {Array.from({ length: testimonial.rating }).map((_, i) => (
                           <Icon key={i} name="Star" size={14} className="fill-yellow-500 text-yellow-500" />
                         ))}
@@ -134,7 +231,7 @@ export const ProfessionalTestimonials = () => {
                     </div>
                   </div>
 
-                  <p className="text-sm text-gray-800 leading-relaxed mb-4 italic">
+                  <p className="text-sm text-gray-800 leading-relaxed mb-4 italic" itemProp="reviewBody">
                     "{testimonial.text}"
                   </p>
 

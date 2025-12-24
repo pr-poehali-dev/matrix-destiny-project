@@ -16,6 +16,7 @@ import { ProfessionalPromo } from '@/components/ProfessionalPromo';
 import { ProfessionalPromoMain } from '@/components/ProfessionalPromoMain';
 import { ProfessionalCases } from '@/components/ProfessionalCases';
 import { ProfessionalTestimonials } from '@/components/ProfessionalTestimonials';
+import { TestimonialsStats } from '@/components/TestimonialsStats';
 import { SEOContent } from '@/components/SEOContent';
 
 const calculateDestinyMatrix = (birthDate: string, name: string) => {
@@ -1136,10 +1137,12 @@ export default function Index() {
             ) : null}
             
             {hasAccess && <ProfessionalCases />}
-            
-            {hasAccess && <ProfessionalTestimonials />}
           </div>
         )}
+
+        <ProfessionalTestimonials />
+
+        <TestimonialsStats />
 
         <CTABlock onCalculate={scrollToCalculator} />
         
