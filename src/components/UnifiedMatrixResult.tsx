@@ -115,36 +115,40 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
               <div>
                 <p className="font-bold text-amber-700 mb-2">🔥 Из Личности (Аркан {result.personal} - {personal?.title}):</p>
                 <ul className="text-sm text-gray-800 space-y-1 list-disc list-inside">
-                  <li>{personal?.description?.split('.')[0]}</li>
-                  <li>Личная сила характера</li>
-                  <li>Природные склонности</li>
+                  <li>Основа личности — {personal?.title}</li>
+                  <li>Личная сила и характер</li>
+                  <li>Природные таланты и склонности</li>
+                  <li>Ваша уникальность</li>
                 </ul>
               </div>
               
               <div>
                 <p className="font-bold text-yellow-700 mb-2">🎯 Из Предназначения (Аркан {result.destiny} - {destiny?.title}):</p>
                 <ul className="text-sm text-gray-800 space-y-1 list-disc list-inside">
-                  <li>{destiny?.description?.split('.')[0]}</li>
+                  <li>Предназначение в {destiny?.career?.split(',')[0]}</li>
                   <li>Главная миссия жизни</li>
-                  <li>Путь к успеху</li>
+                  <li>Путь к успеху и деньгам</li>
+                  <li>Кармическая задача</li>
                 </ul>
               </div>
               
               <div>
                 <p className="font-bold text-green-700 mb-2">🤝 Из Социальной роли (Аркан {result.social} - {social?.title}):</p>
                 <ul className="text-sm text-gray-800 space-y-1 list-disc list-inside">
-                  <li>{social?.description?.split('.')[0]}</li>
+                  <li>Социальные навыки — {social?.title}</li>
                   <li>Умение работать с людьми</li>
-                  <li>Социальные навыки</li>
+                  <li>Ваша роль в обществе</li>
+                  <li>Как вас видят другие</li>
                 </ul>
               </div>
               
               <div>
                 <p className="font-bold text-indigo-700 mb-2">✨ Из Духовной сути (Аркан {result.spiritual} - {spiritual?.title}):</p>
                 <ul className="text-sm text-gray-800 space-y-1 list-disc list-inside">
-                  <li>{spiritual?.description?.split('.')[0]}</li>
+                  <li>Духовная сила — {spiritual?.title}</li>
                   <li>Духовная мудрость</li>
-                  <li>Связь с высшим</li>
+                  <li>Связь с высшим смыслом</li>
+                  <li>Глубинная суть</li>
                 </ul>
               </div>
             </div>
