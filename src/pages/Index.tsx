@@ -474,6 +474,33 @@ export default function Index() {
     });
   };
 
+  const handleDeleteCalculation = (calcId: string) => {
+    if (!email) return;
+    
+    const updatedHistory = calculationHistory.filter(calc => calc.id !== calcId);
+    setCalculationHistory(updatedHistory);
+    localStorage.setItem(`calculations_history_${email}`, JSON.stringify(updatedHistory));
+    
+    toast({
+      title: 'Расчёт удалён',
+      description: 'Запись удалена из истории',
+    });
+  };
+
+  const handleClearHistory = () => {
+    if (!email) return;
+    
+    if (window.confirm('Удалить всю историю расчётов? Это действие нельзя отменить.')) {
+      setCalculationHistory([]);
+      localStorage.removeItem(`calculations_history_${email}`);
+      
+      toast({
+        title: 'История очищена',
+        description: 'Все расчёты удалены из истории',
+      });
+    }
+  };
+
   const handleLogin = async () => {
     if (!loginEmail) {
       toast({
@@ -824,41 +851,68 @@ export default function Index() {
                     <Icon name="History" size={20} className="text-amber-600" />
                     История расчётов {calculationHistory.length > 0 && `(${calculationHistory.length})`}
                   </h3>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowHistory(false)}
-                  >
-                    <Icon name="X" size={16} />
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    {calculationHistory.length > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleClearHistory}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                      >
+                        <Icon name="Trash2" size={14} className="mr-1" />
+                        Очистить всё
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowHistory(false)}
+                    >
+                      <Icon name="X" size={16} />
+                    </Button>
+                  </div>
                 </div>
                 {calculationHistory.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto">
                     {calculationHistory.slice().reverse().map((calc) => (
-                      <button
+                      <div
                         key={calc.id}
-                        onClick={() => {
-                          setName(calc.name);
-                          setBirthDate(calc.birthDate);
-                          setResult({
-                            personal: calc.personal,
-                            destiny: calc.destiny,
-                            social: calc.social,
-                            spiritual: calc.spiritual,
-                            name: calc.name
-                          });
-                          setShowPricing(true);
-                          setShowHistory(false);
-                          detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }}
-                        className="p-3 text-left bg-white dark:bg-gray-800 rounded-lg border border-amber-200 dark:border-amber-700 hover:border-amber-400 hover:shadow-md transition-all"
+                        className="relative p-3 bg-white dark:bg-gray-800 rounded-lg border border-amber-200 dark:border-amber-700 hover:border-amber-400 hover:shadow-md transition-all group"
                       >
-                        <p className="font-semibold text-sm">{calc.name}</p>
-                        <p className="text-xs text-muted-foreground">{new Date(calc.birthDate).toLocaleDateString('ru-RU')}</p>
-                        <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
-                          {new Date(calc.calculatedAt).toLocaleDateString('ru-RU')} в {new Date(calc.calculatedAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
-                        </p>
-                      </button>
+                        <button
+                          onClick={() => {
+                            setName(calc.name);
+                            setBirthDate(calc.birthDate);
+                            setResult({
+                              personal: calc.personal,
+                              destiny: calc.destiny,
+                              social: calc.social,
+                              spiritual: calc.spiritual,
+                              name: calc.name
+                            });
+                            setShowPricing(true);
+                            setShowHistory(false);
+                            detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }}
+                          className="w-full text-left"
+                        >
+                          <p className="font-semibold text-sm pr-8">{calc.name}</p>
+                          <p className="text-xs text-muted-foreground">{new Date(calc.birthDate).toLocaleDateString('ru-RU')}</p>
+                          <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                            {new Date(calc.calculatedAt).toLocaleDateString('ru-RU')} в {new Date(calc.calculatedAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
+                          </p>
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteCalculation(calc.id);
+                          }}
+                          className="absolute top-2 right-2 p-1 rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 opacity-0 group-hover:opacity-100 hover:bg-red-200 dark:hover:bg-red-800 transition-all"
+                          title="Удалить"
+                        >
+                          <Icon name="Trash2" size={14} />
+                        </button>
+                      </div>
                     ))}
                   </div>
                 ) : (
