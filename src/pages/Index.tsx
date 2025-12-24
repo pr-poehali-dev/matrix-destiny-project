@@ -498,6 +498,32 @@ export default function Index() {
           setSubscriptionExpires(accessCheck.expires_at);
         }
         
+        // Загружаем историю расчётов пользователя
+        const savedHistory = localStorage.getItem(`calculations_history_${loginEmail}`);
+        if (savedHistory) {
+          try {
+            const history = JSON.parse(savedHistory);
+            setCalculationHistory(history);
+            
+            // Загружаем последний расчёт
+            if (history.length > 0) {
+              const lastCalc = history[history.length - 1];
+              setName(lastCalc.name);
+              setBirthDate(lastCalc.birthDate);
+              setResult({
+                personal: lastCalc.personal,
+                destiny: lastCalc.destiny,
+                social: lastCalc.social,
+                spiritual: lastCalc.spiritual,
+                name: lastCalc.name
+              });
+              setShowPricing(true);
+            }
+          } catch (error) {
+            console.error('Failed to load calculation history:', error);
+          }
+        }
+        
         setShowLoginModal(false);
         setLoginEmail('');
         
