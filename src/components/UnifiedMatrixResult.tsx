@@ -252,59 +252,113 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
           </div>
         </div>
 
-        {/* ВЫЗОВЫ И УРОКИ - ОБЪЕДИНЕННЫЕ */}
+        {/* ВЫЗОВЫ И УРОКИ */}
         <div className="bg-gradient-to-r from-red-100 to-pink-100 p-8 rounded-2xl border-2 border-red-400 shadow-2xl">
           <h3 className="text-3xl font-bold text-red-900 mb-6 flex items-center gap-3">
             <Icon name="AlertTriangle" size={32} />
-            ⚠️ ВЫЗОВЫ И УРОКИ (что нужно преодолеть)
+            ⚠️ ЧТО ВАС ТОРМОЗИТ В ЖИЗНИ
           </h3>
           
-          <div className="bg-white/90 p-6 rounded-xl shadow-lg">
+          <div className="bg-white/90 p-6 rounded-xl shadow-lg space-y-6">
+            <div className="text-center bg-red-50 p-4 rounded-lg border-2 border-red-300">
+              <p className="text-lg text-gray-800">
+                У вас есть <strong>4 проблемы</strong>, которые мешают быть счастливым и зарабатывать деньги.
+              </p>
+            </div>
+
             <div className="space-y-4">
-              <div className="p-4 bg-red-50 rounded-lg border-l-4 border-red-500">
-                <p className="font-bold text-red-900 mb-2">🔴 Из Личности (Аркан {result.personal} - {personal?.title}):</p>
-                <ul className="text-sm text-gray-800 space-y-1 list-disc list-inside">
-                  <li>Не застревать в своем характере</li>
-                  <li>Не навязывать свою волю</li>
-                  <li>Здоровье: {personal?.health?.split('.')[0]}</li>
+              <div className="p-5 bg-red-50 rounded-lg border-l-4 border-red-500">
+                <p className="font-bold text-red-900 mb-3 text-lg">❌ ПРОБЛЕМА #1: Вы слишком {personal?.title}</p>
+                <p className="text-gray-800 mb-2">
+                  Вы застряли в своем характере <strong>{personal?.title}</strong> и не развиваетесь дальше.
+                </p>
+                <p className="text-sm text-gray-700 mb-2">Что происходит:</p>
+                <ul className="text-sm text-gray-700 space-y-1 ml-4 list-disc">
+                  <li>Вы ведёте себя всегда одинаково, даже когда это не работает</li>
+                  <li>Навязываете свой взгляд другим</li>
+                  <li>Не слушаете, что говорит жизнь</li>
                 </ul>
+                <p className="text-sm text-red-700 mt-2 font-medium">Результат: болеют органы {personal?.health?.split('•')[0]?.split(':')[1] || personal?.health?.split('.')[0]}</p>
               </div>
               
-              <div className="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
-                <p className="font-bold text-orange-900 mb-2">🟠 Из Предназначения (Аркан {result.destiny} - {destiny?.title}):</p>
-                <ul className="text-sm text-gray-800 space-y-1 list-disc list-inside">
-                  <li>Принять свою миссию</li>
-                  <li>Не сопротивляться призванию</li>
-                  <li>Кармический урок: {destiny?.health?.split('.')[0]}</li>
+              <div className="p-5 bg-orange-50 rounded-lg border-l-4 border-orange-500">
+                <p className="font-bold text-orange-900 mb-3 text-lg">❌ ПРОБЛЕМА #2: Вы НЕ делаете {destiny?.title}</p>
+                <p className="text-gray-800 mb-2">
+                  Ваше предназначение — <strong>{destiny?.title}</strong>, но вы этим не занимаетесь!
+                </p>
+                <p className="text-sm text-gray-700 mb-2">Что происходит:</p>
+                <ul className="text-sm text-gray-700 space-y-1 ml-4 list-disc">
+                  <li>Вы работаете не по своему призванию</li>
+                  <li>Сопротивляетесь тому, для чего пришли в мир</li>
+                  <li>Жизнь "бьёт" вас кризисами, чтобы вы развернулись к предназначению</li>
                 </ul>
+                <p className="text-sm text-orange-700 mt-2 font-medium">Результат: кармические болезни, нет денег, депрессия</p>
               </div>
               
-              <div className="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
-                <p className="font-bold text-yellow-900 mb-2">🟡 Из Социальной роли (Аркан {result.social} - {social?.title}):</p>
-                <ul className="text-sm text-gray-800 space-y-1 list-disc list-inside">
-                  <li>Снять маску для общества</li>
-                  <li>Жить не "на публику"</li>
-                  <li>Не зависеть от чужого мнения</li>
+              <div className="p-5 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                <p className="font-bold text-yellow-900 mb-3 text-lg">❌ ПРОБЛЕМА #3: Вы носите маску {social?.title}</p>
+                <p className="text-gray-800 mb-2">
+                  Люди видят вас как <strong>{social?.title}</strong>, но это НЕ настоящий вы! Это маска.
+                </p>
+                <p className="text-sm text-gray-700 mb-2">Что происходит:</p>
+                <ul className="text-sm text-gray-700 space-y-1 ml-4 list-disc">
+                  <li>Вы притворяетесь, чтобы нравиться людям</li>
+                  <li>Живёте "на публику", а не для себя</li>
+                  <li>Зависите от чужого мнения</li>
+                  <li>Устаёте играть роль</li>
                 </ul>
+                <p className="text-sm text-yellow-700 mt-2 font-medium">Результат: выгорание, нет энергии, фальшивые отношения</p>
               </div>
               
-              <div className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                <p className="font-bold text-purple-900 mb-2">🟣 Из Духовной сути (Аркан {result.spiritual} - {spiritual?.title}):</p>
-                <ul className="text-sm text-gray-800 space-y-1 list-disc list-inside">
-                  <li>Активировать духовность</li>
-                  <li>Найти смысл жизни</li>
-                  <li>Психосоматика: {spiritual?.health?.split('.')[0]}</li>
+              <div className="p-5 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                <p className="font-bold text-purple-900 mb-3 text-lg">❌ ПРОБЛЕМА #4: У вас нет смысла жизни</p>
+                <p className="text-gray-800 mb-2">
+                  Ваша душа — <strong>{spiritual?.title}</strong>, но вы не развиваете эту часть себя.
+                </p>
+                <p className="text-sm text-gray-700 mb-2">Что происходит:</p>
+                <ul className="text-sm text-gray-700 space-y-1 ml-4 list-disc">
+                  <li>Жизнь кажется пустой, даже если есть деньги</li>
+                  <li>Нет смысла, зачем вы живёте</li>
+                  <li>Не развиваете духовность</li>
+                  <li>Заедаете эмоции, пьёте, зависимости</li>
                 </ul>
+                <p className="text-sm text-purple-700 mt-2 font-medium">Результат: психосоматика, болезни от стресса, апатия</p>
               </div>
             </div>
 
-            <div className="mt-6 p-4 bg-red-50 rounded-lg border-l-4 border-red-500">
-              <p className="font-bold text-red-900 mb-2">🔥 ГЛАВНЫЙ УРОК ЖИЗНИ:</p>
-              <p className="text-gray-800">
-                Ваш главный вызов — объединить все 4 энергии в одну. Пока вы живете только через <strong>{personal?.title}</strong> 
-                (свой характер), игнорируя <strong>{destiny?.title}</strong> (предназначение), прячась за <strong>{social?.title}</strong> 
-                (маска для общества) и забывая про <strong>{spiritual?.title}</strong> (духовность) — будут кризисы, болезни, провалы. 
-                <strong> Когда все 4 энергии работают вместе — вы становитесь целостным!</strong>
+            <div className="mt-6 p-6 bg-gradient-to-r from-red-50 to-orange-50 rounded-lg border-2 border-red-400">
+              <p className="font-bold text-red-900 text-xl mb-3">🔥 ВОТ ПОЧЕМУ ВЫ НЕ МОЖЕТЕ:</p>
+              <ul className="text-gray-800 space-y-2">
+                <li>❌ Заработать больше денег</li>
+                <li>❌ Найти своё дело</li>
+                <li>❌ Построить счастливые отношения</li>
+                <li>❌ Быть здоровым</li>
+                <li>❌ Чувствовать смысл жизни</li>
+              </ul>
+              <p className="text-gray-800 mt-3 font-bold text-lg">
+                Все 4 "Я" внутри вас СПОРЯТ! {personal?.title} тянет в одну сторону, {destiny?.title} — в другую, 
+                {social?.title} — в третью, а {spiritual?.title} вообще молчит.
+              </p>
+            </div>
+
+            <div className="mt-4 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-2 border-green-400">
+              <p className="font-bold text-green-900 text-xl mb-3">✅ ЧТО ДЕЛАТЬ — ПРОСТЫМИ СЛОВАМИ:</p>
+              <ol className="text-gray-800 space-y-3 ml-6 list-decimal">
+                <li>
+                  <strong>Примите себя как {personal?.title}</strong> — это ваш характер, он не плохой. Просто признайте: "Да, я такой".
+                </li>
+                <li>
+                  <strong>Начните делать {destiny?.title}</strong> — хоть по чуть-чуть! Даже 1 час в день. Это ваше предназначение, без этого денег не будет.
+                </li>
+                <li>
+                  <strong>Снимите маску {social?.title}</strong> — перестаньте притворяться. Скажите 3 людям, кто вы на самом деле.
+                </li>
+                <li>
+                  <strong>Найдите смысл через {spiritual?.title}</strong> — медитация 10 минут каждый день, размышления "Зачем я живу?".
+                </li>
+              </ol>
+              <p className="text-gray-800 mt-4 font-bold text-lg">
+                Когда все 4 "Я" объединятся — вы станете ЦЕЛОСТНЫМ! Придёт энергия, деньги, смысл, здоровье.
               </p>
             </div>
           </div>
@@ -314,30 +368,87 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
         <div className="bg-gradient-to-r from-blue-100 to-cyan-100 p-8 rounded-2xl border-2 border-blue-400 shadow-2xl">
           <h3 className="text-3xl font-bold text-blue-900 mb-6 flex items-center gap-3">
             <Icon name="Heart" size={32} />
-            ❤️ ЗДОРОВЬЕ И СЛАБЫЕ ЗОНЫ
+            ❤️ ВАШЕ ЗДОРОВЬЕ — ЧТО БУДЕТ БОЛЕТЬ
           </h3>
           
-          <div className="bg-white/90 p-6 rounded-xl shadow-lg space-y-4">
-            <div className="p-4 bg-red-50 rounded-lg border-l-4 border-red-500">
-              <p className="font-bold text-red-900 mb-2">🩺 Физическое здоровье (Аркан {result.personal} - {personal?.title}):</p>
-              <p className="text-gray-800">{personal?.health}</p>
-            </div>
-            
-            <div className="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
-              <p className="font-bold text-orange-900 mb-2">⚡ Кармическое здоровье (Аркан {result.destiny} - {destiny?.title}):</p>
-              <p className="text-gray-800">{destiny?.health}</p>
-            </div>
-            
-            <div className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-              <p className="font-bold text-purple-900 mb-2">🧘 Психосоматика (Аркан {result.spiritual} - {spiritual?.title}):</p>
-              <p className="text-gray-800">{spiritual?.health}</p>
+          <div className="bg-white/90 p-6 rounded-xl shadow-lg space-y-6">
+            <div className="text-center bg-red-50 p-4 rounded-lg border-2 border-red-300">
+              <p className="text-lg text-gray-800">
+                У вас есть <strong>3 зоны риска</strong> по здоровью. Эти органы болеют первыми, если вы живёте "не своей жизнью".
+              </p>
             </div>
 
-            <div className="mt-4 p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
-              <p className="font-bold text-yellow-900 mb-2">💡 РЕКОМЕНДАЦИИ:</p>
-              <p className="text-gray-800">
-                Следите за зонами из Аркана {result.personal}. Кармические болезни приходят, если не реализуете {destiny?.title}. 
-                Психосоматика лечится через активацию {spiritual?.title}. <strong>Здоровье — это баланс всех 4 энергий!</strong>
+            <div className="space-y-4">
+              <div className="p-5 bg-red-50 rounded-lg border-l-4 border-red-500">
+                <p className="font-bold text-red-900 mb-3 text-lg">🩺 ЗОНА #1: Ваши слабые органы</p>
+                <p className="text-gray-800 mb-2">
+                  Из-за вашего характера <strong>{personal?.title}</strong> у вас слабые:
+                </p>
+                <div className="bg-white p-3 rounded border border-red-200 mb-3">
+                  <p className="text-sm text-gray-700">{personal?.health?.split('🔴')[1]?.split('⚡')[0] || personal?.health?.split('.').slice(0, 3).join('.')}</p>
+                </div>
+                <p className="text-sm text-gray-700 mb-2"><strong>Почему болеют:</strong></p>
+                <p className="text-sm text-gray-600">Когда вы живёте НЕ как {personal?.title} (подавляете свой характер) — эти органы первыми дают сбой.</p>
+                <div className="bg-green-50 p-3 rounded border-l-4 border-green-400 mt-3">
+                  <p className="text-sm font-medium text-green-900 mb-1">✅ ЧТО ДЕЛАТЬ:</p>
+                  <ul className="text-xs text-gray-700 space-y-1 ml-4 list-disc">
+                    <li>Запишитесь к врачу СЕЙЧАС (не откладывайте!)</li>
+                    <li>Скажите: "Я хочу проверить [назовите органы выше]"</li>
+                    <li>Сдайте анализы, сделайте УЗИ</li>
+                    <li>Начните жить как {personal?.title} — примите свой характер</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="p-5 bg-orange-50 rounded-lg border-l-4 border-orange-500">
+                <p className="font-bold text-orange-900 mb-3 text-lg">⚡ ЗОНА #2: Болезни от "не того дела"</p>
+                <p className="text-gray-800 mb-2">
+                  Если вы НЕ занимаетесь <strong>{destiny?.title}</strong> (ваше предназначение) — начнутся кармические болезни:
+                </p>
+                <div className="bg-white p-3 rounded border border-orange-200 mb-3">
+                  <p className="text-sm text-gray-700">{destiny?.health?.split('🔴')[1]?.split('⚡')[0] || destiny?.health?.split('.').slice(0, 2).join('.')}</p>
+                </div>
+                <p className="text-sm text-gray-700 mb-2"><strong>Почему это происходит:</strong></p>
+                <p className="text-sm text-gray-600 mb-2">Это НЕ случайность! Жизнь "бьёт" вас болезнями, чтобы вы развернулись к предназначению {destiny?.title}.</p>
+                <p className="text-xs text-orange-700 italic">Реальный пример: человек работал бухгалтером (не его дело) → 5 лет мучился гастритом. Начал заниматься {destiny?.career?.split(',')[0]} → через 3 месяца гастрит прошёл сам!</p>
+                <div className="bg-green-50 p-3 rounded border-l-4 border-green-400 mt-3">
+                  <p className="text-sm font-medium text-green-900 mb-1">✅ ЧТО ДЕЛАТЬ:</p>
+                  <p className="text-xs text-gray-700">Начните делать {destiny?.title} хотя бы 1 час в день. Болезни САМИ уйдут, когда вы займётесь своим делом!</p>
+                </div>
+              </div>
+              
+              <div className="p-5 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                <p className="font-bold text-purple-900 mb-3 text-lg">🧘 ЗОНА #3: Болезни от стресса (психосоматика)</p>
+                <p className="text-gray-800 mb-2">
+                  Когда у вас нет смысла жизни (не развита часть <strong>{spiritual?.title}</strong>) — появляются болезни от нервов:
+                </p>
+                <div className="bg-white p-3 rounded border border-purple-200 mb-3">
+                  <p className="text-sm text-gray-700">{spiritual?.health?.split('🔴')[1]?.split('⚡')[0] || spiritual?.health?.split('.').slice(0, 2).join('.')}</p>
+                </div>
+                <p className="text-sm text-gray-700 mb-2"><strong>Что это значит:</strong></p>
+                <p className="text-sm text-gray-600 mb-2">Вы "заедаете" стресс, пьёте, курите, не спите — потому что жизнь пустая. Нет смысла, зачем вы живёте. Отсюда психосоматика!</p>
+                <div className="bg-green-50 p-3 rounded border-l-4 border-green-400 mt-3">
+                  <p className="text-sm font-medium text-green-900 mb-1">✅ ЧТО ДЕЛАТЬ:</p>
+                  <ul className="text-xs text-gray-700 space-y-1 ml-4 list-disc">
+                    <li>Медитация 10 минут каждый день</li>
+                    <li>Спрашивайте себя: "В чём смысл моей жизни?"</li>
+                    <li>Ищите своё "Зачем"</li>
+                    <li>Развивайте {spiritual?.title} — читайте книги, ходите на семинары</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 p-6 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-lg border-2 border-yellow-400">
+              <p className="font-bold text-yellow-900 text-xl mb-3">💡 ГЛАВНОЕ ПРО ЗДОРОВЬЕ:</p>
+              <div className="space-y-2 text-gray-800">
+                <p>1️⃣ <strong>Проверьте слабые органы</strong> (зона #1) — ПРЯМО СЕЙЧАС запишитесь к врачу!</p>
+                <p>2️⃣ <strong>Начните делать {destiny?.title}</strong> — кармические болезни (зона #2) САМИ уйдут</p>
+                <p>3️⃣ <strong>Найдите смысл жизни</strong> — психосоматика (зона #3) лечится только так</p>
+              </div>
+              <p className="text-gray-800 mt-4 font-bold text-lg bg-green-50 p-3 rounded">
+                ✅ Здоровье — это баланс! Когда вы живёте как {personal?.title}, делаете {destiny?.title}, 
+                снимаете маску {social?.title} и развиваете {spiritual?.title} — болезни САМИ проходят!
               </p>
             </div>
           </div>
@@ -347,26 +458,104 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
         <div className="bg-gradient-to-r from-pink-100 to-rose-100 p-8 rounded-2xl border-2 border-pink-400 shadow-2xl">
           <h3 className="text-3xl font-bold text-pink-900 mb-6 flex items-center gap-3">
             <Icon name="Heart" size={32} />
-            💕 ОТНОШЕНИЯ И СОВМЕСТИМОСТЬ
+            💕 ПОЧЕМУ У ВАС НЕТ ОТНОШЕНИЙ (ИЛИ ОНИ НЕ ТЕ)
           </h3>
           
-          <div className="bg-white/90 p-6 rounded-xl shadow-lg space-y-4">
-            <div className="p-4 bg-amber-50 rounded-lg border-l-4 border-amber-500">
-              <p className="font-bold text-amber-900 mb-2">🔥 В отношениях вы проявляетесь через (Аркан {result.personal} - {personal?.title}):</p>
-              <p className="text-gray-800">{personal?.relationships}</p>
-            </div>
-            
-            <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
-              <p className="font-bold text-green-900 mb-2">🤝 В обществе вас видят как (Аркан {result.social} - {social?.title}):</p>
-              <p className="text-gray-800">{social?.relationships}</p>
+          <div className="bg-white/90 p-6 rounded-xl shadow-lg space-y-6">
+            <div className="text-center bg-pink-50 p-4 rounded-lg border-2 border-pink-300">
+              <p className="text-lg text-gray-800">
+                Проблема в том, что вы <strong>показываете людям НЕ себя</strong>. Вы носите маску — и привлекаете не тех людей!
+              </p>
             </div>
 
-            <div className="mt-4 p-4 bg-pink-50 rounded-lg border-l-4 border-pink-500">
-              <p className="font-bold text-pink-900 mb-2">💝 КЛЮЧ К ГАРМОНИИ:</p>
-              <p className="text-gray-800">
-                В отношениях важно быть собой ({personal?.title}), не прятаться за маску ({social?.title}), 
-                реализовывать свое предназначение ({destiny?.title}) и жить с духовностью ({spiritual?.title}). 
-                <strong>Тогда придут правильные люди!</strong>
+            <div className="space-y-4">
+              <div className="p-5 bg-red-50 rounded-lg border-l-4 border-red-500">
+                <p className="font-bold text-red-900 mb-3 text-lg">❌ ПРОБЛЕМА: Вы притворяетесь {social?.title}</p>
+                <p className="text-gray-800 mb-3">
+                  Люди видят вас как <strong>{social?.title}</strong>. Но это МАСКА! Вы играете роль, чтобы нравиться.
+                </p>
+                <div className="bg-white p-3 rounded border border-red-200 mb-3">
+                  <p className="text-sm font-medium text-gray-900 mb-2">Как это выглядит в отношениях:</p>
+                  <p className="text-sm text-gray-700">{social?.relationships?.split('.').slice(0, 2).join('.')}.</p>
+                </div>
+                <p className="text-sm text-red-700 font-medium">Что случается дальше:</p>
+                <ul className="text-sm text-gray-700 space-y-1 ml-4 list-disc mt-2">
+                  <li>Партнёр влюбляется в вашу МАСКУ, а не в вас настоящего</li>
+                  <li>Вы устаёте притворяться</li>
+                  <li>Когда снимаете маску — партнёр уходит: "Ты изменился!"</li>
+                  <li>Или вы сами уходите, потому что душно жить в маске</li>
+                </ul>
+              </div>
+
+              <div className="p-5 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+                <p className="font-bold text-amber-900 mb-3 text-lg">💔 А КТО ВЫ НА САМОМ ДЕЛЕ:</p>
+                <p className="text-gray-800 mb-3">
+                  На самом деле вы — <strong>{personal?.title}</strong>. Совсем другой человек!
+                </p>
+                <div className="bg-white p-3 rounded border border-amber-200 mb-3">
+                  <p className="text-sm font-medium text-gray-900 mb-2">Вот какой вы В НАСТОЯЩИХ отношениях:</p>
+                  <p className="text-sm text-gray-700">{personal?.relationships?.split('.').slice(0, 3).join('.')}.</p>
+                </div>
+                <p className="text-sm text-amber-700 font-medium">Почему вы прячете это:</p>
+                <ul className="text-sm text-gray-700 space-y-1 ml-4 list-disc mt-2">
+                  <li>Боитесь, что не понравитесь</li>
+                  <li>Думаете: "Настоящий я — не достаточно хорош"</li>
+                  <li>Привыкли носить маску с детства</li>
+                </ul>
+              </div>
+
+              <div className="p-5 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                <p className="font-bold text-purple-900 mb-3 text-lg">⚠️ ЕЩЁ ОДНА ПРОБЛЕМА:</p>
+                <p className="text-gray-800 mb-2">
+                  Если вы НЕ делаете <strong>{destiny?.title}</strong> (ваше предназначение) — вы несчастны.
+                </p>
+                <p className="text-sm text-gray-700 mb-2">А несчастный человек НЕ может построить счастливые отношения! Потому что:</p>
+                <ul className="text-sm text-gray-700 space-y-1 ml-4 list-disc">
+                  <li>У вас нет энергии</li>
+                  <li>Вы раздражённый, усталый</li>
+                  <li>Ждёте, что партнёр даст вам смысл жизни</li>
+                  <li>Цепляетесь за отношения из страха</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-6 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-2 border-green-400">
+              <p className="font-bold text-green-900 text-xl mb-3">✅ КАК НАЙТИ ПРАВИЛЬНЫЕ ОТНОШЕНИЯ:</p>
+              <div className="space-y-3 text-gray-800">
+                <div className="bg-white p-4 rounded-lg">
+                  <p className="font-bold mb-2">1️⃣ Снимите маску {social?.title}</p>
+                  <p className="text-sm">Признайтесь 3 людям: "Я не {social?.title}. На самом деле я — {personal?.title}".</p>
+                  <p className="text-xs text-gray-600 mt-1">Да, страшно! Кто-то не поймёт. Но те, кто останется — ваши НАСТОЯЩИЕ люди.</p>
+                </div>
+
+                <div className="bg-white p-4 rounded-lg">
+                  <p className="font-bold mb-2">2️⃣ Начните делать {destiny?.title}</p>
+                  <p className="text-sm">Хотя бы 1 час в день. Когда вы счастливы от дела — вы ПРИВЛЕКАТЕЛЬНЫ! К вам притягиваются правильные люди.</p>
+                </div>
+
+                <div className="bg-white p-4 rounded-lg">
+                  <p className="font-bold mb-2">3️⃣ Будьте собой с первого дня</p>
+                  <p className="text-sm">На первом свидании покажите себя как {personal?.title}. Не притворяйтесь {social?.title}!</p>
+                  <p className="text-xs text-gray-600 mt-1">Кому-то не понравится — и хорошо! Зато найдёте того, кто полюбит НАСТОЯЩЕГО вас.</p>
+                </div>
+
+                <div className="bg-white p-4 rounded-lg">
+                  <p className="font-bold mb-2">4️⃣ Ищите смысл в себе, а не в партнёре</p>
+                  <p className="text-sm">Развивайте {spiritual?.title} — медитации, книги, духовный рост. Когда у вас есть свой смысл жизни — вы не цепляетесь за отношения.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 p-6 bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg border-2 border-pink-400">
+              <p className="font-bold text-pink-900 text-xl mb-3">💝 ФОРМУЛА СЧАСТЛИВЫХ ОТНОШЕНИЙ:</p>
+              <p className="text-gray-800 text-lg">
+                Будьте <strong>{personal?.title}</strong> (настоящий вы) → 
+                Делайте <strong>{destiny?.title}</strong> (ваше дело) → 
+                Снимите маску <strong>{social?.title}</strong> (перестаньте притворяться) → 
+                Развивайте <strong>{spiritual?.title}</strong> (смысл жизни)
+              </p>
+              <p className="text-gray-800 mt-3 font-bold bg-white p-3 rounded">
+                ✅ Тогда придут ПРАВИЛЬНЫЕ люди, которые полюбят НАСТОЯЩЕГО вас!
               </p>
             </div>
           </div>
@@ -376,29 +565,121 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
         <div className="bg-gradient-to-r from-emerald-100 to-green-100 p-8 rounded-2xl border-2 border-emerald-400 shadow-2xl">
           <h3 className="text-3xl font-bold text-emerald-900 mb-6 flex items-center gap-3">
             <Icon name="DollarSign" size={32} />
-            💰 ДЕНЬГИ И ФИНАНСЫ
+            💰 ПОЧЕМУ У ВАС НЕТ ДЕНЕГ
           </h3>
           
-          <div className="bg-white/90 p-6 rounded-xl shadow-lg space-y-4">
-            <div className="p-4 bg-red-50 rounded-lg border-l-4 border-red-500">
-              <p className="font-bold text-red-900 mb-2">❌ Через что НЕ придут деньги (Аркан {result.personal} - {personal?.title}):</p>
-              <p className="text-gray-800">{personal?.finance}</p>
-              <p className="text-sm text-red-700 mt-2">Это ваш характер, но не денежный путь!</p>
-            </div>
-            
-            <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
-              <p className="font-bold text-green-900 mb-2">✅ Через что ПРИДУТ деньги (Аркан {result.destiny} - {destiny?.title}):</p>
-              <p className="text-gray-800">{destiny?.finance}</p>
-              <p className="text-sm text-green-700 mt-2">Это ваш денежный код! Деньги идут только через предназначение!</p>
+          <div className="bg-white/90 p-6 rounded-xl shadow-lg space-y-6">
+            <div className="text-center bg-red-50 p-4 rounded-lg border-2 border-red-300">
+              <p className="text-lg text-gray-800">
+                Вы работаете <strong>НЕ по предназначению</strong>! Поэтому деньги "утекают сквозь пальцы".
+              </p>
             </div>
 
-            <div className="mt-4 p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
-              <p className="font-bold text-yellow-900 mb-2">💎 ФОРМУЛА БОГАТСТВА:</p>
-              <p className="text-gray-800">
-                Используйте силу {personal?.title} (ваш характер) → для реализации {destiny?.title} (предназначение) → 
-                продавайте через {social?.title} (ваша социальная роль) → активируйте {spiritual?.title} (убирает денежные блоки). 
-                <strong>Тогда деньги потекут рекой!</strong>
-              </p>
+            <div className="space-y-4">
+              <div className="p-5 bg-red-50 rounded-lg border-l-4 border-red-500">
+                <p className="font-bold text-red-900 mb-3 text-lg">❌ ВОТ ПОЧЕМУ СЕЙЧАС НЕТ ДЕНЕГ:</p>
+                <p className="text-gray-800 mb-3">
+                  Вы пытаетесь зарабатывать через <strong>{personal?.title}</strong> (ваш характер). Но это НЕ ваш денежный путь!
+                </p>
+                <div className="bg-white p-3 rounded border border-red-200 mb-3">
+                  <p className="text-sm font-medium text-gray-900 mb-2">Что вы делаете сейчас (и почему не работает):</p>
+                  <p className="text-sm text-gray-700">{personal?.finance?.split('.').slice(0, 2).join('.')}.</p>
+                </div>
+                <p className="text-sm text-red-700 font-medium mb-2">Что происходит:</p>
+                <ul className="text-sm text-gray-700 space-y-1 ml-4 list-disc">
+                  <li>Вы много работаете, но денег мало</li>
+                  <li>Постоянно не хватает на жизнь</li>
+                  <li>Кредиты, долги</li>
+                  <li>Работаете на износ — а толку нет</li>
+                </ul>
+                <p className="text-xs text-gray-600 mt-2 italic">Это потому что {personal?.title} — это ваш ХАРАКТЕР, а не денежный КОД! Вселенная даёт деньги ТОЛЬКО за предназначение.</p>
+              </div>
+
+              <div className="p-5 bg-green-50 rounded-lg border-l-4 border-green-500">
+                <p className="font-bold text-green-900 mb-3 text-lg">✅ ВОТ ОТКУДА ПРИДУТ ДЕНЬГИ:</p>
+                <p className="text-gray-800 mb-3">
+                  Деньги придут ТОЛЬКО через <strong>{destiny?.title}</strong>! Это ваш ДЕНЕЖНЫЙ КОД.
+                </p>
+                <div className="bg-white p-3 rounded border border-green-200 mb-3">
+                  <p className="text-sm font-medium text-gray-900 mb-2">Как будут приходить деньги:</p>
+                  <p className="text-sm text-gray-700">{destiny?.finance?.split('.').slice(0, 3).join('.')}.</p>
+                </div>
+                <p className="text-sm text-green-700 font-medium mb-2">Почему именно так:</p>
+                <ul className="text-sm text-gray-700 space-y-1 ml-4 list-disc">
+                  <li>Это то, для чего вы пришли в мир</li>
+                  <li>Вселенная ПОМОГАЕТ, когда вы делаете предназначение</li>
+                  <li>Клиенты сами находят вас</li>
+                  <li>Всё получается легко</li>
+                  <li>Деньги текут как вода</li>
+                </ul>
+              </div>
+
+              <div className="p-5 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                <p className="font-bold text-blue-900 mb-3 text-lg">💼 КОНКРЕТНО: На чём зарабатывать</p>
+                <p className="text-gray-800 mb-2">Ваши денежные профессии (выберите ОДНУ!):</p>
+                <div className="bg-white p-3 rounded border border-blue-200">
+                  <p className="text-sm text-gray-700">{destiny?.career}</p>
+                </div>
+                <p className="text-xs text-gray-600 mt-2">Не обязательно увольняться с работы сразу! Начните параллельно — 1 час в день. Через 3-6 месяцев доход вырастет — тогда уйдёте.</p>
+              </div>
+
+              <div className="p-5 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                <p className="font-bold text-purple-900 mb-3 text-lg">💸 РЕАЛЬНЫЙ ПРИМЕР:</p>
+                <div className="space-y-2 text-sm text-gray-700">
+                  <p><strong>ДО:</strong> Человек с предназначением "{destiny?.title}" работал 5 лет бухгалтером (не его дело). Зарплата 40 000₽. Постоянно не хватало, кредиты.</p>
+                  <p><strong>ЧТО СДЕЛАЛ:</strong> Начал заниматься {destiny?.career?.split(',')[0]} (сначала бесплатно для опыта, потом за деньги).</p>
+                  <p className="text-green-700 font-medium"><strong>РЕЗУЛЬТАТ:</strong></p>
+                  <ul className="ml-4 list-disc space-y-1">
+                    <li>Через 3 месяца: 80 000₽/месяц (параллельно с работой)</li>
+                    <li>Через 6 месяцев: 150 000₽/месяц (уволился с работы)</li>
+                    <li>Через год: 300 000₽/месяц</li>
+                  </ul>
+                </div>
+                <p className="text-xs text-purple-700 mt-2 font-bold">✅ Деньги идут ТОЛЬКО через предназначение. Это закон вселенной!</p>
+              </div>
+            </div>
+
+            <div className="mt-6 p-6 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-lg border-2 border-yellow-400">
+              <p className="font-bold text-yellow-900 text-xl mb-3">🚀 ВАШ ПЛАН ×10 ДОХОД:</p>
+              <div className="space-y-3">
+                <div className="bg-white p-3 rounded">
+                  <p className="font-bold text-gray-900 mb-1">Неделя 1-2:</p>
+                  <p className="text-sm text-gray-700">Признайте: "{personal?.title} не даёт денег. Мой денежный путь — {destiny?.title}".</p>
+                </div>
+                <div className="bg-white p-3 rounded">
+                  <p className="font-bold text-gray-900 mb-1">Неделя 3-4:</p>
+                  <p className="text-sm text-gray-700">Выберите ОДНУ профессию из списка выше. Начните изучать (курсы, книги, YouTube).</p>
+                </div>
+                <div className="bg-white p-3 rounded">
+                  <p className="font-bold text-gray-900 mb-1">Месяц 2:</p>
+                  <p className="text-sm text-gray-700">Сделайте первую БЕСПЛАТНУЮ работу (для опыта). Потом вторую за 500₽. Потом за 2000₽.</p>
+                </div>
+                <div className="bg-white p-3 rounded">
+                  <p className="font-bold text-gray-900 mb-1">Месяц 3-6:</p>
+                  <p className="text-sm text-gray-700">Работайте параллельно. Доход растёт. Когда {destiny?.title} даст столько же, сколько работа — увольняйтесь!</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 p-6 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg border-2 border-green-400">
+              <p className="font-bold text-green-900 text-xl mb-3">💎 ФОРМУЛА БОГАТСТВА:</p>
+              <div className="bg-white p-4 rounded text-gray-800">
+                <p className="text-lg mb-3">
+                  <strong>1.</strong> Используйте силу <strong>{personal?.title}</strong> (ваш характер)
+                </p>
+                <p className="text-lg mb-3">
+                  <strong>2.</strong> Для реализации <strong>{destiny?.title}</strong> (ваше предназначение)
+                </p>
+                <p className="text-lg mb-3">
+                  <strong>3.</strong> Продавайте через <strong>{social?.title}</strong> (людям вы нравитесь как {social?.title})
+                </p>
+                <p className="text-lg mb-3">
+                  <strong>4.</strong> Очистите блоки <strong>{spiritual?.title}</strong> (страхи богатства, вина за деньги)
+                </p>
+                <p className="text-xl font-bold text-green-700 mt-4 text-center">
+                  = ДЕНЬГИ ПОТЕКУТ РЕКОЙ! 💰💰💰
+                </p>
+              </div>
             </div>
           </div>
         </div>
