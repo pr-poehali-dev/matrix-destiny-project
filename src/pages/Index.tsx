@@ -56,6 +56,9 @@ export default function Index() {
   const [subscriptionExpires, setSubscriptionExpires] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginEmail, setLoginEmail] = useState('');
+  const [calculationHistory, setCalculationHistory] = useState<Array<any>>([]);
+  const [showHistory, setShowHistory] = useState(false);
+  const [activeTab, setActiveTab] = useState<'personal' | 'destiny' | 'social' | 'spiritual'>('personal');
   const { toast } = useToast();
   const navigate = useNavigate();
   const calculatorRef = useRef<HTMLDivElement>(null);
@@ -69,23 +72,29 @@ export default function Index() {
     if (storedEmail) {
       setEmail(storedEmail);
       
-      // Загружаем последний расчёт пользователя
-      const savedCalculation = localStorage.getItem(`calculation_${storedEmail}`);
-      if (savedCalculation) {
+      // Загружаем историю расчётов пользователя
+      const savedHistory = localStorage.getItem(`calculations_history_${storedEmail}`);
+      if (savedHistory) {
         try {
-          const calc = JSON.parse(savedCalculation);
-          setName(calc.name);
-          setBirthDate(calc.birthDate);
-          setResult({
-            personal: calc.personal,
-            destiny: calc.destiny,
-            social: calc.social,
-            spiritual: calc.spiritual,
-            name: calc.name
-          });
-          setShowPricing(true);
+          const history = JSON.parse(savedHistory);
+          setCalculationHistory(history);
+          
+          // Загружаем последний расчёт
+          if (history.length > 0) {
+            const lastCalc = history[history.length - 1];
+            setName(lastCalc.name);
+            setBirthDate(lastCalc.birthDate);
+            setResult({
+              personal: lastCalc.personal,
+              destiny: lastCalc.destiny,
+              social: lastCalc.social,
+              spiritual: lastCalc.spiritual,
+              name: lastCalc.name
+            });
+            setShowPricing(true);
+          }
         } catch (error) {
-          console.error('Failed to load saved calculation:', error);
+          console.error('Failed to load calculation history:', error);
         }
       }
       
@@ -130,8 +139,9 @@ export default function Index() {
       if (email) {
         localStorage.setItem('userEmail', email);
         
-        // Сохраняем расчёт для этого пользователя
+        // Сохраняем расчёт в историю
         const calculationData = {
+          id: Date.now().toString(),
           name,
           birthDate,
           personal: matrix.personal,
@@ -140,7 +150,22 @@ export default function Index() {
           spiritual: matrix.spiritual,
           calculatedAt: new Date().toISOString()
         };
-        localStorage.setItem(`calculation_${email}`, JSON.stringify(calculationData));
+        
+        // Загружаем существующую историю
+        const savedHistory = localStorage.getItem(`calculations_history_${email}`);
+        let history = [];
+        if (savedHistory) {
+          try {
+            history = JSON.parse(savedHistory);
+          } catch (e) {
+            history = [];
+          }
+        }
+        
+        // Добавляем новый расчёт в историю
+        history.push(calculationData);
+        localStorage.setItem(`calculations_history_${email}`, JSON.stringify(history));
+        setCalculationHistory(history);
         
         try {
           const accessCheck = await checkAccess(email);
@@ -276,8 +301,8 @@ export default function Index() {
         console.error('Failed to logout on server:', error);
       }
       
-      // Удаляем сохранённый расчёт пользователя
-      localStorage.removeItem(`calculation_${storedEmail}`);
+      // Удаляем историю расчётов пользователя
+      localStorage.removeItem(`calculations_history_${storedEmail}`);
     }
     
     localStorage.removeItem('subscriberAuth');
@@ -291,6 +316,8 @@ export default function Index() {
     setName('');
     setBirthDate('');
     setShowPricing(false);
+    setCalculationHistory([]);
+    setShowHistory(false);
     toast({
       title: 'Вы вышли из аккаунта',
       description: 'Сессия на этом устройстве завершена',
@@ -407,30 +434,27 @@ export default function Index() {
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
       <LiveNotifications />
       
-      {/* Рекламный баннер для профессионалов */}
-      <div className="bg-gradient-to-r from-purple-700 via-indigo-700 to-blue-700 text-white py-4 shadow-lg">
+      {/* Профессиональный баннер */}
+      <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white py-3 shadow-lg">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start">
-              <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                <Icon name="Briefcase" size={18} />
-                <span className="font-bold text-sm">ДЛЯ ПРОФЕССИОНАЛОВ</span>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 text-sm">
-                <span className="font-semibold">👨‍💼 HR</span>
-                <span className="text-white/60">•</span>
-                <span className="font-semibold">🧠 Психологи</span>
-                <span className="text-white/60">•</span>
-                <span className="font-semibold">📈 Коучи</span>
-                <span className="text-white/60">•</span>
-                <span className="font-semibold">🍎 Нутрициологи</span>
-              </div>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-3 text-center">
+            <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-1.5 rounded-full">
+              <Icon name="Briefcase" size={18} />
+              <span className="font-bold text-sm">ДЛЯ ПРОФЕССИОНАЛОВ</span>
             </div>
-            <div className="text-center md:text-right">
-              <p className="text-sm font-semibold">
-                🎯 Полный анализ клиента за 5 минут • От 300₽
-              </p>
+            <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
+              <span className="font-semibold">👨‍💼 HR</span>
+              <span className="text-white/60">•</span>
+              <span className="font-semibold">🧠 Психологи</span>
+              <span className="text-white/60">•</span>
+              <span className="font-semibold">📈 Коучи</span>
+              <span className="text-white/60">•</span>
+              <span className="font-semibold">🍎 Нутрициологи</span>
             </div>
+            <div className="hidden md:block text-white/40">•</div>
+            <p className="text-sm font-semibold">
+              🎯 Полный анализ клиента за 5 минут • От 300₽
+            </p>
           </div>
         </div>
       </div>
@@ -590,24 +614,81 @@ export default function Index() {
                 </CardDescription>
               </div>
               {result && hasAccess && (
-                <Button
-                  onClick={() => {
-                    setName('');
-                    setBirthDate('');
-                    setResult(null);
-                    setShowPricing(false);
-                    calculatorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }}
-                  variant="outline"
-                  className="gap-2"
-                >
-                  <Icon name="Plus" size={16} />
-                  Новый расчёт
-                </Button>
+                <div className="flex gap-2">
+                  {calculationHistory.length > 1 && (
+                    <Button
+                      onClick={() => setShowHistory(!showHistory)}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <Icon name="History" size={16} />
+                      История ({calculationHistory.length})
+                    </Button>
+                  )}
+                  <Button
+                    onClick={() => {
+                      setName('');
+                      setBirthDate('');
+                      setResult(null);
+                      setShowPricing(false);
+                      calculatorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }}
+                    variant="outline"
+                    className="gap-2"
+                  >
+                    <Icon name="Plus" size={16} />
+                    Новый расчёт
+                  </Button>
+                </div>
               )}
             </div>
           </CardHeader>
           <CardContent className="space-y-4 pt-6">
+            {showHistory && calculationHistory.length > 1 && hasAccess && (
+              <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950 dark:to-indigo-950 rounded-lg border-2 border-purple-200 dark:border-purple-800">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-bold text-lg flex items-center gap-2">
+                    <Icon name="History" size={20} className="text-purple-600" />
+                    История расчётов ({calculationHistory.length})
+                  </h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowHistory(false)}
+                  >
+                    <Icon name="X" size={16} />
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto">
+                  {calculationHistory.slice().reverse().map((calc) => (
+                    <button
+                      key={calc.id}
+                      onClick={() => {
+                        setName(calc.name);
+                        setBirthDate(calc.birthDate);
+                        setResult({
+                          personal: calc.personal,
+                          destiny: calc.destiny,
+                          social: calc.social,
+                          spiritual: calc.spiritual,
+                          name: calc.name
+                        });
+                        setShowPricing(true);
+                        setShowHistory(false);
+                        detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }}
+                      className="p-3 text-left bg-white dark:bg-gray-800 rounded-lg border border-purple-200 dark:border-purple-700 hover:border-purple-400 hover:shadow-md transition-all"
+                    >
+                      <p className="font-semibold text-sm">{calc.name}</p>
+                      <p className="text-xs text-muted-foreground">{new Date(calc.birthDate).toLocaleDateString('ru-RU')}</p>
+                      <p className="text-xs text-purple-600 dark:text-purple-400 mt-1">
+                        {new Date(calc.calculatedAt).toLocaleDateString('ru-RU')} в {new Date(calc.calculatedAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             <div>
               <label className="block text-sm font-medium mb-2">Имя</label>
               <Input
