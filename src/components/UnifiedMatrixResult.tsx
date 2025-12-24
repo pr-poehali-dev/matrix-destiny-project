@@ -126,12 +126,17 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
 
           <div className="bg-blue-50 p-3 rounded-lg">
             <p className="font-bold text-blue-900 mb-1">💼 Конкретные профессии:</p>
-            <p className="text-gray-700 text-sm">{destiny?.career}</p>
+            <p className="text-gray-700 text-sm">
+              {destiny?.finance?.split('🎓 ПРОФЕССИИ')[1]?.split(':')[1]?.trim() || 
+               destiny?.finance?.split('💸 ИСТОЧНИКИ ДОХОДА:')[1]?.split('\n\n')[0]?.trim()}
+            </p>
           </div>
 
           <div className="bg-purple-50 p-3 rounded-lg">
-            <p className="font-bold text-purple-900 mb-1">💸 Как будут приходить деньги:</p>
-            <p className="text-gray-700 text-sm">{destiny?.finance}</p>
+            <p className="font-bold text-purple-900 mb-1">💸 Источники дохода:</p>
+            <p className="text-gray-700 text-sm whitespace-pre-line">
+              {destiny?.finance?.split('💸 ИСТОЧНИКИ ДОХОДА:')[1]?.split('\n\n')[0]?.trim()}
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -203,7 +208,7 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
                 Ваше предназначение — {destiny?.title}, но вы этим не занимаетесь!
               </p>
               <p className="text-gray-600 text-sm">
-                <strong>Что это значит:</strong> {destiny?.career?.split(',').slice(0, 2).join(', ')}
+                <strong>Что это значит:</strong> {destiny?.description?.split('\n').find(line => line.includes('ГЛАВНОЕ ПРЕДНАЗНАЧЕНИЕ'))?.replace('🎯 ГЛАВНОЕ ПРЕДНАЗНАЧЕНИЕ:', '').trim() || destiny?.description?.split('.').slice(0, 2).join('.')}
               </p>
             </div>
             
@@ -362,7 +367,10 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
 
           <div className="bg-blue-50 p-4 rounded-lg">
             <p className="font-bold text-blue-900 mb-2">💼 Конкретно: На чём зарабатывать</p>
-            <p className="text-gray-700 text-sm">{destiny?.career}</p>
+            <p className="text-gray-700 text-sm">
+              {destiny?.finance?.split('🎓 ПРОФЕССИИ')[1]?.split(':')[1]?.trim() || 
+               destiny?.finance?.split('💸 ИСТОЧНИКИ ДОХОДА:')[1]?.split('\n\n')[0]?.trim()}
+            </p>
           </div>
 
           <div className="bg-yellow-50 p-4 rounded-lg">
@@ -406,7 +414,7 @@ export const UnifiedMatrixResult = ({ result, hasAccess }: UnifiedMatrixResultPr
             <p className="font-bold text-yellow-900 mb-3">💰 Неделя 2-4 — Найдите, на чём зарабатывать</p>
             <div className="space-y-2 text-sm">
               <p className="text-gray-700"><strong>Ваше денежное предназначение:</strong> {destiny?.title}</p>
-              <p className="text-gray-700"><strong>Профессии для вас:</strong> {destiny?.career?.split('.')[0]}</p>
+              <p className="text-gray-700"><strong>Профессии для вас:</strong> {destiny?.finance?.split('🎓 ПРОФЕССИИ')[1]?.split(':')[1]?.split('.')[0]?.trim() || destiny?.finance?.split('💸 ИСТОЧНИКИ ДОХОДА:')[1]?.split('\n\n')[0]?.split('\n').slice(0, 3).join(', ')}</p>
               <p className="text-gray-700"><strong>Задание:</strong> Выпишите 10 способов заработка на {destiny?.title}</p>
             </div>
           </div>
