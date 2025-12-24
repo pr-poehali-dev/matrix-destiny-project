@@ -469,13 +469,6 @@ export default function Index() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background"></div>
         
         <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center items-center text-center">
-          <div className="mb-6 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 text-gray-900 px-6 py-3 rounded-2xl shadow-2xl border-2 border-white/50 animate-pulse">
-            <p className="font-bold text-lg md:text-xl flex items-center gap-2 flex-wrap justify-center">
-              <Icon name="Briefcase" size={24} className="flex-shrink-0" />
-              <span>Профессиональный инструмент для HR • Психологов • Коучей • Нутрициологов</span>
-            </p>
-          </div>
-          
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
             Матрица Судьбы
           </h1>
