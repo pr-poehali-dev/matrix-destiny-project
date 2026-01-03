@@ -50,25 +50,39 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
       {/* Заголовок */}
       <div className="text-center space-y-2 py-6">
         <h2 className="text-3xl font-bold text-gray-900">
-          🎯 Полный портрет личности
+          📋 Психологический портрет клиента
         </h2>
         <p className="text-lg text-gray-600">
-          {result.name} — анализ всех 4 энергий
+          {result.name} — комплексный анализ личности
         </p>
       </div>
 
-      {/* КТО ВЫ НА САМОМ ДЕЛЕ */}
+      {/* ЕДИНОЕ ЗАКЛЮЧЕНИЕ */}
       <Card id="personal-profile">
         <CardHeader className="bg-gradient-to-r from-purple-50 to-indigo-50">
           <CardTitle className="flex items-center gap-2 text-2xl">
-            <Icon name="User" size={24} />
-            Полный портрет личности — кто вы на самом деле
+            <Icon name="FileText" size={24} />
+            Заключение специалиста
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-6 space-y-4">
-          <p className="text-gray-700 leading-relaxed text-base">
-            У вас внутри живут <strong>4 разных "Я"</strong>. Они часто спорят между собой — поэтому вы в замешательстве!
-          </p>
+        <CardContent className="pt-6 space-y-6">
+          {/* Структура личности */}
+          <div className="space-y-3">
+            <h3 className="text-xl font-bold text-gray-900 border-b-2 border-purple-200 pb-2">
+              🧠 Кто перед вами: структура личности
+            </h3>
+            <p className="text-gray-800 leading-relaxed">
+              Перед вами человек с <strong>внутренним конфликтом четырёх "Я"</strong>: 
+              истинное "Я-настоящий" (Аркан {result.personal} — {personal?.title}), 
+              социальная маска "Я-для-людей" (Аркан {result.social} — {social?.title}), 
+              призвание "Я-должен" (Аркан {result.destiny} — {destiny?.title}) и 
+              глубинная душа "Я-глубинное" (Аркан {result.spiritual} — {spiritual?.title}).
+            </p>
+            <p className="text-gray-800 leading-relaxed">
+              <strong>Основная проблема:</strong> {personal?.title} внутри борется с ожиданиями общества ({social?.title}), 
+              не понимая своего истинного предназначения ({destiny?.title}), что приводит к потере связи с собственной душой ({spiritual?.title}).
+            </p>
+          </div>
           
           <div className="space-y-4">
             {/* ЛИЧНОЕ Я */}
