@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
 import { useNavigate } from 'react-router-dom';
-import func2url from '../../backend/func2url.json';
 
 const Login = () => {
   const [email, setEmail] = useState('');
