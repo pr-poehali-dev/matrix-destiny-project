@@ -40,8 +40,17 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     try:
         request_context = event.get('requestContext', {})
         identity = request_context.get('identity', {})
-        source_ip = identity.get('sourceIp', 'unknown')
-        user_agent = event.get('headers', {}).get('user-agent', 'unknown')
+        headers = event.get('headers', {})
+        
+        # Получаем настоящий IP из заголовков прокси
+        source_ip = (
+            headers.get('x-forwarded-for', '').split(',')[0].strip() or
+            headers.get('x-real-ip', '') or
+            identity.get('sourceIp', 'unknown')
+        )
+        
+        # Получаем User-Agent
+        user_agent = headers.get('user-agent', 'unknown')
         
         # DELETE: Выход из сессии
         if method == 'DELETE':
@@ -220,6 +229,12 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         
         # НОВАЯ ПРОВЕРКА: Контроль количества устройств (защита от передачи аккаунта)
         if has_access and plan_type in ['month', 'half_year', 'year']:
+            # КРИТИЧНО: Очищаем все сессии с IP прокси-сервера (неправильные данные)
+            cur.execute("""
+                DELETE FROM user_sessions 
+                WHERE email = %s AND ip_address = '158.160.16.200'
+            """, (email,))
+            
             # Очищаем неактивные сессии (старше 24 часов)
             cur.execute("""
                 DELETE FROM user_sessions 
