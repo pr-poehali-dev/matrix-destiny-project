@@ -29,10 +29,22 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const url = `${func2url['access-check']}?email=${encodeURIComponent(email)}`;
-      console.log('🔍 Проверка доступа:', url);
+      const baseUrl = func2url['access-check'];
+      const encodedEmail = encodeURIComponent(email);
+      const url = `${baseUrl}?email=${encodedEmail}`;
       
-      const response = await fetch(url);
+      console.log('🔍 Base URL:', baseUrl);
+      console.log('🔍 Email:', encodedEmail);
+      console.log('🔍 Final URL:', url);
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        cache: 'no-cache'
+      });
+      
       console.log('📡 HTTP статус:', response.status, response.statusText);
       
       const data = await response.json();
