@@ -62,7 +62,12 @@ const extractRelationshipDestroys = (rel: string | undefined) => {
 };
 
 export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMatrixResultProps) => {
-  if (!hasAccess) return null;
+  console.log('🔍 UnifiedMatrixResult rendered', { result, hasAccess });
+  
+  if (!hasAccess) {
+    console.log('❌ No access');
+    return null;
+  }
   
   // Проверяем, что result существует и содержит валидные числа
   if (!result || 
@@ -70,17 +75,33 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
       typeof result.destiny !== 'number' || 
       typeof result.social !== 'number' || 
       typeof result.spiritual !== 'number') {
-    console.error('Invalid result data:', result);
-    return null;
+    console.error('❌ Invalid result data:', result);
+    return <div className="text-center py-10 text-orange-600">
+      Ошибка: result не содержит валидных данных
+    </div>;
   }
+
+  console.log('📊 Fetching arcana data for:', {
+    personal: result.personal,
+    destiny: result.destiny,
+    social: result.social,
+    spiritual: result.spiritual
+  });
 
   const personal = energyDescriptions[result.personal];
   const destiny = energyDescriptions[result.destiny];
   const social = energyDescriptions[result.social];
   const spiritual = energyDescriptions[result.spiritual];
 
+  console.log('📚 Arcana data fetched:', {
+    personal: !!personal,
+    destiny: !!destiny,
+    social: !!social,
+    spiritual: !!spiritual
+  });
+
   if (!personal || !destiny || !social || !spiritual) {
-    console.error('Missing arcana data for:', {
+    console.error('❌ Missing arcana data for:', {
       personal: result.personal,
       destiny: result.destiny,
       social: result.social,
@@ -92,6 +113,8 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
       <span className="text-sm">Personal: {result.personal}, Destiny: {result.destiny}, Social: {result.social}, Spiritual: {result.spiritual}</span>
     </div>;
   }
+
+  console.log('✅ All checks passed, rendering component');
 
   const professions = extractProfessions(destiny?.finance);
   const healthZones = extractHealthZones(personal?.health);
