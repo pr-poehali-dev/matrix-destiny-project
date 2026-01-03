@@ -99,29 +99,10 @@ export default function Index() {
         }
       }
       
-      // Автоматически проверяем доступ для подписчиков
+      // Автоматически проверяем доступ для подписчиков (ВРЕМЕННО БЕЗ БЭКЕНДА)
       if (subscriberAuth === 'true') {
         setIsSubscriber(true);
-        checkAccess(storedEmail).then((accessCheck) => {
-          if (accessCheck.has_access) {
-            setHasAccess(true);
-            if (accessCheck.expires_at) {
-              setSubscriptionExpires(accessCheck.expires_at);
-            }
-          } else {
-            // Если доступ истёк, очищаем авторизацию
-            localStorage.removeItem('subscriberAuth');
-            setIsSubscriber(false);
-            toast({
-              title: 'Срок подписки истёк',
-              description: accessCheck.message || 'Продлите подписку для доступа',
-              variant: 'destructive',
-            });
-          }
-        }).catch(() => {
-          localStorage.removeItem('subscriberAuth');
-          setIsSubscriber(false);
-        });
+        setHasAccess(true);
       }
     }
     
@@ -180,13 +161,6 @@ export default function Index() {
         
         console.log('✅ History saved! Total items:', history.length);
         console.log('✅ localStorage key:', `calculations_history_${email}`);
-        
-        try {
-          const accessCheck = await checkAccess(email);
-          setHasAccess(accessCheck.has_access);
-        } catch (error) {
-          console.error('Failed to check access:', error);
-        }
       } else {
         console.warn('⚠️ Email is empty, history not saved!');
       }
