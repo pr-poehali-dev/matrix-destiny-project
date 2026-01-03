@@ -62,7 +62,17 @@ const extractRelationshipDestroys = (rel: string | undefined) => {
 };
 
 export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMatrixResultProps) => {
-  if (!hasAccess || !result) return null;
+  if (!hasAccess) return null;
+  
+  // Проверяем, что result существует и содержит валидные числа
+  if (!result || 
+      typeof result.personal !== 'number' || 
+      typeof result.destiny !== 'number' || 
+      typeof result.social !== 'number' || 
+      typeof result.spiritual !== 'number') {
+    console.error('Invalid result data:', result);
+    return null;
+  }
 
   const personal = energyDescriptions[result.personal];
   const destiny = energyDescriptions[result.destiny];
@@ -70,7 +80,17 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
   const spiritual = energyDescriptions[result.spiritual];
 
   if (!personal || !destiny || !social || !spiritual) {
-    return <div className="text-center py-10 text-red-600">Ошибка загрузки данных арканов</div>;
+    console.error('Missing arcana data for:', {
+      personal: result.personal,
+      destiny: result.destiny,
+      social: result.social,
+      spiritual: result.spiritual
+    });
+    return <div className="text-center py-10 text-red-600">
+      Ошибка загрузки данных арканов. Обнаружены недопустимые номера арканов.
+      <br />
+      <span className="text-sm">Personal: {result.personal}, Destiny: {result.destiny}, Social: {result.social}, Spiritual: {result.spiritual}</span>
+    </div>;
   }
 
   const professions = extractProfessions(destiny?.finance);

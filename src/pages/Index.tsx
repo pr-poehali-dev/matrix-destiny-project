@@ -23,10 +23,14 @@ const calculateDestinyMatrix = (birthDate: string, name: string) => {
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
   
+  console.log('📅 Calculate matrix for:', { birthDate, day, month, year });
+  
   const sumDigits = (num: number): number => {
+    const original = num;
     while (num > 22) {
       num = num.toString().split('').reduce((a, b) => a + parseInt(b), 0);
     }
+    console.log(`sumDigits(${original}) = ${num}`);
     return num;
   };
 
@@ -35,13 +39,17 @@ const calculateDestinyMatrix = (birthDate: string, name: string) => {
   const socialNumber = sumDigits(month + year);
   const spiritualNumber = sumDigits(day + year);
   
-  return {
+  const result = {
     personal: personalNumber,
     destiny: destinyNumber,
     social: socialNumber,
     spiritual: spiritualNumber,
     name: name
   };
+  
+  console.log('✅ Matrix calculated:', result);
+  
+  return result;
 };
 
 export default function Index() {
