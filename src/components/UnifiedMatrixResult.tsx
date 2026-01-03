@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
-import { energyDescriptions } from '@/data/arcana-descriptions';
+import { energyDescriptions, arcanaSimpleNames } from '@/data/arcana-descriptions';
 import { ShareButtons } from '@/components/ShareButtons';
 
 interface UnifiedMatrixResultProps {
@@ -76,6 +76,12 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
   const relNeeds = extractRelationshipNeeds(personal?.relationships);
   const relDestroys = extractRelationshipDestroys(personal?.relationships);
 
+  // Получаем простые имена арканов
+  const personalSimple = arcanaSimpleNames[result.personal] || personal?.title;
+  const socialSimple = arcanaSimpleNames[result.social] || social?.title;
+  const destinySimple = arcanaSimpleNames[result.destiny] || destiny?.title;
+  const spiritualSimple = arcanaSimpleNames[result.spiritual] || spiritual?.title;
+
   return (
     <div className="space-y-6 mb-8">
       {/* Заголовок */}
@@ -104,25 +110,25 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
             </h3>
             <div className="bg-purple-50 p-4 rounded-lg space-y-3 text-gray-800 leading-relaxed">
               <p>
-                <strong className="text-purple-900">Истинная суть человека:</strong> По своей природе это <strong>{personal?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}</strong>. 
+                <strong className="text-purple-900">Истинная суть человека:</strong> По своей природе это <strong>{personalSimple}</strong>. 
                 {getSimplePersonality(personal?.description)} 
                 Это его настоящее "Я", которое он часто прячет от окружающих.
               </p>
               
               <p>
-                <strong className="text-blue-900">Социальная маска:</strong> В обществе человек надевает маску <strong>{social?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}</strong>. 
+                <strong className="text-blue-900">Социальная маска:</strong> В обществе человек надевает маску <strong>{socialSimple}</strong>. 
                 {getSimplePersonality(social?.description)} 
                 Это НЕ его истинное лицо — это защитная реакция, способ адаптации к ожиданиям общества.
               </p>
               
               <p>
-                <strong className="text-green-900">Предназначение:</strong> Его душа пришла в этот мир, чтобы реализовать энергию <strong>{destiny?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}</strong>. 
+                <strong className="text-green-900">Предназначение:</strong> Его душа пришла в этот мир, чтобы реализовать энергию <strong>{destinySimple}</strong>. 
                 {getSimplePersonality(destiny?.description)} 
                 Когда человек занимается своим призванием, жизнь становится лёгкой и деньги приходят сами.
               </p>
               
               <p>
-                <strong className="text-pink-900">Глубинная суть души:</strong> На самом глубоком уровне это <strong>{spiritual?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}</strong>. 
+                <strong className="text-pink-900">Глубинная суть души:</strong> На самом глубоком уровне это <strong>{spiritualSimple}</strong>. 
                 {getSimplePersonality(spiritual?.description)} 
                 Это то, ради чего душа воплотилась на Земле — её высшая миссия.
               </p>
@@ -137,13 +143,13 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
             </h3>
             <div className="space-y-3 text-gray-800">
               <p>
-                <strong>1. Внутренний конфликт:</strong> Человек живёт как "{social?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}" (социальная роль), 
-                хотя внутри чувствует себя "{personal?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}" (истинное "Я"). 
+                <strong>1. Внутренний конфликт:</strong> Человек живёт как "{socialSimple}" (социальная роль), 
+                хотя внутри чувствует себя "{personalSimple}" (истинное "Я"). 
                 Это создаёт хроническое напряжение, усталость, ощущение "я живу не своей жизнью".
               </p>
               
               <p>
-                <strong>2. Непонимание призвания:</strong> Не реализует энергию "{destiny?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}", 
+                <strong>2. Непонимание призвания:</strong> Не реализует энергию "{destinySimple}", 
                 поэтому:
               </p>
               <ul className="ml-6 space-y-1 text-sm">
@@ -154,7 +160,7 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
               </ul>
               
               <p>
-                <strong>3. Потеря смысла жизни:</strong> Душа ("{spiritual?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}") не получает своего питания. 
+                <strong>3. Потеря смысла жизни:</strong> Душа ("{spiritualSimple}") не получает своего питания. 
                 Отсюда: депрессия, апатия, экзистенциальный кризис, вопросы "зачем всё это?", "в чём смысл?".
               </p>
               
@@ -183,7 +189,7 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
                   ШАГ 1: Вернуть контакт с истинным "Я"
                 </p>
                 <p className="text-sm mb-2">
-                  <strong>Цель:</strong> Разрешить человеку быть "{personal?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}" — не прятаться за маску.
+                  <strong>Цель:</strong> Разрешить человеку быть "{personalSimple}" — не прятаться за маску.
                 </p>
                 <p className="text-sm mb-2">
                   <strong>Работаем с убеждением:</strong> "Я имею право быть собой. Меня не обязательно всем любить."
@@ -199,7 +205,7 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
                   ШАГ 2: Найти своё предназначение
                 </p>
                 <p className="text-sm mb-2">
-                  <strong>Цель:</strong> Направить энергию в реализацию призвания "{destiny?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}".
+                  <strong>Цель:</strong> Направить энергию в реализацию призвания "{destinySimple}".
                 </p>
                 <p className="text-sm mb-2">
                   <strong>Профессии для реализации:</strong> {professions}
@@ -215,7 +221,7 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
                   ШАГ 3: Снять социальную маску
                 </p>
                 <p className="text-sm mb-2">
-                  <strong>Цель:</strong> Объяснить, что маска "{social?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}" — это НЕ он. 
+                  <strong>Цель:</strong> Объяснить, что маска "{socialSimple}" — это НЕ он. 
                   Это защитная реакция, способ выживания в обществе.
                 </p>
                 <p className="text-sm mb-2">
@@ -232,7 +238,7 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
                   ШАГ 4: Подключить душу и найти высший смысл
                 </p>
                 <p className="text-sm mb-2">
-                  <strong>Цель:</strong> Активировать энергию "{spiritual?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}" — 
+                  <strong>Цель:</strong> Активировать энергию "{spiritualSimple}" — 
                   глубинную суть, ради которой душа пришла на Землю.
                 </p>
                 <p className="text-sm mb-2">
@@ -260,8 +266,8 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
                 <strong>Психологические причины болезней:</strong> {healthCauses}
               </p>
               <p>
-                <strong className="text-blue-900">Главная причина психосоматики:</strong> Когда человек не живёт как "{personal?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}" 
-                и не реализует "{destiny?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}", тело начинает сигнализировать болезнями. 
+                <strong className="text-blue-900">Главная причина психосоматики:</strong> Когда человек не живёт как "{personalSimple}" 
+                и не реализует "{destinySimple}", тело начинает сигнализировать болезнями. 
                 Это способ подсознания сказать: "Ты идёшь не туда!"
               </p>
               <p className="bg-white p-3 rounded">
@@ -289,8 +295,8 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
               </p>
               <p className="bg-white p-3 rounded">
                 <strong className="text-pink-900">Главный урок в любви:</strong> Человек притягивает партнёров, которые либо усиливают его маску 
-                ("{social?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}"), либо показывают его тень. 
-                Пока не примет себя как "{personal?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}", 
+                ("{socialSimple}"), либо показывают его тень. 
+                Пока не примет себя как "{personalSimple}", 
                 отношения будут повторять один и тот же сценарий.
               </p>
               <p className="text-xs italic text-pink-800">
@@ -310,7 +316,7 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
                 <strong>Профессии для реализации души:</strong> {professions}
               </p>
               <p>
-                <strong className="text-yellow-900">Почему сейчас нет денег:</strong> Человек не работает по своему предназначению ("{destiny?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}"). 
+                <strong className="text-yellow-900">Почему сейчас нет денег:</strong> Человек не работает по своему предназначению ("{destinySimple}"). 
                 Он занимается не тем, тратит энергию впустую, поэтому Вселенная не поддерживает его финансово.
               </p>
               <p className="bg-white p-3 rounded">
@@ -332,10 +338,10 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
             </h3>
             <div className="space-y-2 text-gray-900 text-sm leading-relaxed">
               <p>
-                <strong>Кто перед вами:</strong> Человек-"{personal?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}", 
-                который притворяется "{social?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}", 
-                не реализует "{destiny?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}" 
-                и потерял связь с "{spiritual?.title.replace(/\(\d+\s+аркан\)/gi, '').trim()}".
+                <strong>Кто перед вами:</strong> Человек-"{personalSimple}", 
+                который притворяется "{socialSimple}", 
+                не реализует "{destinySimple}" 
+                и потерял связь с "{spiritualSimple}".
               </p>
               <p>
                 <strong>Главная проблема:</strong> Внутренний конфликт четырёх "Я", непонимание своего места в мире, 
