@@ -10,7 +10,7 @@ interface UnifiedMatrixResultProps {
     social: number;
     spiritual: number;
     name: string;
-  };
+  } | null;
   hasAccess: boolean;
   birthDate: string;
 }
@@ -62,7 +62,7 @@ const extractRelationshipDestroys = (rel: string | undefined) => {
 };
 
 export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMatrixResultProps) => {
-  if (!hasAccess) return null;
+  if (!hasAccess || !result) return null;
 
   const personal = energyDescriptions[result.personal];
   const destiny = energyDescriptions[result.destiny];
