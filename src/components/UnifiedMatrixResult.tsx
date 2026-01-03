@@ -69,6 +69,10 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
   const social = energyDescriptions[result.social];
   const spiritual = energyDescriptions[result.spiritual];
 
+  if (!personal || !destiny || !social || !spiritual) {
+    return <div className="text-center py-10 text-red-600">Ошибка загрузки данных арканов</div>;
+  }
+
   const professions = extractProfessions(destiny?.finance);
   const healthZones = extractHealthZones(personal?.health);
   const healthCauses = extractHealthCauses(personal?.health);
@@ -77,10 +81,10 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
   const relDestroys = extractRelationshipDestroys(personal?.relationships);
 
   // Получаем простые имена арканов
-  const personalSimple = arcanaSimpleNames[result.personal] || personal?.title;
-  const socialSimple = arcanaSimpleNames[result.social] || social?.title;
-  const destinySimple = arcanaSimpleNames[result.destiny] || destiny?.title;
-  const spiritualSimple = arcanaSimpleNames[result.spiritual] || spiritual?.title;
+  const personalSimple = arcanaSimpleNames[result.personal] || personal?.title || 'Неизвестный тип';
+  const socialSimple = arcanaSimpleNames[result.social] || social?.title || 'Неизвестный тип';
+  const destinySimple = arcanaSimpleNames[result.destiny] || destiny?.title || 'Неизвестный тип';
+  const spiritualSimple = arcanaSimpleNames[result.spiritual] || spiritual?.title || 'Неизвестный тип';
 
   return (
     <div className="space-y-6 mb-8">
