@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
-import { checkAccess } from '@/lib/api';
 import { useNavigate, Link } from 'react-router-dom';
 import { LiveStats } from '@/components/LiveStats';
 import { LiveNotifications } from '@/components/LiveNotifications';

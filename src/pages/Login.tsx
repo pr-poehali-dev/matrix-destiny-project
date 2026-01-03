@@ -60,9 +60,10 @@ const Login = () => {
           description: `Добро пожаловать! Подписка до ${expiresDate.toLocaleDateString('ru-RU')}`,
         });
         
+        // Немедленное перенаправление
         setTimeout(() => {
-          navigate('/');
-        }, 1500);
+          window.location.href = '/';
+        }, 800);
       } else {
         toast({
           title: 'Доступ запрещён',
