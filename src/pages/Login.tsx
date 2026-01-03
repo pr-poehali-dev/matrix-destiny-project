@@ -30,10 +30,13 @@ const Login = () => {
     try {
       const func2url = await import('../../backend/func2url.json');
       const url = `${func2url['access-check']}?email=${encodeURIComponent(email)}&v=${Date.now()}`;
-      console.log('Проверка доступа:', url);
+      console.log('🔍 Проверка доступа:', url);
+      
       const response = await fetch(url);
+      console.log('📡 HTTP статус:', response.status, response.statusText);
+      
       const data = await response.json();
-      console.log('Ответ сервера:', data);
+      console.log('📦 Ответ сервера:', data);
 
       if (response.ok && data.has_access) {
         // Проверяем, что это подписка (не разовый доступ)
@@ -58,7 +61,9 @@ const Login = () => {
         }
       } else {
         // Показываем конкретную причину отказа
-        const errorMessage = data.message || 'Email не найден или срок подписки истёк';
+        const errorMessage = data.message || data.error || 'Email не найден или срок подписки истёк';
+        
+        console.error('❌ Доступ запрещён:', errorMessage);
         
         toast({
           title: 'Доступ запрещён',
@@ -66,10 +71,12 @@ const Login = () => {
           variant: 'destructive',
         });
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error('💥 Критическая ошибка:', error);
+      
       toast({
-        title: 'Ошибка',
-        description: 'Не удалось войти в систему',
+        title: 'Ошибка входа',
+        description: error?.message || 'Не удалось войти в систему. Попробуйте позже',
         variant: 'destructive',
       });
     } finally {

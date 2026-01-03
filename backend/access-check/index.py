@@ -42,15 +42,19 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         identity = request_context.get('identity', {})
         headers = event.get('headers', {})
         
+        # Нормализуем заголовки к нижнему регистру (Cloud Functions могут отправлять в разных регистрах)
+        headers_lower = {k.lower(): v for k, v in headers.items()}
+        
         # Получаем настоящий IP из заголовков прокси
+        forwarded_for = headers_lower.get('x-forwarded-for', '')
         source_ip = (
-            headers.get('x-forwarded-for', '').split(',')[0].strip() or
-            headers.get('x-real-ip', '') or
+            forwarded_for.split(',')[0].strip() if forwarded_for else
+            headers_lower.get('x-real-ip', '') or
             identity.get('sourceIp', 'unknown')
         )
         
         # Получаем User-Agent
-        user_agent = headers.get('user-agent', 'unknown')
+        user_agent = headers_lower.get('user-agent', 'unknown')
         
         # DELETE: Выход из сессии
         if method == 'DELETE':
