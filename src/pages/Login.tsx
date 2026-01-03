@@ -28,67 +28,54 @@ const Login = () => {
 
     setLoading(true);
 
-    try {
-      const baseUrl = func2url['access-check'];
-      const encodedEmail = encodeURIComponent(email);
-      const url = `${baseUrl}?email=${encodedEmail}`;
-      
-      console.log('🔍 Base URL:', baseUrl);
-      console.log('🔍 Email:', encodedEmail);
-      console.log('🔍 Final URL:', url);
-      
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        cache: 'no-cache'
-      });
-      
-      console.log('📡 HTTP статус:', response.status, response.statusText);
-      
-      const data = await response.json();
-      console.log('📦 Ответ сервера:', data);
+    // ВРЕМЕННОЕ РЕШЕНИЕ: Список одобренных подписчиков (пока не работает бэкенд из-за биллинга)
+    const approvedSubscribers = [
+      { email: 'romanysh@rambler.ru', expires: '2026-06-21', plan: 'half_year' },
+      { email: 'iriha1@bk.ru', expires: '2026-12-13', plan: 'year' },
+      { email: 'cabinet-psyhologa@outlook.com', expires: '2026-01-23', plan: 'month' },
+    ];
 
-      if (response.ok && data.has_access) {
-        // Проверяем, что это подписка (не разовый доступ)
-        if (data.plan_type !== 'single') {
-          localStorage.setItem('userEmail', email);
-          localStorage.setItem('subscriberAuth', 'true');
-          
+    try {
+      const subscriber = approvedSubscribers.find(s => s.email.toLowerCase() === email.toLowerCase());
+
+      if (subscriber) {
+        const expiresDate = new Date(subscriber.expires);
+        const now = new Date();
+
+        if (now > expiresDate) {
           toast({
-            title: '✅ Вход выполнен',
-            description: 'Добро пожаловать! Переходим на главную страницу',
-          });
-          
-          setTimeout(() => {
-            navigate('/');
-          }, 1500);
-        } else {
-          toast({
-            title: 'Это разовый доступ',
-            description: 'Эта функция только для подписчиков с безлимитным доступом',
+            title: 'Доступ запрещён',
+            description: `Срок подписки истёк ${expiresDate.toLocaleDateString('ru-RU')}`,
             variant: 'destructive',
           });
+          setLoading(false);
+          return;
         }
-      } else {
-        // Показываем конкретную причину отказа
-        const errorMessage = data.message || data.error || 'Email не найден или срок подписки истёк';
-        
-        console.error('❌ Доступ запрещён:', errorMessage);
+
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('subscriberAuth', 'true');
         
         toast({
+          title: '✅ Вход выполнен',
+          description: `Добро пожаловать! Подписка до ${expiresDate.toLocaleDateString('ru-RU')}`,
+        });
+        
+        setTimeout(() => {
+          navigate('/');
+        }, 1500);
+      } else {
+        toast({
           title: 'Доступ запрещён',
-          description: errorMessage,
+          description: 'Email не найден в списке подписчиков',
           variant: 'destructive',
         });
       }
     } catch (error: any) {
-      console.error('💥 Критическая ошибка:', error);
+      console.error('💥 Ошибка:', error);
       
       toast({
         title: 'Ошибка входа',
-        description: error?.message || 'Не удалось войти в систему. Попробуйте позже',
+        description: 'Не удалось войти в систему',
         variant: 'destructive',
       });
     } finally {
