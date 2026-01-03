@@ -73,7 +73,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             cur = conn.cursor()
             
             cur.execute("""
-                DELETE FROM user_sessions
+                DELETE FROM t_p85141447_matrix_destiny_proje.user_sessions
                 WHERE email = %s AND ip_address = %s
             """, (email, source_ip))
             
@@ -111,7 +111,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             
             cur.execute("""
                 SELECT ip_address, user_agent, last_activity, created_at
-                FROM user_sessions
+                FROM t_p85141447_matrix_destiny_proje.user_sessions
                 WHERE email = %s AND last_activity > %s
                 ORDER BY last_activity DESC
             """, (email, datetime.now() - timedelta(hours=24)))
@@ -120,7 +120,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             
             cur.execute("""
                 SELECT max_devices, expires_at
-                FROM active_access
+                FROM t_p85141447_matrix_destiny_proje.active_access
                 WHERE email = %s
             """, (email,))
             
@@ -183,7 +183,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         
         cur.execute("""
             SELECT plan_type, expires_at, downloads_left, granted_at, max_devices
-            FROM active_access
+            FROM t_p85141447_matrix_destiny_proje.active_access
             WHERE email = %s
         """, (email,))
         
@@ -221,7 +221,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 
                 # Логируем попытку доступа с истёкшей подпиской
                 cur.execute("""
-                    INSERT INTO security_logs (email, event_type, ip_address, user_agent, details)
+                    INSERT INTO t_p85141447_matrix_destiny_proje.security_logs (email, event_type, ip_address, user_agent, details)
                     VALUES (%s, 'expired_access', %s, %s, %s)
                 """, (email, source_ip, user_agent, json.dumps({'expires_at': expires_at.isoformat()})))
                 conn.commit()
@@ -235,13 +235,13 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         if has_access and plan_type in ['month', 'half_year', 'year']:
             # КРИТИЧНО: Очищаем все сессии с IP прокси-сервера (неправильные данные)
             cur.execute("""
-                DELETE FROM user_sessions 
+                DELETE FROM t_p85141447_matrix_destiny_proje.user_sessions 
                 WHERE email = %s AND ip_address = '158.160.16.200'
             """, (email,))
             
             # Очищаем неактивные сессии (старше 24 часов)
             cur.execute("""
-                DELETE FROM user_sessions 
+                DELETE FROM t_p85141447_matrix_destiny_proje.user_sessions 
                 WHERE email = %s AND last_activity < %s
             """, (email, datetime.now() - timedelta(hours=24)))
             
@@ -249,7 +249,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             cur.execute("""
                 SELECT COUNT(DISTINCT ip_address) as device_count,
                        array_agg(DISTINCT ip_address) as ips
-                FROM user_sessions
+                FROM t_p85141447_matrix_destiny_proje.user_sessions
                 WHERE email = %s AND last_activity > %s
             """, (email, datetime.now() - timedelta(hours=24)))
             
@@ -264,7 +264,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 
                 # Логируем подозрительную активность
                 cur.execute("""
-                    INSERT INTO security_logs (email, event_type, ip_address, user_agent, details)
+                    INSERT INTO t_p85141447_matrix_destiny_proje.security_logs (email, event_type, ip_address, user_agent, details)
                     VALUES (%s, 'too_many_devices', %s, %s, %s)
                 """, (email, source_ip, user_agent, json.dumps({
                     'active_devices': active_device_count,
@@ -278,7 +278,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 
                 # Проверяем, есть ли уже сессия с этого IP
                 cur.execute("""
-                    SELECT session_token FROM user_sessions
+                    SELECT session_token FROM t_p85141447_matrix_destiny_proje.user_sessions
                     WHERE email = %s AND ip_address = %s
                 """, (email, source_ip))
                 
@@ -287,7 +287,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 if existing_session:
                     # Обновляем существующую сессию
                     cur.execute("""
-                        UPDATE user_sessions
+                        UPDATE t_p85141447_matrix_destiny_proje.user_sessions
                         SET last_activity = %s, user_agent = %s
                         WHERE email = %s AND ip_address = %s
                     """, (datetime.now(), user_agent, email, source_ip))
@@ -295,13 +295,13 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 else:
                     # Создаём новую сессию
                     cur.execute("""
-                        INSERT INTO user_sessions (email, ip_address, user_agent, session_token)
+                        INSERT INTO t_p85141447_matrix_destiny_proje.user_sessions (email, ip_address, user_agent, session_token)
                         VALUES (%s, %s, %s, %s)
                     """, (email, source_ip, user_agent, session_token))
                 
                 # Обновляем последний вход
                 cur.execute("""
-                    UPDATE active_access
+                    UPDATE t_p85141447_matrix_destiny_proje.active_access
                     SET last_login_at = %s, last_login_ip = %s
                     WHERE email = %s
                 """, (datetime.now(), source_ip, email))
