@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
 import { useNavigate } from 'react-router-dom';
+import func2url from '../../backend/func2url.json';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -28,8 +29,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const func2url = await import('../../backend/func2url.json');
-      const url = `${func2url['access-check']}?email=${encodeURIComponent(email)}&v=${Date.now()}`;
+      const url = `${func2url['access-check']}?email=${encodeURIComponent(email)}`;
       console.log('🔍 Проверка доступа:', url);
       
       const response = await fetch(url);
