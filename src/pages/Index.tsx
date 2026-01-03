@@ -54,8 +54,6 @@ export default function Index() {
   const [adminEmail, setAdminEmail] = useState('');
   const [isSubscriber, setIsSubscriber] = useState(false);
   const [subscriptionExpires, setSubscriptionExpires] = useState<string | null>(null);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [loginEmail, setLoginEmail] = useState('');
   const [calculationHistory, setCalculationHistory] = useState<Array<any>>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [activeTab, setActiveTab] = useState<'personal' | 'destiny' | 'social' | 'spiritual'>('personal');
@@ -489,80 +487,6 @@ export default function Index() {
     }
   };
 
-  const handleLogin = async () => {
-    if (!loginEmail) {
-      toast({
-        title: 'Требуется email',
-        description: 'Пожалуйста, введите email',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    try {
-      const accessCheck = await checkAccess(loginEmail);
-      
-      if (accessCheck.has_access) {
-        localStorage.setItem('userEmail', loginEmail);
-        localStorage.setItem('subscriberAuth', 'true');
-        setEmail(loginEmail);
-        setIsSubscriber(true);
-        setHasAccess(true);
-        
-        if (accessCheck.expires_at) {
-          setSubscriptionExpires(accessCheck.expires_at);
-        }
-        
-        // Загружаем историю расчётов пользователя
-        const savedHistory = localStorage.getItem(`calculations_history_${loginEmail}`);
-        if (savedHistory) {
-          try {
-            const history = JSON.parse(savedHistory);
-            setCalculationHistory(history);
-            
-            // Загружаем последний расчёт
-            if (history.length > 0) {
-              const lastCalc = history[history.length - 1];
-              setName(lastCalc.name);
-              setBirthDate(lastCalc.birthDate);
-              setResult({
-                personal: lastCalc.personal,
-                destiny: lastCalc.destiny,
-                social: lastCalc.social,
-                spiritual: lastCalc.spiritual,
-                name: lastCalc.name
-              });
-              setShowPricing(true);
-            }
-          } catch (error) {
-            console.error('Failed to load calculation history:', error);
-          }
-        }
-        
-        setShowLoginModal(false);
-        setLoginEmail('');
-        
-        toast({
-          title: '✅ Вход выполнен',
-          description: 'Добро пожаловать! У вас есть активная подписка',
-        });
-      } else {
-        toast({
-          title: 'Доступ не найден',
-          description: 'У этого email нет активной подписки',
-          variant: 'destructive',
-        });
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      toast({
-        title: 'Ошибка входа',
-        description: 'Попробуйте позже',
-        variant: 'destructive',
-      });
-    }
-  };
-
   const pricingPlans = [
     {
       name: 'Разовая расшифровка',
@@ -712,11 +636,12 @@ export default function Index() {
             <Button
               variant="default"
               size="sm"
-              onClick={() => setShowLoginModal(true)}
-              className="gap-2"
+              asChild
             >
-              <Icon name="LogIn" size={16} />
-              Войти
+              <Link to="/login" className="gap-2">
+                <Icon name="LogIn" size={16} />
+                Войти
+              </Link>
             </Button>
           ) : (
             <div className="flex items-center gap-4">
@@ -1259,56 +1184,6 @@ export default function Index() {
           </div>
         </footer>
       </div>
-
-      {showLoginModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowLoginModal(false)}>
-          <Card className="w-full max-w-md" onClick={(e) => e.stopPropagation()}>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Icon name="LogIn" size={24} />
-                Вход в аккаунт
-              </CardTitle>
-              <CardDescription>
-                Введите email, который вы использовали при оплате подписки
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Email</label>
-                <Input
-                  type="email"
-                  placeholder="example@email.com"
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleLogin();
-                    }
-                  }}
-                />
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleLogin}
-                  className="flex-1"
-                >
-                  <Icon name="LogIn" size={16} className="mr-2" />
-                  Войти
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowLoginModal(false)}
-                >
-                  Отмена
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground text-center">
-                Нет подписки? <button onClick={() => { setShowLoginModal(false); scrollToCalculator(); }} className="text-primary hover:underline">Оформить подписку</button>
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      )}
     </div>
   );
 }
