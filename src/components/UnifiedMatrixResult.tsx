@@ -62,22 +62,36 @@ const extractRelationshipDestroys = (rel: string | undefined) => {
 };
 
 export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMatrixResultProps) => {
-  console.log('🔍 UnifiedMatrixResult rendered', { result, hasAccess });
+  console.log('🔍 UnifiedMatrixResult rendered', { result, hasAccess, birthDate });
   
   if (!hasAccess) {
     console.log('❌ No access');
     return null;
   }
   
-  // Проверяем, что result существует и содержит валидные числа
-  if (!result || 
-      typeof result.personal !== 'number' || 
+  // Проверяем, что result существует
+  if (!result) {
+    console.error('❌ result is null or undefined');
+    return <div className="text-center py-10 text-red-600 font-medium">
+      <p className="text-lg">⚠️ Ошибка: данные расчёта не переданы</p>
+      <p className="text-sm mt-2">Попробуйте пересчитать матрицу</p>
+    </div>;
+  }
+  
+  // Проверяем, что result содержит валидные числа
+  if (typeof result.personal !== 'number' || 
       typeof result.destiny !== 'number' || 
       typeof result.social !== 'number' || 
       typeof result.spiritual !== 'number') {
     console.error('❌ Invalid result data:', result);
-    return <div className="text-center py-10 text-orange-600">
-      Ошибка: result не содержит валидных данных
+    return <div className="text-center py-10 text-red-600 font-medium">
+      <p className="text-lg">⚠️ Ошибка: некорректные данные матрицы</p>
+      <p className="text-sm mt-2">
+        Personal: {JSON.stringify(result.personal)}, 
+        Destiny: {JSON.stringify(result.destiny)}, 
+        Social: {JSON.stringify(result.social)}, 
+        Spiritual: {JSON.stringify(result.spiritual)}
+      </p>
     </div>;
   }
 
