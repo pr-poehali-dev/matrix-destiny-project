@@ -88,16 +88,30 @@ export default function Index() {
           // Загружаем последний расчёт
           if (history.length > 0) {
             const lastCalc = history[history.length - 1];
-            setName(lastCalc.name);
-            setBirthDate(lastCalc.birthDate);
-            setResult({
-              personal: lastCalc.personal,
-              destiny: lastCalc.destiny,
-              social: lastCalc.social,
-              spiritual: lastCalc.spiritual,
-              name: lastCalc.name
-            });
-            setShowPricing(true);
+            console.log('📜 Loading last calculation from history:', lastCalc);
+            
+            // Проверяем что все поля присутствуют и являются числами
+            if (lastCalc && 
+                lastCalc.name && 
+                lastCalc.birthDate &&
+                typeof lastCalc.personal === 'number' &&
+                typeof lastCalc.destiny === 'number' &&
+                typeof lastCalc.social === 'number' &&
+                typeof lastCalc.spiritual === 'number') {
+              setName(lastCalc.name);
+              setBirthDate(lastCalc.birthDate);
+              setResult({
+                personal: lastCalc.personal,
+                destiny: lastCalc.destiny,
+                social: lastCalc.social,
+                spiritual: lastCalc.spiritual,
+                name: lastCalc.name
+              });
+              setShowPricing(true);
+              console.log('✅ Last calculation restored successfully');
+            } else {
+              console.error('❌ Invalid last calculation data:', lastCalc);
+            }
           }
         } catch (error) {
           console.error('Failed to load calculation history:', error);

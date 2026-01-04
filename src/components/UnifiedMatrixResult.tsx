@@ -102,10 +102,11 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
     spiritual: result.spiritual
   });
 
-  const personal = energyDescriptions[result.personal];
-  const destiny = energyDescriptions[result.destiny];
-  const social = energyDescriptions[result.social];
-  const spiritual = energyDescriptions[result.spiritual];
+  // Безопасная проверка и получение данных арканов
+  const personal = result.personal ? energyDescriptions[result.personal] : undefined;
+  const destiny = result.destiny ? energyDescriptions[result.destiny] : undefined;
+  const social = result.social ? energyDescriptions[result.social] : undefined;
+  const spiritual = result.spiritual ? energyDescriptions[result.spiritual] : undefined;
 
   console.log('📚 Arcana data fetched:', {
     personal: !!personal,
