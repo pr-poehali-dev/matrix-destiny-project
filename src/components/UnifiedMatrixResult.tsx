@@ -78,12 +78,20 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
     </div>;
   }
   
-  // Проверяем, что result содержит валидные числа
-  if (typeof result.personal !== 'number' || 
-      typeof result.destiny !== 'number' || 
-      typeof result.social !== 'number' || 
-      typeof result.spiritual !== 'number') {
-    console.error('❌ Invalid result data:', result);
+  // Проверяем, что result содержит валидные числа (строгая проверка)
+  const hasValidNumbers = (
+    typeof result.personal === 'number' && 
+    typeof result.destiny === 'number' && 
+    typeof result.social === 'number' && 
+    typeof result.spiritual === 'number' &&
+    result.personal >= 1 && result.personal <= 22 &&
+    result.destiny >= 1 && result.destiny <= 22 &&
+    result.social >= 1 && result.social <= 22 &&
+    result.spiritual >= 1 && result.spiritual <= 22
+  );
+
+  if (!hasValidNumbers) {
+    console.error('❌ Invalid result data:', JSON.parse(JSON.stringify(result)));
     return <div className="text-center py-10 text-red-600 font-medium">
       <p className="text-lg">⚠️ Ошибка: некорректные данные матрицы</p>
       <p className="text-sm mt-2">
@@ -91,6 +99,9 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
         Destiny: {JSON.stringify(result.destiny)}, 
         Social: {JSON.stringify(result.social)}, 
         Spiritual: {JSON.stringify(result.spiritual)}
+      </p>
+      <p className="text-xs mt-2 text-gray-500">
+        Попробуйте обновить страницу (F5) и рассчитать матрицу заново
       </p>
     </div>;
   }
@@ -131,6 +142,15 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
 
   console.log('✅ All checks passed, rendering component');
 
+  // Дополнительная проверка перед использованием
+  if (!result || !result.personal || !result.destiny || !result.social || !result.spiritual) {
+    console.error('❌ CRITICAL: result lost between checks!', result);
+    return <div className="text-center py-10 text-red-600 font-medium">
+      <p className="text-lg">⚠️ Критическая ошибка: данные потерялись при рендеринге</p>
+      <p className="text-sm mt-2">Попробуйте обновить страницу и пересчитать матрицу</p>
+    </div>;
+  }
+
   const professions = extractProfessions(destiny?.finance);
   const healthZones = extractHealthZones(personal?.health);
   const healthCauses = extractHealthCauses(personal?.health);
@@ -138,7 +158,7 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
   const relNeeds = extractRelationshipNeeds(personal?.relationships);
   const relDestroys = extractRelationshipDestroys(personal?.relationships);
 
-  // Получаем простые имена арканов
+  // Получаем простые имена арканов с безопасным доступом
   const personalSimple = arcanaSimpleNames[result.personal] || personal?.title || 'Неизвестный тип';
   const socialSimple = arcanaSimpleNames[result.social] || social?.title || 'Неизвестный тип';
   const destinySimple = arcanaSimpleNames[result.destiny] || destiny?.title || 'Неизвестный тип';
