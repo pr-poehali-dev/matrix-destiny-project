@@ -236,6 +236,221 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
         </CardContent>
       </Card>
 
+      {/* ДЕТАЛЬНЫЕ РАСШИФРОВКИ ПО КАЖДОЙ ЭНЕРГИИ */}
+      <Card className="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-2xl">
+            <Icon name="User" className="text-amber-600" size={28} />
+            Детальная расшифровка: Личное (Аркан {finalResult.personal})
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="prose max-w-none">
+            <h3 className="text-xl font-bold text-amber-900">🎯 {personalSimple}</h3>
+            <div className="whitespace-pre-wrap text-gray-700">{personal.description}</div>
+            
+            <h4 className="text-lg font-bold text-red-800 mt-6">💊 Здоровье</h4>
+            <div className="whitespace-pre-wrap text-gray-700 bg-red-50 p-4 rounded-lg">{personal.health}</div>
+            
+            <h4 className="text-lg font-bold text-pink-800 mt-6">💕 Отношения</h4>
+            <div className="whitespace-pre-wrap text-gray-700 bg-pink-50 p-4 rounded-lg">{personal.relationships}</div>
+            
+            <h4 className="text-lg font-bold text-green-800 mt-6">💰 Финансы</h4>
+            <div className="whitespace-pre-wrap text-gray-700 bg-green-50 p-4 rounded-lg">{personal.finance}</div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-300">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-2xl">
+            <Icon name="Target" className="text-yellow-600" size={28} />
+            Детальная расшифровка: Предназначение (Аркан {finalResult.destiny})
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="prose max-w-none">
+            <h3 className="text-xl font-bold text-yellow-900">🎯 {destinySimple}</h3>
+            <div className="whitespace-pre-wrap text-gray-700">{destiny.description}</div>
+            
+            <h4 className="text-lg font-bold text-red-800 mt-6">💊 Здоровье</h4>
+            <div className="whitespace-pre-wrap text-gray-700 bg-red-50 p-4 rounded-lg">{destiny.health}</div>
+            
+            <h4 className="text-lg font-bold text-pink-800 mt-6">💕 Отношения</h4>
+            <div className="whitespace-pre-wrap text-gray-700 bg-pink-50 p-4 rounded-lg">{destiny.relationships}</div>
+            
+            <h4 className="text-lg font-bold text-green-800 mt-6">💰 Финансы и Профессии</h4>
+            <div className="whitespace-pre-wrap text-gray-700 bg-green-50 p-4 rounded-lg">{destiny.finance}</div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-gradient-to-br from-green-50 to-teal-50 border-2 border-green-300">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-2xl">
+            <Icon name="Users" className="text-green-600" size={28} />
+            Детальная расшифровка: Социальное (Аркан {finalResult.social})
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="prose max-w-none">
+            <h3 className="text-xl font-bold text-green-900">🎯 {socialSimple}</h3>
+            <div className="whitespace-pre-wrap text-gray-700">{social.description}</div>
+            
+            <h4 className="text-lg font-bold text-red-800 mt-6">💊 Здоровье</h4>
+            <div className="whitespace-pre-wrap text-gray-700 bg-red-50 p-4 rounded-lg">{social.health}</div>
+            
+            <h4 className="text-lg font-bold text-pink-800 mt-6">💕 Отношения</h4>
+            <div className="whitespace-pre-wrap text-gray-700 bg-pink-50 p-4 rounded-lg">{social.relationships}</div>
+            
+            <h4 className="text-lg font-bold text-green-800 mt-6">💰 Финансы</h4>
+            <div className="whitespace-pre-wrap text-gray-700 bg-green-50 p-4 rounded-lg">{social.finance}</div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-300">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-2xl">
+            <Icon name="Sparkles" className="text-purple-600" size={28} />
+            Детальная расшифровка: Духовное (Аркан {finalResult.spiritual})
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="prose max-w-none">
+            <h3 className="text-xl font-bold text-purple-900">🎯 {spiritualSimple}</h3>
+            <div className="whitespace-pre-wrap text-gray-700">{spiritual.description}</div>
+            
+            <h4 className="text-lg font-bold text-red-800 mt-6">💊 Здоровье</h4>
+            <div className="whitespace-pre-wrap text-gray-700 bg-red-50 p-4 rounded-lg">{spiritual.health}</div>
+            
+            <h4 className="text-lg font-bold text-pink-800 mt-6">💕 Отношения</h4>
+            <div className="whitespace-pre-wrap text-gray-700 bg-pink-50 p-4 rounded-lg">{spiritual.relationships}</div>
+            
+            <h4 className="text-lg font-bold text-green-800 mt-6">💰 Финансы</h4>
+            <div className="whitespace-pre-wrap text-gray-700 bg-green-50 p-4 rounded-lg">{spiritual.finance}</div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ИТОГОВЫЙ ПЛАН ДЕЙСТВИЙ */}
+      <Card className="bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-300">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-2xl">
+            <Icon name="CheckCircle2" className="text-orange-600" size={28} />
+            План действий на 90 дней
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <h3 className="text-xl font-bold text-orange-900 mb-4">🎯 Ваша главная проблема</h3>
+            <p className="text-gray-700 text-lg">
+              Внутри вас живут 4 разных "Я", которые конфликтуют:
+            </p>
+            <ul className="mt-3 space-y-2 text-gray-700">
+              <li>• <strong>{personalSimple}</strong> — как вы себя ощущаете</li>
+              <li>• <strong>{destinySimple}</strong> — чего от вас ждёт жизнь</li>
+              <li>• <strong>{socialSimple}</strong> — как вас видят люди</li>
+              <li>• <strong>{spiritualSimple}</strong> — ваша глубинная суть</li>
+            </ul>
+            <p className="mt-4 text-gray-700 font-semibold">
+              Все 4 энергии конфликтуют = внутренний разлушается, кризисы, болезни!
+            </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <h3 className="text-xl font-bold text-green-900 mb-4">✅ Решение: 4 шага к целостности</h3>
+            
+            <div className="space-y-4">
+              <div className="border-l-4 border-amber-500 pl-4">
+                <h4 className="font-bold text-amber-900">ШАГ 1 (Недели 1-3): Примите себя ({personalSimple})</h4>
+                <p className="text-gray-700 mt-2">
+                  Перестаньте воевать с собой. Ваш характер {personalSimple} — это данность, а не проблема. 
+                  Каждый день говорите: "Я {personalSimple}, и это нормально".
+                </p>
+                <p className="text-sm text-gray-600 mt-2">⏱ Практика: 10 минут утром на принятие себя</p>
+              </div>
+
+              <div className="border-l-4 border-green-500 pl-4">
+                <h4 className="font-bold text-green-900">ШАГ 2 (Недели 4-6): Снимите маску ({socialSimple})</h4>
+                <p className="text-gray-700 mt-2">
+                  {socialSimple} — это защитная маска, не вы. Начните быть собой хотя бы с близкими. 
+                  1 раз в неделю делайте что-то "не в своём стиле" {socialSimple}.
+                </p>
+                <p className="text-sm text-gray-600 mt-2">🎯 Цель: почувствовать себя без маски</p>
+              </div>
+
+              <div className="border-l-4 border-yellow-500 pl-4">
+                <h4 className="font-bold text-yellow-900">ШАГ 3 (Недели 7-10): Идите к предназначению ({destinySimple})</h4>
+                <p className="text-gray-700 mt-2">
+                  НЕ бросайте всё резко! Начните с 15 минут в день на {destinySimple}. 
+                  {professions && `Например: ${professions}`}
+                </p>
+                <p className="text-sm text-gray-600 mt-2">📈 Результат: через 6 месяцев вы будете жить предназначением</p>
+              </div>
+
+              <div className="border-l-4 border-purple-500 pl-4">
+                <h4 className="font-bold text-purple-900">ШАГ 4 (Недели 11-12): Активируйте душу ({spiritualSimple})</h4>
+                <p className="text-gray-700 mt-2">
+                  Найдите свою духовную практику: медитация, йога, природа, творчество, служение. 
+                  10 минут тишины каждое утро — просто сидите, дышите, слушайте свою душу.
+                </p>
+                <p className="text-sm text-gray-600 mt-2">🙏 Цель: почувствовать связь с чем-то большим</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-green-50 p-6 rounded-lg border-2 border-green-300">
+            <h3 className="text-xl font-bold text-green-900 mb-3">🎯 Ожидаемый результат</h3>
+            <div className="space-y-3 text-gray-700">
+              <div>
+                <p className="font-semibold">Через 1-3 месяца:</p>
+                <ul className="mt-1 space-y-1">
+                  <li>✅ Внутренний конфликт ослабевает</li>
+                  <li>✅ Появляется ясность "что делать дальше"</li>
+                  <li>✅ Больше энергии, меньше тревоги</li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-semibold">Через 3-6 месяцев:</p>
+                <ul className="mt-1 space-y-1">
+                  <li>✅ Вы на пути к {destinySimple}</li>
+                  <li>✅ Приходят "свои" люди</li>
+                  <li>✅ Деньги начинают течь легче</li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-semibold">Через 6-12 месяцев:</p>
+                <ul className="mt-1 space-y-1">
+                  <li>✅ Вы живёте своё предназначение</li>
+                  <li>✅ Гармония в отношениях</li>
+                  <li>✅ Финансовый поток стабилен</li>
+                  <li>✅ Здоровье улучшается</li>
+                  <li>✅ Вы целостны!</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-red-50 p-6 rounded-lg border-2 border-red-300">
+            <h3 className="text-xl font-bold text-red-900 mb-3">⚠️ Что будет, если НЕ принять себя</h3>
+            <p className="text-gray-700 mb-3">
+              Судьба будет "ломать" вас кризисами, пока вы не пойдёте к {destinySimple}:
+            </p>
+            <ul className="space-y-2 text-gray-700">
+              <li>→ Потеря работы или выгорание</li>
+              <li>→ Разрыв отношений</li>
+              <li>→ Болезни тела: {healthZones || 'см. раздел Здоровье'}</li>
+              <li>→ Финансовые кризисы</li>
+              <li>→ Депрессия и потеря смысла</li>
+            </ul>
+            <p className="mt-4 text-gray-700 font-semibold">
+              Это НЕ наказание! Это способ судьбы сказать: "Эй, ты идёшь не туда! Вернись к своему {destinySimple}!"
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
       <ShareButtons 
         result={finalResult} 
         birthDate={birthDate}
