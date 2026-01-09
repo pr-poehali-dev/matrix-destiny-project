@@ -70,6 +70,109 @@ const extractRelationshipDestroys = (relationships: string | undefined) => {
   return '';
 };
 
+// Функция для синтеза единого заключения по здоровью из 4 арканов
+const synthesizeHealthConclusion = (
+  personal: any,
+  destiny: any,
+  social: any,
+  spiritual: any,
+  personalSimple: string,
+  destinySimple: string,
+  socialSimple: string,
+  spiritualSimple: string
+) => {
+  // Извлекаем ключевые зоны риска из каждого аркана
+  const zones = [
+    extractHealthZones(personal.health),
+    extractHealthZones(destiny.health),
+    extractHealthZones(social.health),
+    extractHealthZones(spiritual.health)
+  ].filter(z => z);
+
+  const causes = [
+    extractHealthCauses(personal.health),
+    extractHealthCauses(destiny.health),
+    extractHealthCauses(social.health),
+    extractHealthCauses(spiritual.health)
+  ].filter(c => c);
+
+  return {
+    title: '🏥 ЗДОРОВЬЕ — Единое заключение',
+    conflict: `Ваше тело — это поле битвы 4 энергий:\n\n• ${personalSimple} (характер) создаёт базовую конституцию\n• ${destinySimple} (предназначение) — если НЕ живёте им, тело болеет\n• ${socialSimple} (маска) — когда носите маску 24/7, тело устаёт\n• ${spiritualSimple} (душа) — без духовности возникает пустота и психосоматика`,
+    mainRisk: '⚠️ ГЛАВНЫЙ РИСК',
+    mainRiskText: `Если вы НЕ живёте через ${destinySimple} (ваше предназначение), тело будет саботировать вас болезнями. Это способ судьбы сказать: "Ты идёшь не туда!"`,
+    zones: zones.slice(0, 3).join('\n'),
+    rootCause: `🔬 КОРНЕВАЯ ПРИЧИНА БОЛЕЗНЕЙ:\n\nФизический уровень (${personalSimple}): проблемы с конкретными органами\nКармический уровень (${destinySimple}): болезни от неприня��ия предназначения\nСоциальный уровень (${socialSimple}): стресс от постоянной маски\nДуховный уровень (${spiritualSimple}): психосоматика от пустоты`,
+    actionPlan: `✅ ЧТО ДЕЛАТЬ:\n\n1️⃣ Лечите физику (${personalSimple}) — обследование, анализы, врачи\n2️⃣ Примите предназначение (${destinySimple}) — начните жить им хотя бы 15 минут в день\n3️⃣ Снимите маску (${socialSimple}) — хотя бы дома будьте собой\n4️⃣ Активируйте душу (${spiritualSimple}) — медитации, духовные практики`
+  };
+};
+
+// Функция для синтеза единого заключения по финансам
+const synthesizeFinanceConclusion = (
+  personal: any,
+  destiny: any,
+  social: any,
+  spiritual: any,
+  personalSimple: string,
+  destinySimple: string,
+  socialSimple: string,
+  spiritualSimple: string
+) => {
+  const professions = extractProfessions(destiny.finance);
+
+  return {
+    title: '💰 ДЕНЬГИ И ФИНАНСЫ — Единое заключение',
+    diagnosis: `🔴 ПОЧЕМУ НЕТ ДЕНЕГ (диагностика):\n\nВы работаете через ${personalSimple}, но деньги приходят ТОЛЬКО через ${destinySimple}!\n\nВот что происходит:\n• Вы зарабатываете как ${personalSimple} — это даёт мало денег\n• Продаёте себя через маску ${socialSimple} — клиенты чувствуют фальшь\n• Ваше истинное призвание ${destinySimple} — не реализовано\n• Денежные блоки ${spiritualSimple} — страх богатства, вина за деньги`,
+    moneyCode: `🎯 ВАШ ДЕНЕЖНЫЙ КОД:\n\n${destinySimple} — это ваше кармическое предназначение.\nВселенная даст деньги ТОЛЬКО за эту деятельность!\n\n💼 Конкретные ниши: ${professions || 'см. раздел Предназначение'}`,
+    blockages: `💎 4 УРОВНЯ ДЕНЕЖНЫХ БЛОКОВ:\n\n1️⃣ ${personalSimple}: работаете в неправильной сфере\n2️⃣ ${destinySimple}: не приняли своё предназначение\n3️⃣ ${socialSimple}: продаёте фасад, а не себя\n4️⃣ ${spiritualSimple}: вина за деньги, страх богатства`,
+    solution: `🚀 ПЛАН ×10 ДОХОД (90 ДНЕЙ):\n\nНеделя 1-2: Признать, что ${personalSimple} — не путь денег\nНеделя 3-4: Принять ${destinySimple} как денежное призвание\nНеделя 5-6: Сменить нишу на ${professions || destinySimple}, запустить MVP\nНеделя 7-8: Использовать ${socialSimple} для продаж (это ваш фасад для клиентов)\nНеделя 9-12: Очистить ${spiritualSimple} — медитации, проработка денежных блоков\n\n📊 РЕЗУЛЬТАТ: доход ×3-5 через 90 дней, ×10-15 через год`
+  };
+};
+
+// Функция для синтеза единого заключения по отношениям
+const synthesizeRelationshipsConclusion = (
+  personal: any,
+  destiny: any,
+  social: any,
+  spiritual: any,
+  personalSimple: string,
+  destinySimple: string,
+  socialSimple: string,
+  spiritualSimple: string
+) => {
+  return {
+    title: '💕 ОТНОШЕНИЯ И ЛЮБОВЬ — Единое заключение',
+    problem: `⚠️ ПОЧЕМУ НЕТ ОТНОШЕНИЙ / ПОСТОЯННЫЕ КОНФЛИКТЫ:\n\nВнутри вас 4 разных "Я", которые ищут 4 разных партнёров:\n\n• ${personalSimple} (истинное Я) — хочет быть собой\n• ${destinySimple} (предназначение) — ищет того, кто поддержит миссию\n• ${socialSimple} (маска) — привлекает людей к фасаду, не к вам\n• ${spiritualSimple} (душа) — тянется к родственной душе\n\n→ Все 4 "Я" тянут в разные стороны = хаос в отношениях!`,
+    rootCause: `🔬 КОРЕНЬ ПРОБЛЕМЫ:\n\nВы встречаетесь через маску ${socialSimple}\nПартнёр влюбляется в неё, а не в вас\nЗатем вы показываете ${personalSimple} — партнёр в шоке: "Ты не такой!"\nВы требуете поддержки ${destinySimple}, но партнёр этого не понимает\nДуша ${spiritualSimple} чувствует пустоту — нет духовной связи\n\n→ Результат: конфликты, разрывы, "не мой человек"`,
+    whatNeeded: `✅ ЧТО НУЖНО ДЛЯ ГАРМОНИИ:\n\n1️⃣ Снимите маску ${socialSimple} — будьте собой с первой встречи\n2️⃣ Покажите ${personalSimple} — пусть видят вас настоящего\n3️⃣ Найдите того, кто поддержит ${destinySimple} — вашу миссию\n4️⃣ Ищите духовную связь ${spiritualSimple} — не просто физику`,
+    compatibility: `💑 ИДЕАЛЬНЫЙ ПАРТНЁР ДЛЯ ВАС:\n\nКто примет ${personalSimple}\nКто поддержит ${destinySimple}\nКому не нужна маска ${socialSimple}\nС кем есть связь ${spiritualSimple}\n\n→ Такой человек = ваша судьба`,
+    actionPlan: `🛠 ЧТО ДЕЛАТЬ ПРЯМО СЕЙЧАС:\n\n• В новых знакомствах: не надевайте ${socialSimple}, сразу будьте ${personalSimple}\n• В текущих отношениях: снимите маску, покажите себя настоящего\n• Говорите о ${destinySimple}: "Вот моя миссия, ты со мной?"\n• Ищите духовную связь: медитации вдвоём, глубокие разговоры о смысле`
+  };
+};
+
+// Функция для синтеза заключения по работе и реализации
+const synthesizeCareerConclusion = (
+  personal: any,
+  destiny: any,
+  social: any,
+  spiritual: any,
+  personalSimple: string,
+  destinySimple: string,
+  socialSimple: string,
+  spiritualSimple: string
+) => {
+  const professions = extractProfessions(destiny.finance);
+
+  return {
+    title: '🎯 РАБОТА И РЕАЛИЗАЦИЯ — Единое заключение',
+    conflict: `⚠️ ВАШ ВНУТРЕННИЙ КОНФЛИКТ НА РАБОТЕ:\n\nВы работаете как ${personalSimple} (ваш характер)\nЛюди видят ${socialSimple} (вашу маску)\nНо ваше истинное призвание — ${destinySimple}\nА душа ${spiritualSimple} требует смысла\n\n→ Все 4 энергии конфликтуют = выгорание, нет результата`,
+    wrongPath: `🔴 ПРИЗНАКИ, ЧТО ВЫ НЕ НА СВОЁМ МЕСТЕ:\n\n• Работа через силу (${personalSimple} сопротивляется)\n• Постоянно играете роль (${socialSimple} устали носить)\n• Нет смысла в работе (${spiritualSimple} чувствует пустоту)\n• Нет денег/результата (не живёте ${destinySimple})\n\n→ Это сигнал судьбы: "Ты идёшь не туда!"`,
+    rightPath: `✅ ВАШЕ ИСТИННОЕ ПРИЗВАНИЕ:\n\n${destinySimple} — это ваш денежный код\n\n💼 Конкретные профессии: ${professions || 'см. детальную расшифровку'}\n\nПочему именно это:\n• Вселенная помогает ТОЛЬКО здесь\n• Деньги текут легко\n• Работа не ощущается работой\n• Приходят "свои" клиенты\n• Есть смысл и энергия`,
+    howToIntegrate: `🔧 КАК ИНТЕГРИРОВАТЬ ВСЕ 4 ЭНЕРГИИ В РАБОТЕ:\n\n1️⃣ Используйте ${personalSimple} КАК ИНСТРУМЕНТ для ${destinySimple}\n   Ваш характер — не проблема, а уникальная сила\n\n2️⃣ Используйте ${socialSimple} ДЛЯ ПРОДАЖ\n   Маска нужна для клиентов, но не живите в ней 24/7\n\n3️⃣ Работайте через ${destinySimple}\n   Смените нишу на своё призвание — за 30 дней!\n\n4️⃣ Найдите смысл ${spiritualSimple}\n   Работа должна быть служением, не просто деньгами`,
+    transitionPlan: `🚀 ПЛАН ПЕРЕХОДА (90 ДНЕЙ):\n\nНеделя 1-2: Осознайте, что ${personalSimple} ≠ ${destinySimple}\nНеделя 3-4: Изучите ${destinySimple}: курсы, книги, менторы\nНеделя 5-6: Начните ${destinySimple} как хобби (15 мин/день)\nНеделя 7-10: Первые клиенты/проекты через ${destinySimple}\nНеделя 11-12: Переход на ${destinySimple} как основная деятельность\n\n📊 РЕЗУЛЬТАТ: через 6-12 месяцев — полная реализация в ${destinySimple}`
+  };
+};
+
 export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMatrixResultProps) => {
   const memoizedData = useMemo(() => {
     if (!hasAccess) return null;
@@ -304,6 +407,127 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
           )}
         </CardContent>
       </Card>
+
+      {/* СИНТЕЗИРОВАННЫЕ ЗАКЛЮЧЕНИЯ ПО СФЕРАМ ЖИЗНИ */}
+      {(() => {
+        const healthConclusion = synthesizeHealthConclusion(personal, destiny, social, spiritual, personalSimple, destinySimple, socialSimple, spiritualSimple);
+        const financeConclusion = synthesizeFinanceConclusion(personal, destiny, social, spiritual, personalSimple, destinySimple, socialSimple, spiritualSimple);
+        const relationsConclusion = synthesizeRelationshipsConclusion(personal, destiny, social, spiritual, personalSimple, destinySimple, socialSimple, spiritualSimple);
+        const careerConclusion = synthesizeCareerConclusion(personal, destiny, social, spiritual, personalSimple, destinySimple, socialSimple, spiritualSimple);
+
+        return (
+          <>
+            {/* ЗДОРОВЬЕ — СИНТЕЗ */}
+            <Card className="bg-gradient-to-br from-red-50 to-pink-50 border-2 border-red-300">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-2xl">
+                  <Icon name="Activity" className="text-red-600" size={28} />
+                  {healthConclusion.title}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-red-100 p-4 rounded-lg border-l-4 border-red-600">
+                  <p className="text-gray-800 whitespace-pre-line">{healthConclusion.conflict}</p>
+                </div>
+                <div className="bg-white/80 p-4 rounded-lg">
+                  <p className="font-bold text-red-900 mb-2">{healthConclusion.mainRisk}</p>
+                  <p className="text-gray-700">{healthConclusion.mainRiskText}</p>
+                </div>
+                {healthConclusion.zones && (
+                  <div className="bg-orange-50 p-4 rounded-lg">
+                    <p className="font-bold text-orange-900 mb-2">🎯 Зоны риска (топ-3):</p>
+                    <p className="text-gray-700 whitespace-pre-line">{healthConclusion.zones}</p>
+                  </div>
+                )}
+                <div className="bg-yellow-50 p-4 rounded-lg">
+                  <p className="text-gray-700 whitespace-pre-line">{healthConclusion.rootCause}</p>
+                </div>
+                <div className="bg-green-50 p-4 rounded-lg border-2 border-green-300">
+                  <p className="text-gray-700 whitespace-pre-line font-medium">{healthConclusion.actionPlan}</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* ФИНАНСЫ — СИНТЕЗ */}
+            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-2xl">
+                  <Icon name="DollarSign" className="text-green-600" size={28} />
+                  {financeConclusion.title}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-red-100 p-4 rounded-lg border-l-4 border-red-600">
+                  <p className="text-gray-800 whitespace-pre-line">{financeConclusion.diagnosis}</p>
+                </div>
+                <div className="bg-green-100 p-4 rounded-lg border-l-4 border-green-600">
+                  <p className="text-gray-800 whitespace-pre-line font-semibold">{financeConclusion.moneyCode}</p>
+                </div>
+                <div className="bg-orange-50 p-4 rounded-lg">
+                  <p className="text-gray-700 whitespace-pre-line">{financeConclusion.blockages}</p>
+                </div>
+                <div className="bg-green-50 p-4 rounded-lg border-2 border-green-300">
+                  <p className="text-gray-700 whitespace-pre-line font-medium">{financeConclusion.solution}</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* ОТНОШЕНИЯ — СИНТЕЗ */}
+            <Card className="bg-gradient-to-br from-pink-50 to-rose-50 border-2 border-pink-300">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-2xl">
+                  <Icon name="Heart" className="text-pink-600" size={28} />
+                  {relationsConclusion.title}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-pink-100 p-4 rounded-lg border-l-4 border-pink-600">
+                  <p className="text-gray-800 whitespace-pre-line">{relationsConclusion.problem}</p>
+                </div>
+                <div className="bg-red-50 p-4 rounded-lg">
+                  <p className="text-gray-700 whitespace-pre-line">{relationsConclusion.rootCause}</p>
+                </div>
+                <div className="bg-green-50 p-4 rounded-lg border-2 border-green-300">
+                  <p className="text-gray-700 whitespace-pre-line font-medium">{relationsConclusion.whatNeeded}</p>
+                </div>
+                <div className="bg-purple-50 p-4 rounded-lg">
+                  <p className="text-gray-700 whitespace-pre-line">{relationsConclusion.compatibility}</p>
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <p className="text-gray-700 whitespace-pre-line">{relationsConclusion.actionPlan}</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* РАБОТА И РЕАЛИЗАЦИЯ — СИНТЕЗ */}
+            <Card className="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-2xl">
+                  <Icon name="Briefcase" className="text-amber-600" size={28} />
+                  {careerConclusion.title}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-amber-100 p-4 rounded-lg border-l-4 border-amber-600">
+                  <p className="text-gray-800 whitespace-pre-line">{careerConclusion.conflict}</p>
+                </div>
+                <div className="bg-red-50 p-4 rounded-lg">
+                  <p className="text-gray-700 whitespace-pre-line">{careerConclusion.wrongPath}</p>
+                </div>
+                <div className="bg-green-100 p-4 rounded-lg border-l-4 border-green-600">
+                  <p className="text-gray-800 whitespace-pre-line font-semibold">{careerConclusion.rightPath}</p>
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <p className="text-gray-700 whitespace-pre-line">{careerConclusion.howToIntegrate}</p>
+                </div>
+                <div className="bg-green-50 p-4 rounded-lg border-2 border-green-300">
+                  <p className="text-gray-700 whitespace-pre-line font-medium">{careerConclusion.transitionPlan}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        );
+      })()}
 
       {/* ДЕТАЛЬНЫЕ РАСШИФРОВКИ ПО КАЖДОЙ ЭНЕРГИИ */}
       <Card className="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300">
