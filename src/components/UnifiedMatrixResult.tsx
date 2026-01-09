@@ -237,14 +237,8 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
       </Card>
 
       <ShareButtons 
-        name={finalResult.name} 
+        result={finalResult} 
         birthDate={birthDate}
-        matrixNumbers={{
-          personal: finalResult.personal,
-          destiny: finalResult.destiny,
-          social: finalResult.social,
-          spiritual: finalResult.spiritual
-        }}
       />
     </div>
   );
