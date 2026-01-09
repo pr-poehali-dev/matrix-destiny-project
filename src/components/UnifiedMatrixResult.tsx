@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { energyDescriptions, arcanaSimpleNames } from '@/data/arcana-descriptions';
@@ -15,13 +16,6 @@ interface UnifiedMatrixResultProps {
   birthDate: string;
 }
 
-// Функция для извлечения простого описания аркана (убираем технические детали)
-const getSimplePersonality = (desc: string | undefined) => {
-  if (!desc) return '';
-  // Берём первые 2-3 предложения из description
-  return desc.split('\n\n').slice(0, 2).join(' ').substring(0, 300);
-};
-
 const extractProfessions = (finance: string | undefined) => {
   if (!finance) return '';
   const profSection = finance.split('🎓 ПРОФЕССИИ')[1];
@@ -33,417 +27,230 @@ const extractProfessions = (finance: string | undefined) => {
 
 const extractHealthZones = (health: string | undefined) => {
   if (!health) return '';
-  const zones = health.split('🔴 ЗОНЫ ОСОБОГО ВНИМАНИЯ:')[1];
-  return zones?.split('⚡')[0]?.trim() || '';
+  const zoneSection = health.split('⚠️ ЗОНЫ ОСОБОГО ВНИМАНИЯ')[1];
+  if (zoneSection) {
+    return zoneSection.split('\n\n')[0]?.trim() || '';
+  }
+  return '';
 };
 
 const extractHealthCauses = (health: string | undefined) => {
   if (!health) return '';
-  const causes = health.split('⚡ ПРИЧИНЫ ЗАБОЛЕВАНИЙ:')[1];
-  return causes?.split('🌿')[0]?.trim() || '';
+  const causeSection = health.split('🔬 ВОЗМОЖНЫЕ ПРИЧИНЫ')[1];
+  if (causeSection) {
+    return causeSection.split('\n\n')[0]?.trim() || '';
+  }
+  return '';
 };
 
-const extractRelationshipStyle = (rel: string | undefined) => {
-  if (!rel) return '';
-  const style = rel.split('🎭 ВАШ СТИЛЬ В ОТНОШЕНИЯХ:')[1];
-  return style?.split('✅')[0]?.trim() || '';
+const extractRelationshipStyle = (relationships: string | undefined) => {
+  if (!relationships) return '';
+  const styleSection = relationships.split('🎭 СТИЛЬ ОТНОШЕНИЙ')[1];
+  if (styleSection) {
+    return styleSection.split('\n\n')[0]?.trim() || '';
+  }
+  return '';
 };
 
-const extractRelationshipNeeds = (rel: string | undefined) => {
-  if (!rel) return '';
-  const needs = rel.split('✅ ЧТО ВАМ НУЖНО ОТ ПАРТНЕРА:')[1];
-  return needs?.split('❌')[0]?.trim() || '';
+const extractRelationshipNeeds = (relationships: string | undefined) => {
+  if (!relationships) return '';
+  const needSection = relationships.split('💝 ЧТО НУЖНО')[1];
+  if (needSection) {
+    return needSection.split('\n\n')[0]?.trim() || '';
+  }
+  return '';
 };
 
-const extractRelationshipDestroys = (rel: string | undefined) => {
-  if (!rel) return '';
-  const destroys = rel.split('❌ ЧТО РАЗРУШАЕТ ВАШИ ОТНОШЕНИЯ:')[1];
-  return destroys?.split('🔑')[0]?.trim() || '';
+const extractRelationshipDestroys = (relationships: string | undefined) => {
+  if (!relationships) return '';
+  const destroySection = relationships.split('⚡ ЧТО РАЗРУШАЕТ')[1];
+  if (destroySection) {
+    return destroySection.split('\n\n')[0]?.trim() || '';
+  }
+  return '';
 };
 
 export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMatrixResultProps) => {
-  console.log('🔍 UnifiedMatrixResult rendered', { result, hasAccess, birthDate });
-  
-  if (!hasAccess) {
-    console.log('❌ No access');
-    return null;
-  }
-  
-  // Проверяем, что result существует
-  if (!result) {
-    console.error('❌ result is null or undefined');
+  const memoizedData = useMemo(() => {
+    if (!result || !hasAccess) return null;
+
+    const hasValidNumbers = (
+      typeof result.personal === 'number' && 
+      typeof result.destiny === 'number' && 
+      typeof result.social === 'number' && 
+      typeof result.spiritual === 'number' &&
+      result.personal >= 1 && result.personal <= 22 &&
+      result.destiny >= 1 && result.destiny <= 22 &&
+      result.social >= 1 && result.social <= 22 &&
+      result.spiritual >= 1 && result.spiritual <= 22
+    );
+
+    if (!hasValidNumbers) return null;
+
+    const personal = energyDescriptions[result.personal];
+    const destiny = energyDescriptions[result.destiny];
+    const social = energyDescriptions[result.social];
+    const spiritual = energyDescriptions[result.spiritual];
+
+    if (!personal || !destiny || !social || !spiritual) return null;
+
+    return {
+      result,
+      personal,
+      destiny,
+      social,
+      spiritual,
+      professions: extractProfessions(destiny.finance),
+      healthZones: extractHealthZones(personal.health),
+      healthCauses: extractHealthCauses(personal.health),
+      relStyle: extractRelationshipStyle(personal.relationships),
+      relNeeds: extractRelationshipNeeds(personal.relationships),
+      relDestroys: extractRelationshipDestroys(personal.relationships),
+      personalSimple: arcanaSimpleNames[result.personal] || personal.title,
+      socialSimple: arcanaSimpleNames[result.social] || social.title,
+      destinySimple: arcanaSimpleNames[result.destiny] || destiny.title,
+      spiritualSimple: arcanaSimpleNames[result.spiritual] || spiritual.title
+    };
+  }, [result, hasAccess]);
+
+  if (!hasAccess) return null;
+
+  if (!memoizedData) {
     return <div className="text-center py-10 text-red-600 font-medium">
-      <p className="text-lg">⚠️ Ошибка: данные расчёта не переданы</p>
+      <p className="text-lg">⚠️ Ошибка загрузки данных</p>
       <p className="text-sm mt-2">Попробуйте пересчитать матрицу</p>
     </div>;
   }
-  
-  // Проверяем, что result содержит валидные числа (строгая проверка)
-  const hasValidNumbers = (
-    typeof result.personal === 'number' && 
-    typeof result.destiny === 'number' && 
-    typeof result.social === 'number' && 
-    typeof result.spiritual === 'number' &&
-    result.personal >= 1 && result.personal <= 22 &&
-    result.destiny >= 1 && result.destiny <= 22 &&
-    result.social >= 1 && result.social <= 22 &&
-    result.spiritual >= 1 && result.spiritual <= 22
-  );
 
-  if (!hasValidNumbers) {
-    console.error('❌ Invalid result data:', JSON.parse(JSON.stringify(result)));
-    return <div className="text-center py-10 text-red-600 font-medium">
-      <p className="text-lg">⚠️ Ошибка: некорректные данные матрицы</p>
-      <p className="text-sm mt-2">
-        Personal: {JSON.stringify(result.personal)}, 
-        Destiny: {JSON.stringify(result.destiny)}, 
-        Social: {JSON.stringify(result.social)}, 
-        Spiritual: {JSON.stringify(result.spiritual)}
-      </p>
-      <p className="text-xs mt-2 text-gray-500">
-        Попробуйте обновить страницу (F5) и рассчитать матрицу заново
-      </p>
-    </div>;
-  }
-
-  console.log('📊 Fetching arcana data for:', {
-    personal: result.personal,
-    destiny: result.destiny,
-    social: result.social,
-    spiritual: result.spiritual
-  });
-
-  // Безопасная проверка и получение данных арканов
-  const personal = result.personal ? energyDescriptions[result.personal] : undefined;
-  const destiny = result.destiny ? energyDescriptions[result.destiny] : undefined;
-  const social = result.social ? energyDescriptions[result.social] : undefined;
-  const spiritual = result.spiritual ? energyDescriptions[result.spiritual] : undefined;
-
-  console.log('📚 Arcana data fetched:', {
-    personal: !!personal,
-    destiny: !!destiny,
-    social: !!social,
-    spiritual: !!spiritual
-  });
-
-  if (!personal || !destiny || !social || !spiritual) {
-    console.error('❌ Missing arcana data for:', {
-      personal: result.personal,
-      destiny: result.destiny,
-      social: result.social,
-      spiritual: result.spiritual
-    });
-    return <div className="text-center py-10 text-red-600">
-      Ошибка загрузки данных арканов. Обнаружены недопустимые номера арканов.
-      <br />
-      <span className="text-sm">Personal: {result.personal}, Destiny: {result.destiny}, Social: {result.social}, Spiritual: {result.spiritual}</span>
-    </div>;
-  }
-
-  console.log('✅ All checks passed, rendering component');
-
-  // Дополнительная проверка перед использованием
-  if (!result || !result.personal || !result.destiny || !result.social || !result.spiritual) {
-    console.error('❌ CRITICAL: result lost between checks!', result);
-    return <div className="text-center py-10 text-red-600 font-medium">
-      <p className="text-lg">⚠️ Критическая ошибка: данные потерялись при рендеринге</p>
-      <p className="text-sm mt-2">Попробуйте обновить страницу и пересчитать матрицу</p>
-    </div>;
-  }
-
-  const professions = extractProfessions(destiny?.finance);
-  const healthZones = extractHealthZones(personal?.health);
-  const healthCauses = extractHealthCauses(personal?.health);
-  const relStyle = extractRelationshipStyle(personal?.relationships);
-  const relNeeds = extractRelationshipNeeds(personal?.relationships);
-  const relDestroys = extractRelationshipDestroys(personal?.relationships);
-
-  // Получаем простые имена арканов с безопасным доступом
-  const personalSimple = arcanaSimpleNames[result.personal] || personal?.title || 'Неизвестный тип';
-  const socialSimple = arcanaSimpleNames[result.social] || social?.title || 'Неизвестный тип';
-  const destinySimple = arcanaSimpleNames[result.destiny] || destiny?.title || 'Неизвестный тип';
-  const spiritualSimple = arcanaSimpleNames[result.spiritual] || spiritual?.title || 'Неизвестный тип';
+  const {
+    result: safeResult,
+    personal,
+    destiny,
+    social,
+    spiritual,
+    professions,
+    healthZones,
+    healthCauses,
+    relStyle,
+    relNeeds,
+    relDestroys,
+    personalSimple,
+    socialSimple,
+    destinySimple,
+    spiritualSimple
+  } = memoizedData;
 
   return (
     <div className="space-y-6 mb-8">
-      {/* Заголовок */}
       <div className="text-center space-y-2 py-6">
         <h2 className="text-3xl font-bold text-gray-900">
           📋 Психологический портрет клиента
         </h2>
         <p className="text-lg text-gray-600">
-          {result.name} — комплексное заключение для специалистов
+          {safeResult.name} — комплексное заключение для специалистов
         </p>
       </div>
 
-      {/* ЕДИНОЕ ЗАКЛЮЧЕНИЕ */}
-      <Card id="personal-profile">
-        <CardHeader className="bg-gradient-to-r from-purple-50 to-indigo-50">
+      <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200">
+        <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl">
-            <Icon name="FileText" size={24} />
-            Заключение специалиста
+            <Icon name="FileText" className="text-purple-600" size={28} />
+            Единое заключение
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-6 space-y-6">
-          {/* КТО ПЕРЕД ВАМИ */}
+        <CardContent className="space-y-4 text-base leading-relaxed">
           <div className="space-y-3">
-            <h3 className="text-xl font-bold text-gray-900 border-b-2 border-purple-200 pb-2">
-              🧠 Кто перед вами: портрет личности
-            </h3>
-            <div className="bg-purple-50 p-4 rounded-lg space-y-3 text-gray-800 leading-relaxed">
-              <p>
-                <strong className="text-purple-900">Истинная суть человека:</strong> По своей природе это <strong>{personalSimple}</strong>. 
-                {getSimplePersonality(personal?.description)} 
-                Это его настоящее "Я", которое он часто прячет от окружающих.
-              </p>
-              
-              <p>
-                <strong className="text-blue-900">Социальная маска:</strong> В обществе человек надевает маску <strong>{socialSimple}</strong>. 
-                {getSimplePersonality(social?.description)} 
-                Это НЕ его истинное лицо — это защитная реакция, способ адаптации к ожиданиям общества.
-              </p>
-              
-              <p>
-                <strong className="text-green-900">Предназначение:</strong> Его душа пришла в этот мир, чтобы реализовать энергию <strong>{destinySimple}</strong>. 
-                {getSimplePersonality(destiny?.description)} 
-                Когда человек занимается своим призванием, жизнь становится лёгкой и деньги приходят сами.
-              </p>
-              
-              <p>
-                <strong className="text-pink-900">Глубинная суть души:</strong> На самом глубоком уровне это <strong>{spiritualSimple}</strong>. 
-                {getSimplePersonality(spiritual?.description)} 
-                Это то, ради чего душа воплотилась на Земле — её высшая миссия.
-              </p>
-            </div>
+            <p className="font-semibold text-gray-800">
+              🧠 <span className="underline">Личностный профиль:</span> {personalSimple}
+            </p>
+            <p className="ml-6 text-gray-700">{personal.description}</p>
           </div>
 
-          {/* В ЧЁМ ПРОБЛЕМА */}
-          <div className="space-y-3 bg-red-50 p-5 rounded-lg border-l-4 border-red-500">
-            <h3 className="text-xl font-bold text-red-900 flex items-center gap-2">
-              <Icon name="AlertTriangle" size={20} />
-              ⚠️ В чём проблема этого человека
-            </h3>
-            <div className="space-y-3 text-gray-800">
-              <p>
-                <strong>1. Внутренний конфликт:</strong> Человек живёт как "{socialSimple}" (социальная роль), 
-                хотя внутри чувствует себя "{personalSimple}" (истинное "Я"). 
-                Это создаёт хроническое напряжение, усталость, ощущение "я живу не своей жизнью".
-              </p>
-              
-              <p>
-                <strong>2. Непонимание призвания:</strong> Не реализует энергию "{destinySimple}", 
-                поэтому:
-              </p>
-              <ul className="ml-6 space-y-1 text-sm">
-                <li>• Деньги даются тяжело, приходится много работать за малый результат</li>
-                <li>• Карьера буксует, нет удовлетворения от работы</li>
-                <li>• Постоянное чувство "не на своём месте"</li>
-                <li>• Завистливо смотрит на тех, кто нашёл себя</li>
-              </ul>
-              
-              <p>
-                <strong>3. Потеря смысла жизни:</strong> Душа ("{spiritualSimple}") не получает своего питания. 
-                Отсюда: депрессия, апатия, экзистенциальный кризис, вопросы "зачем всё это?", "в чём смысл?".
-              </p>
-              
-              <p>
-                <strong>4. Психосоматические проблемы:</strong> Подавление истинных желаний и непроявленность души ведут к болезням. 
-                Слабые зоны: {healthZones}
-              </p>
-              
-              <p className="text-sm italic text-red-800">
-                <strong>Главная проблема в одном предложении:</strong> Человек притворяется кем-то другим, не делает то, для чего пришёл, 
-                и не понимает смысла своей жизни.
-              </p>
-            </div>
-          </div>
-
-          {/* КАК ПОМОЧЬ */}
-          <div className="space-y-4 bg-green-50 p-5 rounded-lg border-l-4 border-green-500">
-            <h3 className="text-xl font-bold text-green-900 flex items-center gap-2">
-              <Icon name="HeartPulse" size={20} />
-              💡 Как помочь: пошаговый план терапии
-            </h3>
-            
-            <div className="space-y-4 text-gray-800">
-              <div className="bg-white p-4 rounded-lg shadow-sm">
-                <p className="font-bold text-green-900 mb-2">
-                  ШАГ 1: Вернуть контакт с истинным "Я"
-                </p>
-                <p className="text-sm mb-2">
-                  <strong>Цель:</strong> Разрешить человеку быть "{personalSimple}" — не прятаться за маску.
-                </p>
-                <p className="text-sm mb-2">
-                  <strong>Работаем с убеждением:</strong> "Я имею право быть собой. Меня не обязательно всем любить."
-                </p>
-                <p className="text-sm">
-                  <strong>Практики:</strong> Ведение дневника истинных желаний ("что я хочу на самом деле?"), 
-телесные практики для возвращения в контакт с собой, упражнения на самопринятие.
-                </p>
+          <div className="space-y-3">
+            <p className="font-semibold text-gray-800">
+              🎯 <span className="underline">Предназначение:</span> {destinySimple}
+            </p>
+            <p className="ml-6 text-gray-700">{destiny.description}</p>
+            {professions && (
+              <div className="ml-6 bg-white/60 p-3 rounded-lg">
+                <p className="font-medium text-gray-800">🎓 Подходящие профессии:</p>
+                <p className="text-gray-700 mt-1">{professions}</p>
               </div>
-
-              <div className="bg-white p-4 rounded-lg shadow-sm">
-                <p className="font-bold text-green-900 mb-2">
-                  ШАГ 2: Найти своё предназначение
-                </p>
-                <p className="text-sm mb-2">
-                  <strong>Цель:</strong> Направить энергию в реализацию призвания "{destinySimple}".
-                </p>
-                <p className="text-sm mb-2">
-                  <strong>Профессии для реализации:</strong> {professions}
-                </p>
-                <p className="text-sm">
-                  <strong>Важно объяснить:</strong> Это не просто работа — это путь души. 
-                  Когда занимаешься своим делом, деньги приходят легко, а жизнь обретает смысл.
-                </p>
-              </div>
-
-              <div className="bg-white p-4 rounded-lg shadow-sm">
-                <p className="font-bold text-green-900 mb-2">
-                  ШАГ 3: Снять социальную маску
-                </p>
-                <p className="text-sm mb-2">
-                  <strong>Цель:</strong> Объяснить, что маска "{socialSimple}" — это НЕ он. 
-                  Это защитная реакция, способ выживания в обществе.
-                </p>
-                <p className="text-sm mb-2">
-                  <strong>Работаем с вопросом:</strong> "Кому я пытаюсь понравиться? Чьё одобрение мне нужно? Почему?"
-                </p>
-                <p className="text-sm">
-                  <strong>Практики:</strong> Учиться говорить "нет", устанавливать границы, разрешить себе быть "плохим" в глазах других, 
-                  экспериментировать с искренностью в безопасных условиях.
-                </p>
-              </div>
-
-              <div className="bg-white p-4 rounded-lg shadow-sm">
-                <p className="font-bold text-green-900 mb-2">
-                  ШАГ 4: Подключить душу и найти высший смысл
-                </p>
-                <p className="text-sm mb-2">
-                  <strong>Цель:</strong> Активировать энергию "{spiritualSimple}" — 
-                  глубинную суть, ради которой душа пришла на Землю.
-                </p>
-                <p className="text-sm mb-2">
-                  <strong>Работаем с вопросом:</strong> "Ради чего я живу? Какой след хочу оставить в мире?"
-                </p>
-                <p className="text-sm">
-                  <strong>Практики:</strong> Духовные практики (медитации, молитвы, работа с энергией), 
-                  поиск высшего смысла в ежедневных действиях, служение людям через своё призвание.
-                </p>
-              </div>
-            </div>
+            )}
           </div>
 
-          {/* ЗДОРОВЬЕ */}
-          <div className="space-y-3 bg-blue-50 p-5 rounded-lg border-l-4 border-blue-500">
-            <h3 className="text-xl font-bold text-blue-900 flex items-center gap-2">
-              <Icon name="Activity" size={20} />
-              💊 Здоровье: психосоматика и рекомендации
-            </h3>
-            <div className="space-y-3 text-gray-800 text-sm">
-              <p>
-                <strong>Слабые зоны организма:</strong> {healthZones}
-              </p>
-              <p>
-                <strong>Психологические причины болезней:</strong> {healthCauses}
-              </p>
-              <p>
-                <strong className="text-blue-900">Главная причина психосоматики:</strong> Когда человек не живёт как "{personalSimple}" 
-                и не реализует "{destinySimple}", тело начинает сигнализировать болезнями. 
-                Это способ подсознания сказать: "Ты идёшь не туда!"
-              </p>
-              <p className="bg-white p-3 rounded">
-                <strong>Что делать:</strong> Параллельно с психотерапией работать с телом — 
-                телесные практики, йога, дыхание, массаж. Тело хранит всю непрожитую боль.
-              </p>
-            </div>
+          <div className="space-y-3">
+            <p className="font-semibold text-gray-800">
+              🌍 <span className="underline">Социальная роль:</span> {socialSimple}
+            </p>
+            <p className="ml-6 text-gray-700">{social.description}</p>
           </div>
 
-          {/* ОТНОШЕНИЯ */}
-          <div className="space-y-3 bg-pink-50 p-5 rounded-lg border-l-4 border-pink-500">
-            <h3 className="text-xl font-bold text-pink-900 flex items-center gap-2">
-              <Icon name="Heart" size={20} />
-              💕 Отношения: паттерны и кармические уроки
-            </h3>
-            <div className="space-y-3 text-gray-800 text-sm">
-              <p>
-                <strong>Стиль в любви:</strong> {relStyle}
-              </p>
-              <p>
-                <strong>Что нужно от партнёра:</strong> {relNeeds}
-              </p>
-              <p>
-                <strong>Что разрушает отношения:</strong> {relDestroys}
-              </p>
-              <p className="bg-white p-3 rounded">
-                <strong className="text-pink-900">Главный урок в любви:</strong> Человек притягивает партнёров, которые либо усиливают его маску 
-                ("{socialSimple}"), либо показывают его тень. 
-                Пока не примет себя как "{personalSimple}", 
-                отношения будут повторять один и тот же сценарий.
-              </p>
-              <p className="text-xs italic text-pink-800">
-                Совет для специалиста: Работайте с паттернами выбора партнёров, детскими травмами, страхами быть отвергнутым.
-              </p>
-            </div>
+          <div className="space-y-3">
+            <p className="font-semibold text-gray-800">
+              ✨ <span className="underline">Духовный путь:</span> {spiritualSimple}
+            </p>
+            <p className="ml-6 text-gray-700">{spiritual.description}</p>
           </div>
 
-          {/* ДЕНЬГИ И КАРЬЕРА */}
-          <div className="space-y-3 bg-yellow-50 p-5 rounded-lg border-l-4 border-yellow-500">
-            <h3 className="text-xl font-bold text-yellow-900 flex items-center gap-2">
-              <Icon name="DollarSign" size={20} />
-              💰 Деньги и карьера: как разблокировать поток
-            </h3>
-            <div className="space-y-3 text-gray-800 text-sm">
-              <p>
-                <strong>Профессии для реализации души:</strong> {professions}
+          {(healthZones || healthCauses) && (
+            <div className="space-y-3 bg-red-50/60 p-4 rounded-lg border border-red-200">
+              <p className="font-semibold text-gray-800">
+                🏥 <span className="underline">Здоровье:</span>
               </p>
-              <p>
-                <strong className="text-yellow-900">Почему сейчас нет денег:</strong> Человек не работает по своему предназначению ("{destinySimple}"). 
-                Он занимается не тем, тратит энергию впустую, поэтому Вселенная не поддерживает его финансово.
-              </p>
-              <p className="bg-white p-3 rounded">
-                <strong>Как разблокировать деньги:</strong> Найти работу/проект, где можно реализовать свои природные таланты. 
-                Когда человек занимается своим делом, деньги приходят легко — это закон Вселенной.
-              </p>
-              <p className="text-xs italic text-yellow-800">
-                Важно: Деньги — это энергия благодарности за то, что ты делаешь своё дело. 
-                Если дело чужое — благодарности (денег) не будет.
-              </p>
+              {healthZones && (
+                <div className="ml-6">
+                  <p className="font-medium text-gray-800">⚠️ Зоны внимания:</p>
+                  <p className="text-gray-700 mt-1">{healthZones}</p>
+                </div>
+              )}
+              {healthCauses && (
+                <div className="ml-6 mt-2">
+                  <p className="font-medium text-gray-800">🔬 Возможные причины:</p>
+                  <p className="text-gray-700 mt-1">{healthCauses}</p>
+                </div>
+              )}
             </div>
-          </div>
+          )}
 
-          {/* ИТОГОВОЕ РЕЗЮМЕ */}
-          <div className="space-y-3 bg-gradient-to-r from-purple-100 to-pink-100 p-5 rounded-lg border-2 border-purple-300">
-            <h3 className="text-xl font-bold text-purple-900 flex items-center gap-2">
-              <Icon name="CheckCircle" size={20} />
-              ✅ Резюме для специалиста
-            </h3>
-            <div className="space-y-2 text-gray-900 text-sm leading-relaxed">
-              <p>
-                <strong>Кто перед вами:</strong> Человек-"{personalSimple}", 
-                который притворяется "{socialSimple}", 
-                не реализует "{destinySimple}" 
-                и потерял связь с "{spiritualSimple}".
+          {(relStyle || relNeeds || relDestroys) && (
+            <div className="space-y-3 bg-pink-50/60 p-4 rounded-lg border border-pink-200">
+              <p className="font-semibold text-gray-800">
+                💑 <span className="underline">Отношения:</span>
               </p>
-              <p>
-                <strong>Главная проблема:</strong> Внутренний конфликт четырёх "Я", непонимание своего места в мире, 
-                потеря смысла жизни.
-              </p>
-              <p>
-                <strong>План работы:</strong> Вернуть контакт с собой → найти призвание → снять маску → подключить душу.
-              </p>
-              <p>
-                <strong>Прогноз:</strong> При правильной работе через 6-12 месяцев человек обретёт внутреннюю целостность, 
-                найдёт своё дело, выйдет на новый финансовый уровень и почувствует смысл жизни.
-              </p>
+              {relStyle && (
+                <div className="ml-6">
+                  <p className="font-medium text-gray-800">🎭 Стиль отношений:</p>
+                  <p className="text-gray-700 mt-1">{relStyle}</p>
+                </div>
+              )}
+              {relNeeds && (
+                <div className="ml-6 mt-2">
+                  <p className="font-medium text-gray-800">💝 Что нужно:</p>
+                  <p className="text-gray-700 mt-1">{relNeeds}</p>
+                </div>
+              )}
+              {relDestroys && (
+                <div className="ml-6 mt-2">
+                  <p className="font-medium text-gray-800">⚡ Что разрушает:</p>
+                  <p className="text-gray-700 mt-1">{relDestroys}</p>
+                </div>
+              )}
             </div>
-          </div>
-
+          )}
         </CardContent>
       </Card>
 
-      {/* Кнопки шаринга */}
-      <ShareButtons name={result.name} birthDate={birthDate} />
+      <ShareButtons 
+        name={safeResult.name} 
+        birthDate={birthDate}
+        matrixNumbers={{
+          personal: safeResult.personal,
+          destiny: safeResult.destiny,
+          social: safeResult.social,
+          spiritual: safeResult.spiritual
+        }}
+      />
     </div>
   );
 };
