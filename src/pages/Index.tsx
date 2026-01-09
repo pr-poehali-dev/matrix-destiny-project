@@ -65,7 +65,6 @@ export default function Index() {
   const [calculationHistory, setCalculationHistory] = useState<Array<any>>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [activeTab, setActiveTab] = useState<'personal' | 'destiny' | 'social' | 'spiritual'>('personal');
-  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const navigate = useNavigate();
   const calculatorRef = useRef<HTMLDivElement>(null);
@@ -130,9 +129,6 @@ export default function Index() {
       setAdminEmail(storedAdminEmail);
       setHasAccess(true);
     }
-    
-    // Задержка для завершения всех state updates
-    setTimeout(() => setIsLoading(false), 100);
   }, []);
 
   const handleCalculate = async () => {
@@ -570,17 +566,6 @@ export default function Index() {
   const scrollToCalculator = () => {
     calculatorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Загрузка...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
