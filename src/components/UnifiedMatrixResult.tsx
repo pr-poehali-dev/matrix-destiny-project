@@ -73,6 +73,12 @@ const extractRelationshipDestroys = (relationships: string | undefined) => {
 export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMatrixResultProps) => {
   if (!hasAccess) return null;
   if (!result) return null;
+  
+  // КРИТИЧЕСКАЯ ПРОВЕРКА: result должен быть объектом с числовыми полями
+  if (typeof result !== 'object' || result === null) {
+    console.error('❌ UnifiedMatrixResult: result is not an object:', result);
+    return null;
+  }
 
   const memoizedData = useMemo(() => {
     if (!result) return null;
@@ -88,7 +94,10 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
       result.spiritual >= 1 && result.spiritual <= 22
     );
 
-    if (!hasValidNumbers) return null;
+    if (!hasValidNumbers) {
+      console.error('❌ UnifiedMatrixResult: invalid numbers in result:', result);
+      return null;
+    }
 
     const personal = energyDescriptions[result.personal];
     const destiny = energyDescriptions[result.destiny];
