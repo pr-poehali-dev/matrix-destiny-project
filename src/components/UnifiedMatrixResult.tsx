@@ -139,12 +139,81 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
     <div className="space-y-6 mb-8">
       <div className="text-center space-y-2 py-6">
         <h2 className="text-3xl font-bold text-gray-900">
-          📋 Психологический портрет клиента
+          📋 Ваша Матрица Судьбы — Полная Расшифровка
         </h2>
         <p className="text-lg text-gray-600">
-          {finalResult.name} — комплексное заключение для специалистов
+          {finalResult.name} — Кто вы на самом деле и зачем пришли в этот мир
         </p>
       </div>
+
+      {/* ЧТО ТАКОЕ 4 ЭНЕРГИИ - ПРОСТЫМ ЯЗЫКОМ */}
+      <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-2xl">
+            <Icon name="Info" className="text-blue-600" size={28} />
+            Что означают эти 4 энергии?
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-lg text-gray-700 leading-relaxed">
+            Внутри каждого человека живут <strong>4 разных "Я"</strong>, которые часто конфликтуют между собой. 
+            Из-за этого вы чувствуете внутренний разлад, не понимаете кто вы на самом деле, и что делать со своей жизнью.
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div className="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-500">
+              <h3 className="font-bold text-amber-900 mb-2">🧠 Личное (Аркан {finalResult.personal})</h3>
+              <p className="text-sm text-gray-700">
+                <strong>Ваш истинный характер.</strong> Как вы себя чувствуете изнутри, ваша природа. 
+                Это то, каким вас создала судьба.
+              </p>
+              <p className="text-xs text-amber-700 mt-2">👉 {personalSimple}</p>
+            </div>
+
+            <div className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+              <h3 className="font-bold text-yellow-900 mb-2">🎯 Предназначение (Аркан {finalResult.destiny})</h3>
+              <p className="text-sm text-gray-700">
+                <strong>Зачем вы пришли в мир.</strong> Ваша главная миссия, через которую должны реализоваться. 
+                Здесь ваши деньги и смысл жизни.
+              </p>
+              <p className="text-xs text-yellow-700 mt-2">👉 {destinySimple}</p>
+            </div>
+
+            <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+              <h3 className="font-bold text-green-900 mb-2">🌍 Социальная маска (Аркан {finalResult.social})</h3>
+              <p className="text-sm text-gray-700">
+                <strong>Как вас видят люди.</strong> Это НЕ вы! Это защитная роль, которую надели в детстве. 
+                Задача — снять маску и быть собой.
+              </p>
+              <p className="text-xs text-green-700 mt-2">👉 {socialSimple}</p>
+            </div>
+
+            <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <h3 className="font-bold text-purple-900 mb-2">✨ Духовное (Аркан {finalResult.spiritual})</h3>
+              <p className="text-sm text-gray-700">
+                <strong>Ваша душа и смысл.</strong> Связь с чем-то большим, ваш духовный путь. 
+                Без этого чувствуете пустоту внутри.
+              </p>
+              <p className="text-xs text-purple-700 mt-2">👉 {spiritualSimple}</p>
+            </div>
+          </div>
+
+          <div className="bg-red-50 p-4 rounded-lg border-2 border-red-300 mt-4">
+            <p className="font-bold text-red-900 mb-2">⚠️ Ваша главная проблема:</p>
+            <p className="text-gray-700">
+              Все 4 "Я" конфликтуют между собой → внутренний разлад → кризисы, болезни, нет денег, нет отношений!
+            </p>
+          </div>
+
+          <div className="bg-green-50 p-4 rounded-lg border-2 border-green-300 mt-4">
+            <p className="font-bold text-green-900 mb-2">✅ Решение:</p>
+            <p className="text-gray-700">
+              Научиться жить всеми 4 энергиями гармонично: принять себя ({personalSimple}), снять маску ({socialSimple}), 
+              идти к предназначению ({destinySimple}), и найти смысл ({spiritualSimple}).
+            </p>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200">
         <CardHeader>
@@ -246,7 +315,13 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="prose max-w-none">
-            <h3 className="text-xl font-bold text-amber-900">🎯 {personalSimple}</h3>
+            <div className="bg-amber-100 p-4 rounded-lg mb-4 border-l-4 border-amber-600">
+              <h3 className="text-2xl font-bold text-amber-900 mb-2">🎯 {personalSimple}</h3>
+              <p className="text-lg text-gray-800">
+                <strong>Кто вы по характеру:</strong> Это ваше истинное "Я" — как вы себя чувствуете изнутри, 
+                какой вы на самом деле, когда снимаете все маски. Это ваша природа, с которой вы родились.
+              </p>
+            </div>
             <div className="whitespace-pre-wrap text-gray-700">{personal.description}</div>
             
             <h4 className="text-lg font-bold text-red-800 mt-6">💊 Здоровье</h4>
@@ -270,7 +345,14 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="prose max-w-none">
-            <h3 className="text-xl font-bold text-yellow-900">🎯 {destinySimple}</h3>
+            <div className="bg-yellow-100 p-4 rounded-lg mb-4 border-l-4 border-yellow-600">
+              <h3 className="text-2xl font-bold text-yellow-900 mb-2">🎯 {destinySimple}</h3>
+              <p className="text-lg text-gray-800">
+                <strong>Ваша миссия в жизни:</strong> Это то, ЗАЧЕМ вы пришли в этот мир. 
+                Ваше главное предназначение, через которое вы должны реализоваться. 
+                Если вы НЕ живёте это — чувствуете пустоту, нет денег, нет смысла.
+              </p>
+            </div>
             <div className="whitespace-pre-wrap text-gray-700">{destiny.description}</div>
             
             <h4 className="text-lg font-bold text-red-800 mt-6">💊 Здоровье</h4>
@@ -294,7 +376,14 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="prose max-w-none">
-            <h3 className="text-xl font-bold text-green-900">🎯 {socialSimple}</h3>
+            <div className="bg-green-100 p-4 rounded-lg mb-4 border-l-4 border-green-600">
+              <h3 className="text-2xl font-bold text-green-900 mb-2">🎯 {socialSimple}</h3>
+              <p className="text-lg text-gray-800">
+                <strong>Ваша социальная маска:</strong> Это то, КАК вас видят другие люди со стороны. 
+                Это НЕ настоящий вы! Это защитная роль, которую вы надели, чтобы выжить в обществе. 
+                Задача — снять эту маску и быть собой.
+              </p>
+            </div>
             <div className="whitespace-pre-wrap text-gray-700">{social.description}</div>
             
             <h4 className="text-lg font-bold text-red-800 mt-6">💊 Здоровье</h4>
@@ -318,7 +407,14 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="prose max-w-none">
-            <h3 className="text-xl font-bold text-purple-900">🎯 {spiritualSimple}</h3>
+            <div className="bg-purple-100 p-4 rounded-lg mb-4 border-l-4 border-purple-600">
+              <h3 className="text-2xl font-bold text-purple-900 mb-2">🎯 {spiritualSimple}</h3>
+              <p className="text-lg text-gray-800">
+                <strong>Ваша душа и смысл жизни:</strong> Это ваша глубинная суть — связь с чем-то большим, чем вы. 
+                Ваш духовный путь, то что наполняет смыслом. Если игнорируете — чувствуете пустоту внутри, 
+                даже если есть деньги и успех.
+              </p>
+            </div>
             <div className="whitespace-pre-wrap text-gray-700">{spiritual.description}</div>
             
             <h4 className="text-lg font-bold text-red-800 mt-6">💊 Здоровье</h4>
