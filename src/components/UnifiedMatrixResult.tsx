@@ -71,8 +71,11 @@ const extractRelationshipDestroys = (relationships: string | undefined) => {
 };
 
 export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMatrixResultProps) => {
+  if (!hasAccess) return null;
+  if (!result) return null;
+
   const memoizedData = useMemo(() => {
-    if (!result || !hasAccess) return null;
+    if (!result) return null;
 
     const hasValidNumbers = (
       typeof result.personal === 'number' && 
@@ -111,16 +114,9 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
       destinySimple: arcanaSimpleNames[result.destiny] || destiny.title,
       spiritualSimple: arcanaSimpleNames[result.spiritual] || spiritual.title
     };
-  }, [result, hasAccess]);
+  }, [result]);
 
-  if (!hasAccess) return null;
-
-  if (!memoizedData) {
-    return <div className="text-center py-10 text-red-600 font-medium">
-      <p className="text-lg">⚠️ Ошибка загрузки данных</p>
-      <p className="text-sm mt-2">Попробуйте пересчитать матрицу</p>
-    </div>;
-  }
+  if (!memoizedData) return null;
 
   const {
     result: safeResult,
