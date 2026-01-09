@@ -771,6 +771,320 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
         </CardContent>
       </Card>
 
+      {/* ПРОФЕССИОНАЛЬНЫЕ БЛОКИ — ВИДИМАЯ ИНФОРМАЦИЯ ДЛЯ СПЕЦИАЛИСТОВ */}
+      <div className="space-y-6">
+        <div className="text-center py-6">
+          <h2 className="text-3xl font-bold text-orange-900">
+            🎯 Для Профессионалов — Полная Диагностика
+          </h2>
+          <p className="text-lg text-gray-600 mt-2">
+            Всё что нужно знать о клиенте для эффективной работы
+          </p>
+        </div>
+
+        {/* ДЛЯ ПСИХОЛОГОВ */}
+        <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-300">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <Icon name="Brain" className="text-indigo-600" size={28} />
+              🧠 Для Психологов и Коучей
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="bg-indigo-100 p-4 rounded-lg border-l-4 border-indigo-600">
+              <h3 className="font-bold text-indigo-900 mb-2">🎯 Главная проблема клиента</h3>
+              <p className="text-gray-800">
+                Внутренний конфликт 4-х энергий:<br/>
+                • {personalSimple} (как он себя ощущает, его эго)<br/>
+                • {destinySimple} (чего от него ждёт жизнь)<br/>
+                • {socialSimple} (как его видит общество)<br/>
+                • {spiritualSimple} (его глубинная суть)<br/><br/>
+                → Все 4 "Я" конфликтуют = внутренний разлад, кризисы, болезни!
+              </p>
+            </div>
+
+            <div className="bg-white p-4 rounded-lg">
+              <h3 className="font-bold text-indigo-900 mb-2">📿 Кармические задачи</h3>
+              <ul className="space-y-2 text-gray-700">
+                <li>1. Принять {destinySimple} как истинное предназначение</li>
+                <li>2. Интегрировать {personalSimple} с {destinySimple} — использовать личные качества для предназначения</li>
+                <li>3. Разоблачить {socialSimple} как ложную идентичность — снять маску</li>
+                <li>4. Активировать {spiritualSimple} — это связь с высшим и смысл жизни</li>
+              </ul>
+            </div>
+
+            <div className="bg-orange-50 p-4 rounded-lg">
+              <h3 className="font-bold text-orange-900 mb-2">💬 Как говорить с клиентом</h3>
+              <div className="space-y-2 text-gray-700">
+                <p>✅ Используйте язык {personalSimple} — это его родной язык</p>
+                <p>⚠️ НЕ давите на {destinySimple} напрямую — он убежит</p>
+                <p>🎭 Разоблачите {socialSimple} как маску: "Это не ты, это защита"</p>
+                <p>🙏 Активируйте {spiritualSimple} через духовные практики</p>
+              </div>
+            </div>
+
+            <div className="bg-green-50 p-4 rounded-lg border-2 border-green-300">
+              <h3 className="font-bold text-green-900 mb-2">📋 План терапии (пошагово)</h3>
+              <div className="space-y-2 text-gray-700">
+                <p><strong>ШАГ 1 (Сессии 1-3):</strong> Принятие {personalSimple} — это его данность, не враг</p>
+                <p><strong>ШАГ 2 (Сессии 4-6):</strong> Разоблачение {socialSimple} — когда и зачем появилась маска</p>
+                <p><strong>ШАГ 3 (Сессии 7-10):</strong> Интеграция {destinySimple} — принять как истинный путь</p>
+                <p><strong>ШАГ 4 (Сессии 11-15):</strong> Активация {spiritualSimple} — духовные практики, очистка психосоматики</p>
+                <p><strong>ШАГ 5 (Сессии 16+):</strong> Жизнь из Единства — все 4 аркана работают вместе</p>
+              </div>
+            </div>
+
+            <div className="bg-purple-50 p-4 rounded-lg">
+              <h3 className="font-bold text-purple-900 mb-2">🔮 Прогноз</h3>
+              <div className="space-y-2">
+                <div>
+                  <p className="font-semibold text-green-700">✅ ЕСЛИ ПРИМЕТ:</p>
+                  <p className="text-gray-700">через 6-12 месяцев выход на предназначение ({professions}), деньги потоком, гармония в отношениях</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-red-700">⚠️ ЕСЛИ НЕ ПРИМЕТ:</p>
+                  <p className="text-gray-700">кризисы, болезни, потеря работы, разрывы — судьба будет ломать до принятия {destinySimple}</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* ДЛЯ HR */}
+        <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <Icon name="Users" className="text-blue-600" size={28} />
+              👨‍💼 Для HR и Рекрутеров
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="bg-blue-100 p-4 rounded-lg border-l-4 border-blue-600">
+              <h3 className="font-bold text-blue-900 mb-2">✅ Идеальная должность</h3>
+              <p className="text-gray-800">
+                <strong>{destinySimple}</strong> — это его ДНК<br/>
+                Лучшие роли: {professions || 'см. детальную расшифровку'}<br/><br/>
+                ⚠️ КРИТИЧНО: Если должность НЕ соответствует {destinySimple} → уйдёт через 3-6 месяцев
+              </p>
+            </div>
+
+            <div className="bg-white p-4 rounded-lg">
+              <h3 className="font-bold text-blue-900 mb-2">💰 Мотивация и удержание</h3>
+              <div className="space-y-2 text-gray-700">
+                <p><strong>Мотивирован:</strong></p>
+                <ul className="list-disc ml-6">
+                  <li>Соответствие {destinySimple}: работа по предназначению = энергия и результат</li>
+                  <li>Признание {personalSimple}: видеть его истинные качества, не маску</li>
+                  <li>Смысл через {spiritualSimple}</li>
+                </ul>
+                <p className="mt-2"><strong>НЕ мотивирован:</strong></p>
+                <p>Деньгами, если работа противоречит {destinySimple}</p>
+              </div>
+            </div>
+
+            <div className="bg-green-50 p-4 rounded-lg border-2 border-green-300">
+              <h3 className="font-bold text-green-900 mb-2">✅ Как удержать</h3>
+              <ul className="space-y-1 text-gray-700">
+                <li>1. Давайте задачи строго по {destinySimple}</li>
+                <li>2. Признавайте публично его {personalSimple}</li>
+                <li>3. Разрешайте проявлять {socialSimple} для внешних</li>
+                <li>4. Объясняйте смысл работы (для {spiritualSimple})</li>
+                <li>5. НЕ пытайтесь переделать — работайте с тем, что есть</li>
+              </ul>
+            </div>
+
+            <div className="bg-red-50 p-4 rounded-lg">
+              <h3 className="font-bold text-red-900 mb-2">⚠️ Риски</h3>
+              <div className="space-y-2 text-gray-700">
+                <p><strong>РИСК #1:</strong> Уход через 3-6 месяцев (роль не соответствует {destinySimple})</p>
+                <p><strong>РИСК #2:</strong> Конфликты (давят на {personalSimple})</p>
+                <p><strong>РИСК #3:</strong> Выгорание (нет смысла, {spiritualSimple} не активирован)</p>
+              </div>
+            </div>
+
+            <div className="bg-yellow-50 p-4 rounded-lg">
+              <h3 className="font-bold text-yellow-900 mb-2">📊 Итоговый вердикт</h3>
+              <div className="space-y-2">
+                <div>
+                  <p className="font-semibold text-green-700">✅ НАНИМАТЬ, ЕСЛИ:</p>
+                  <p className="text-gray-700">Должность соответствует {destinySimple} минимум на 70%</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-red-700">❌ НЕ НАНИМАТЬ, ЕСЛИ:</p>
+                  <p className="text-gray-700">Роль противоречит {destinySimple} → уйдёт через 3-6 месяцев</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* ДЛЯ НУТРИЦИОЛОГОВ */}
+        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <Icon name="Apple" className="text-green-600" size={28} />
+              🍎 Для Нутрициологов
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="bg-green-100 p-4 rounded-lg border-l-4 border-green-600">
+              <h3 className="font-bold text-green-900 mb-2">🔥 Диагностика — Почему не худеет (4 уровня)</h3>
+            </div>
+
+            <div className="bg-red-50 p-4 rounded-lg">
+              <h4 className="font-bold text-red-900">🔴 УРОВЕНЬ 1: {personalSimple} — ФИЗИОЛОГИЯ</h4>
+              <p className="text-gray-700 mt-2">
+                Проблема: {extractHealthZones(personal.health)}<br/>
+                Что делать: обследование, анализы, УЗИ, лечить физику ПЕРВЫМ ДЕЛОМ<br/>
+                → Без лечения физики похудение невозможно!
+              </p>
+            </div>
+
+            <div className="bg-orange-50 p-4 rounded-lg">
+              <h4 className="font-bold text-orange-900">🟠 УРОВЕНЬ 2: {destinySimple} — КАРМИЧЕСКИЙ БЛОК</h4>
+              <p className="text-gray-700 mt-2">
+                Что происходит: Вес — защита от реализации {destinySimple}<br/>
+                Механизм: Человек БОИТСЯ своего предназначения → тело держит вес как броню<br/>
+                Что делать: направить к психологу для работы со страхом предназначения<br/>
+                → Пока не примет предназначение — вес вернётся!
+              </p>
+            </div>
+
+            <div className="bg-yellow-50 p-4 rounded-lg">
+              <h4 className="font-bold text-yellow-900">🟡 УРОВЕНЬ 3: {spiritualSimple} — ПСИХОСОМАТИКА</h4>
+              <p className="text-gray-700 mt-2">
+                Что происходит: Заедает духовную пустоту и отсутствие смысла<br/>
+                Что делать: духовные практики, медитации, поиск смысла жизни<br/>
+                → Без смысла жизни — заедание продолжится!
+              </p>
+            </div>
+
+            <div className="bg-purple-50 p-4 rounded-lg">
+              <h4 className="font-bold text-purple-900">🟣 УРОВЕНЬ 4: {socialSimple} — СОЦИАЛЬНОЕ ДАВЛЕНИЕ</h4>
+              <p className="text-gray-700 mt-2">
+                Конфликт: Общество видит {socialSimple}, но внутри он {personalSimple}<br/>
+                Механизм: Постоянно носит маску → накапливает стресс → заедает<br/>
+                → Снятие маски = снижение стресса = уход веса!
+              </p>
+            </div>
+
+            <div className="bg-green-50 p-4 rounded-lg border-2 border-green-300">
+              <h3 className="font-bold text-green-900 mb-2">🔑 Ключ к успеху</h3>
+              <p className="text-gray-700">
+                "Вес — это защита от реализации {destinySimple}. Пока человек не примет своё предназначение, 
+                тело будет держать вес как броню. Когда он станет жить как {destinySimple}, вес уйдёт сам."
+              </p>
+              <p className="text-gray-700 mt-2">
+                <strong>Ваша задача:</strong><br/>
+                1. Вылечить физику (уровень 1)<br/>
+                2. Направить к психологу для работы с {destinySimple} (уровень 2)<br/>
+                3. Дать духовные практики для {spiritualSimple} (уровень 3)<br/>
+                4. Помочь снять маску {socialSimple} (уровень 4)<br/>
+                5. Дать правильное питание
+              </p>
+            </div>
+
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h3 className="font-bold text-blue-900 mb-2">📊 Прогноз</h3>
+              <div className="space-y-2">
+                <div>
+                  <p className="font-semibold text-green-700">✅ ЕСЛИ РАБОТАЕТ НА ВСЕХ УРОВНЯХ:</p>
+                  <p className="text-gray-700">
+                    Месяц 1-3: -8-12 кг, улучшение анализов<br/>
+                    Месяц 4-6: -еще 5-8 кг, начинает жить через {destinySimple}<br/>
+                    Месяц 7-12: выход на целевой вес, вес НЕ возвращается!
+                  </p>
+                </div>
+                <div>
+                  <p className="font-semibold text-red-700">⚠️ ЕСЛИ РАБОТАЕТ ТОЛЬКО С ДИЕТОЙ:</p>
+                  <p className="text-gray-700">
+                    Месяц 1-2: -3-5 кг (только вода), потом плато, затем откат<br/>
+                    → Без работы с предназначением вес ВСЕГДА вернётся!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* ДЛЯ БИЗНЕС-КОУЧЕЙ */}
+        <Card className="bg-gradient-to-br from-orange-50 to-yellow-50 border-2 border-orange-300">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <Icon name="TrendingUp" className="text-orange-600" size={28} />
+              📈 Для Бизнес-Коучей
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="bg-orange-100 p-4 rounded-lg border-l-4 border-orange-600">
+              <h3 className="font-bold text-orange-900 mb-2">💸 Диагностика — Почему нет денег</h3>
+              <p className="text-gray-800">
+                🔴 КОРЕНЬ ПРОБЛЕМЫ: работает через {personalSimple}, но деньги приходят ТОЛЬКО через {destinySimple}<br/><br/>
+                4 УРОВНЯ БЛОКИРОВКИ:<br/>
+                • {personalSimple}: работает в неправильной сфере — НЕ денежный путь<br/>
+                • {destinySimple}: истинное предназначение {professions}, пока не принят — денег нет<br/>
+                • {socialSimple}: продаёт через маску, но это фасад, клиенты чувствуют фальшь<br/>
+                • {spiritualSimple}: денежные блоки, страх богатства, вина за деньги
+              </p>
+            </div>
+
+            <div className="bg-green-100 p-4 rounded-lg border-l-4 border-green-600">
+              <h3 className="font-bold text-green-900 mb-2">🎯 Правильная ниша — 100% попадание</h3>
+              <p className="text-gray-800">
+                <strong>{destinySimple}</strong> — это его кармическое предназначение<br/>
+                Ниши: {professions || 'см. детальную расшифровку'}<br/>
+                Почему: это кармическое предназначение, вселенная помогает ТОЛЬКО здесь<br/><br/>
+                ⚠️ Если сейчас НЕ это — сменить нишу за 30 дней!
+              </p>
+            </div>
+
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h3 className="font-bold text-blue-900 mb-2">🚀 План ×10 доход (90 дней)</h3>
+              <div className="space-y-1 text-gray-700">
+                <p><strong>Неделя 1-2:</strong> Признать, что {personalSimple} — не путь денег</p>
+                <p><strong>Неделя 3-4:</strong> Принять {destinySimple} как денежное призвание</p>
+                <p><strong>Неделя 5-6:</strong> Сменить нишу на {professions || destinySimple}, запустить MVP</p>
+                <p><strong>Неделя 7-8:</strong> Использовать {socialSimple} для продаж</p>
+                <p><strong>Неделя 9-12:</strong> Очистить {spiritualSimple} — убрать денежные блоки</p>
+                <p className="font-bold mt-2">📊 РЕЗУЛЬТАТ: доход ×3-5 через 90 дней, ×10-15 через год</p>
+              </div>
+            </div>
+
+            <div className="bg-purple-50 p-4 rounded-lg">
+              <h3 className="font-bold text-purple-900 mb-2">💎 Денежные блоки</h3>
+              <p className="text-gray-700">
+                <strong>Вопрос клиенту:</strong> "Что плохого случится, если станешь богатым через {destinySimple}?"<br/><br/>
+                Типичные ответы: "Потеряю друзей", "Стану плохим", "Меня ограбят"<br/><br/>
+                Как очистить: осознать блок через {spiritualSimple}, простить, отпустить, заменить на новую установку
+              </p>
+            </div>
+
+            <div className="bg-green-50 p-4 rounded-lg border-2 border-green-300">
+              <h3 className="font-bold text-green-900 mb-2">🔑 Ключ к богатству</h3>
+              <p className="text-gray-700">
+                "Деньги приходят, когда живёшь через {destinySimple}. Это твой денежный код. 
+                Вселенная даст деньги ТОЛЬКО за {professions || destinySimple}. 
+                Прими {destinySimple}, очисти {spiritualSimple}, используй {socialSimple} для продаж — это формула богатства."
+              </p>
+            </div>
+
+            <div className="bg-red-50 p-4 rounded-lg">
+              <h3 className="font-bold text-red-900 mb-2">🔮 Прогноз</h3>
+              <div className="space-y-2">
+                <div>
+                  <p className="font-semibold text-green-700">✅ ЕСЛИ СЛЕДУЕТ:</p>
+                  <p className="text-gray-700">месяц 1 — доход ×1.5, месяц 2-3 — ×3-5, месяц 4-6 — ×5-7, месяц 7-12 — ×10-15</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-red-700">⚠️ ЕСЛИ НЕ МЕНЯЕТ НИШУ:</p>
+                  <p className="text-gray-700">доход стоит/падает, выгорание, бизнес закроется — пока не работает через {destinySimple}, денег не будет</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       <ShareButtons 
         result={finalResult} 
         birthDate={birthDate}
