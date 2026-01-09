@@ -130,7 +130,7 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
   if (!memoizedData) return null;
 
   const {
-    result: safeResult,
+    result: finalResult,
     personal,
     destiny,
     social,
@@ -154,7 +154,7 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
           📋 Психологический портрет клиента
         </h2>
         <p className="text-lg text-gray-600">
-          {safeResult.name} — комплексное заключение для специалистов
+          {finalResult.name} — комплексное заключение для специалистов
         </p>
       </div>
 
@@ -249,13 +249,13 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
       </Card>
 
       <ShareButtons 
-        name={safeResult.name} 
+        name={finalResult.name} 
         birthDate={birthDate}
         matrixNumbers={{
-          personal: safeResult.personal,
-          destiny: safeResult.destiny,
-          social: safeResult.social,
-          spiritual: safeResult.spiritual
+          personal: finalResult.personal,
+          destiny: finalResult.destiny,
+          social: finalResult.social,
+          spiritual: finalResult.spiritual
         }}
       />
     </div>
