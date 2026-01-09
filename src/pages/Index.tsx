@@ -1063,10 +1063,12 @@ export default function Index() {
               </CardContent>
             </Card>
 
-            <div ref={detailsRef}>
-              <UnifiedMatrixResult result={result} hasAccess={hasAccess} birthDate={birthDate} />
-              {hasAccess && <ProfessionalPromo />}
-            </div>
+            {result && (
+              <div ref={detailsRef}>
+                <UnifiedMatrixResult result={result} hasAccess={hasAccess} birthDate={birthDate} />
+                {hasAccess && <ProfessionalPromo />}
+              </div>
+            )}
 
             {hasAccess ? (
               <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-amber-300 shadow-2xl">
