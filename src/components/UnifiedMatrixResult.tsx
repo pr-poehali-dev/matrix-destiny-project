@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { energyDescriptions, arcanaSimpleNames } from '@/data/arcana-descriptions';
@@ -71,34 +71,45 @@ const extractRelationshipDestroys = (relationships: string | undefined) => {
 };
 
 export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMatrixResultProps) => {
+  const stableResultRef = useRef(result);
+
+  useEffect(() => {
+    if (result) {
+      stableResultRef.current = result;
+    }
+  }, [result]);
+
   if (!hasAccess) return null;
-  if (!result) return null;
+  if (!result && !stableResultRef.current) return null;
+
+  const safeResult = result || stableResultRef.current;
+  if (!safeResult) return null;
 
   const memoizedData = useMemo(() => {
-    if (!result) return null;
+    if (!safeResult) return null;
 
     const hasValidNumbers = (
-      typeof result.personal === 'number' && 
-      typeof result.destiny === 'number' && 
-      typeof result.social === 'number' && 
-      typeof result.spiritual === 'number' &&
-      result.personal >= 1 && result.personal <= 22 &&
-      result.destiny >= 1 && result.destiny <= 22 &&
-      result.social >= 1 && result.social <= 22 &&
-      result.spiritual >= 1 && result.spiritual <= 22
+      typeof safeResult.personal === 'number' && 
+      typeof safeResult.destiny === 'number' && 
+      typeof safeResult.social === 'number' && 
+      typeof safeResult.spiritual === 'number' &&
+      safeResult.personal >= 1 && safeResult.personal <= 22 &&
+      safeResult.destiny >= 1 && safeResult.destiny <= 22 &&
+      safeResult.social >= 1 && safeResult.social <= 22 &&
+      safeResult.spiritual >= 1 && safeResult.spiritual <= 22
     );
 
     if (!hasValidNumbers) return null;
 
-    const personal = energyDescriptions[result.personal];
-    const destiny = energyDescriptions[result.destiny];
-    const social = energyDescriptions[result.social];
-    const spiritual = energyDescriptions[result.spiritual];
+    const personal = energyDescriptions[safeResult.personal];
+    const destiny = energyDescriptions[safeResult.destiny];
+    const social = energyDescriptions[safeResult.social];
+    const spiritual = energyDescriptions[safeResult.spiritual];
 
     if (!personal || !destiny || !social || !spiritual) return null;
 
     return {
-      result,
+      result: safeResult,
       personal,
       destiny,
       social,
@@ -109,12 +120,12 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
       relStyle: extractRelationshipStyle(personal.relationships),
       relNeeds: extractRelationshipNeeds(personal.relationships),
       relDestroys: extractRelationshipDestroys(personal.relationships),
-      personalSimple: arcanaSimpleNames[result.personal] || personal.title,
-      socialSimple: arcanaSimpleNames[result.social] || social.title,
-      destinySimple: arcanaSimpleNames[result.destiny] || destiny.title,
-      spiritualSimple: arcanaSimpleNames[result.spiritual] || spiritual.title
+      personalSimple: arcanaSimpleNames[safeResult.personal] || personal.title,
+      socialSimple: arcanaSimpleNames[safeResult.social] || social.title,
+      destinySimple: arcanaSimpleNames[safeResult.destiny] || destiny.title,
+      spiritualSimple: arcanaSimpleNames[safeResult.spiritual] || spiritual.title
     };
-  }, [result]);
+  }, [safeResult]);
 
   if (!memoizedData) return null;
 
