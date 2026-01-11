@@ -1,4 +1,4 @@
 {
-  "payment-submit-simple": "https://functions.poehali.dev/0fc565af-534d-4d83-928f-2c07d532a24d",
-  "admin-simple": "https://functions.poehali.dev/655d2aa6-21d4-440a-8698-d83013ac87f5"
+  "admin-direct": "https://functions.poehali.dev/3ce4bbfb-c04b-410f-977f-173caccdad84",
+  "payment-submit-simple": "https://functions.poehali.dev/0fc565af-534d-4d83-928f-2c07d532a24d"
 }

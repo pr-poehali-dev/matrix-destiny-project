@@ -25,7 +25,7 @@ const Admin = () => {
   const [email, setEmail] = useState('');
   const [plan, setPlan] = useState('month');
   const { toast } = useToast();
-  const API = 'https://functions.poehali.dev/655d2aa6-21d4-440a-8698-d83013ac87f5';
+  const API = 'https://functions.poehali.dev/3ce4bbfb-c04b-410f-977f-173caccdad84';
 
   useEffect(() => {
     if (sessionStorage.getItem('admin') === 'ok') {
@@ -49,10 +49,11 @@ const Admin = () => {
 
   const load = async () => {
     try {
-      const r = await fetch(API);
+      const r = await fetch(`${API}?action=list`);
       const data = await r.json();
       setRequests(data);
-    } catch {
+    } catch (error) {
+      console.error('Load error:', error);
       toast({ title: 'Ошибка загрузки', variant: 'destructive' });
     } finally {
       setLoading(false);
@@ -62,11 +63,7 @@ const Admin = () => {
   const grant = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await fetch(API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'grant', email, plan_type: plan }),
-      });
+      await fetch(`${API}?action=grant&email=${encodeURIComponent(email)}&plan_type=${plan}`);
       toast({ title: '✅ Доступ выдан' });
       setEmail('');
       load();
@@ -77,11 +74,7 @@ const Admin = () => {
 
   const approve = async (id: number, email: string) => {
     try {
-      await fetch(API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'approve', id, email }),
-      });
+      await fetch(`${API}?action=approve&id=${id}&email=${encodeURIComponent(email)}`);
       toast({ title: '✅ Одобрено' });
       load();
     } catch {
@@ -91,11 +84,7 @@ const Admin = () => {
 
   const reject = async (id: number) => {
     try {
-      await fetch(API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'reject', id }),
-      });
+      await fetch(`${API}?action=reject&id=${id}`);
       toast({ title: 'Отклонено' });
       load();
     } catch {
