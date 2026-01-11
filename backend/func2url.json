@@ -1,6 +1,4 @@
 {
-  "admin-simple": "https://functions.poehali.dev/655d2aa6-21d4-440a-8698-d83013ac87f5",
-  "telegram-webhook": "https://functions.poehali.dev/3d30f6e7-5c58-48f9-99c6-94619ab3ae70",
-  "access-check": "https://functions.poehali.dev/1a7b2c38-227e-4fa6-878a-c35711ae23ee",
-  "payment-submit-simple": "https://functions.poehali.dev/0fc565af-534d-4d83-928f-2c07d532a24d"
+  "payment-submit-simple": "https://functions.poehali.dev/0fc565af-534d-4d83-928f-2c07d532a24d",
+  "admin-simple": "https://functions.poehali.dev/655d2aa6-21d4-440a-8698-d83013ac87f5"
 }

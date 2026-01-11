@@ -22,11 +22,12 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         return {'statusCode': 200, 'headers': headers, 'body': '', 'isBase64Encoded': False}
     
     try:
+        schema = os.environ.get('MAIN_DB_SCHEMA', 'public')
         conn = psycopg2.connect(os.environ['DATABASE_URL'])
         cur = conn.cursor()
         
         if method == 'GET':
-            cur.execute("SELECT id, email, phone, screenshot_url, status, created_at, plan_type, amount FROM payment_requests ORDER BY created_at DESC")
+            cur.execute(f"SELECT id, email, phone, screenshot_url, status, created_at, plan_type, amount FROM {schema}.payment_requests ORDER BY created_at DESC")
             rows = cur.fetchall()
             
             result = []
@@ -66,8 +67,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 elif plan == 'year':
                     exp = datetime.now() + timedelta(days=365)
                 
-                cur.execute("""
-                    INSERT INTO active_access (email, plan_type, expires_at, downloads_left, granted_by)
+                cur.execute(f"""
+                    INSERT INTO {schema}.active_access (email, plan_type, expires_at, downloads_left, granted_by)
                     VALUES (%s, %s, %s, %s, 'admin')
                     ON CONFLICT (email) DO UPDATE SET 
                         plan_type = EXCLUDED.plan_type,
@@ -85,7 +86,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 rid = body['id']
                 email = body['email']
                 
-                cur.execute("SELECT plan_type FROM payment_requests WHERE id = %s", (rid,))
+                cur.execute(f"SELECT plan_type FROM {schema}.payment_requests WHERE id = %s", (rid,))
                 plan = cur.fetchone()[0]
                 
                 exp = None
@@ -100,9 +101,9 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 elif plan == 'year':
                     exp = datetime.now() + timedelta(days=365)
                 
-                cur.execute("UPDATE payment_requests SET status = 'approved', approved_at = %s WHERE id = %s", (datetime.now(), rid))
-                cur.execute("""
-                    INSERT INTO active_access (email, plan_type, expires_at, downloads_left, granted_by)
+                cur.execute(f"UPDATE {schema}.payment_requests SET status = 'approved', approved_at = %s WHERE id = %s", (datetime.now(), rid))
+                cur.execute(f"""
+                    INSERT INTO {schema}.active_access (email, plan_type, expires_at, downloads_left, granted_by)
                     VALUES (%s, %s, %s, %s, 'admin')
                     ON CONFLICT (email) DO UPDATE SET 
                         plan_type = EXCLUDED.plan_type,
@@ -118,7 +119,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             
             if action == 'reject':
                 rid = body['id']
-                cur.execute("UPDATE payment_requests SET status = 'rejected' WHERE id = %s", (rid,))
+                cur.execute(f"UPDATE {schema}.payment_requests SET status = 'rejected' WHERE id = %s", (rid,))
                 conn.commit()
                 cur.close()
                 conn.close()

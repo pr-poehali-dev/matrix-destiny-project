@@ -78,30 +78,12 @@ const Payment = () => {
 
       toast({
         title: '✅ Заявка отправлена',
-        description: 'Заявка сохранена в админке. Скриншот отправьте на cabinet-psyhologa@outlook.com. Доступ активируется в течение 1-3 часов',
-        duration: 8000,
+        description: 'Заявка сохранена! Администратор получил уведомление. Доступ активируется в течение 1-3 часов',
+        duration: 5000,
       });
       
       localStorage.setItem('userEmail', email);
-      
-      const subject = `Заявка #${Date.now()} - ${plans[selectedPlan].label}`;
-      const body = `
-Здравствуйте!
-
-Прошу активировать доступ к Матрице Судьбы.
-
-Email: ${email}
-${phone ? `Телефон: ${phone}` : ''}
-Тариф: ${plans[selectedPlan].label}
-Сумма: ${plans[selectedPlan].price} ₽
-
-Скриншот оплаты прикреплён к письму.
-`;
-
-      const mailtoLink = `mailto:cabinet-psyhologa@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      window.location.href = mailtoLink;
-      
-      setTimeout(() => navigate('/'), 3000);
+      setTimeout(() => navigate('/'), 2000);
     } catch (error: any) {
       console.error('Submit error:', error);
       toast({
