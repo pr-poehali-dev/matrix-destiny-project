@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { checkAccess } from '@/lib/api';
 
 const Login = () => {
   const [searchParams] = useSearchParams();
@@ -35,46 +36,29 @@ const Login = () => {
 
     setLoading(true);
 
-    // ВРЕМЕННОЕ РЕШЕНИЕ: Список одобренных подписчиков (пока не работает бэкенд из-за биллинга)
-    const approvedSubscribers = [
-      { email: 'romanysh@rambler.ru', expires: '2026-06-21', plan: 'half_year' },
-      { email: 'iriha1@bk.ru', expires: '2026-12-13', plan: 'year' },
-      { email: 'cabinet-psyhologa@outlook.com', expires: '2026-01-23', plan: 'month' },
-    ];
-
     try {
-      const subscriber = approvedSubscribers.find(s => s.email.toLowerCase() === email.toLowerCase());
+      const accessData = await checkAccess(email);
 
-      if (subscriber) {
-        const expiresDate = new Date(subscriber.expires);
-        const now = new Date();
-
-        if (now > expiresDate) {
-          toast({
-            title: 'Доступ запрещён',
-            description: `Срок подписки истёк ${expiresDate.toLocaleDateString('ru-RU')}`,
-            variant: 'destructive',
-          });
-          setLoading(false);
-          return;
-        }
-
+      if (accessData.has_access) {
         localStorage.setItem('userEmail', email);
         localStorage.setItem('subscriberAuth', 'true');
         
+        const expiresMessage = accessData.end_date 
+          ? `Подписка до ${new Date(accessData.end_date).toLocaleDateString('ru-RU')}`
+          : 'Доступ активен';
+        
         toast({
           title: '✅ Вход выполнен',
-          description: `Добро пожаловать! Подписка до ${expiresDate.toLocaleDateString('ru-RU')}`,
+          description: `Добро пожаловать! ${expiresMessage}`,
         });
         
-        // Немедленное перенаправление
         setTimeout(() => {
           window.location.href = '/';
         }, 800);
       } else {
         toast({
           title: 'Доступ запрещён',
-          description: 'Email не найден в списке подписчиков',
+          description: accessData.message || 'Email не найден в списке подписчиков',
           variant: 'destructive',
         });
       }
@@ -83,7 +67,7 @@ const Login = () => {
       
       toast({
         title: 'Ошибка входа',
-        description: 'Не удалось войти в систему',
+        description: 'Не удалось проверить доступ. Попробуйте позже.',
         variant: 'destructive',
       });
     } finally {
