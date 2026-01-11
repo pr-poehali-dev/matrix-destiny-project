@@ -21,7 +21,9 @@
         "email": "test@example.com",
         "phone": "+7 (999) 123-45-67",
         "screenshot": "data:image/jpeg;base64,/9j/4AAQSkZJRg==",
-        "filename": "payment.jpg"
+        "filename": "payment.jpg",
+        "plan_type": "single",
+        "amount": 300
       },
       "expectedStatus": 200,
       "expectedBody": {

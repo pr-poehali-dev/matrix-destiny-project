@@ -8,10 +8,7 @@ from typing import Dict, Any, Optional
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
-    Проверяет доступ пользователя по email
-    Args: event - dict с httpMethod, queryStringParameters (email)
-          context - объект с атрибутами запроса
-    Returns: HTTP response dict с информацией о доступе
+    Проверяет доступ пользователя к функционалу по email
     """
     method: str = event.get('httpMethod', 'GET')
     

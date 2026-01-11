@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
-    Обрабатывает callback кнопки из Telegram (одобрить/отклонить заявку)
+    Webhook для Telegram бота
     """
     method: str = event.get('httpMethod', 'POST')
     

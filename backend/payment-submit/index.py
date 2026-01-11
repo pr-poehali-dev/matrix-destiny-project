@@ -8,10 +8,7 @@ from typing import Dict, Any
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
-    Принимает заявку на оплату от пользователя и отправляет уведомление на email
-    Args: event - dict с httpMethod, body (email, phone, screenshot base64)
-          context - объект с атрибутами запроса
-    Returns: HTTP response dict
+    Принимает заявку на оплату от пользователя
     """
     method: str = event.get('httpMethod', 'POST')
     
@@ -43,7 +40,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         screenshot_base64 = body_data.get('screenshot', '')
         filename = body_data.get('filename', 'screenshot.jpg')
         plan_type = body_data.get('plan_type', 'single')
-        amount = body_data.get('amount', 200)
+        amount = body_data.get('amount', 300)
         
         if not email:
             return {
@@ -94,12 +91,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         conn.close()
         
         try:
-            # Отправляем уведомление в Telegram
             bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
             chat_id = os.environ.get('TELEGRAM_CHAT_ID')
-            
-            print(f"DEBUG: Telegram configured: {bool(bot_token and chat_id)}")
-            print(f"DEBUG: Chat ID: {chat_id}")
             
             if bot_token and chat_id:
                 plan_labels = {
@@ -129,8 +122,6 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 
                 message += f"\n\n[Открыть админ-панель]({admin_url})"
                 
-                print(f"DEBUG: Sending Telegram message to chat_id: {chat_id}")
-                
                 telegram_url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
                 response = requests.post(telegram_url, json={
                     'chat_id': chat_id,
@@ -145,18 +136,10 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     }
                 })
                 
-                print(f"DEBUG: Telegram response status: {response.status_code}, body: {response.text}")
-                
                 if response.status_code != 200:
                     print(f"ERROR: Failed to send Telegram message: {response.text}")
-                else:
-                    print(f"DEBUG: Telegram message sent successfully")
-            else:
-                print("WARNING: Telegram not configured, skipping notification")
         except Exception as telegram_error:
             print(f"ERROR sending Telegram notification: {str(telegram_error)}")
-            import traceback
-            traceback.print_exc()
         
         return {
             'statusCode': 200,
@@ -170,6 +153,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         }
     
     except Exception as e:
+        print(f"ERROR in handler: {str(e)}")
         return {
             'statusCode': 500,
             'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},

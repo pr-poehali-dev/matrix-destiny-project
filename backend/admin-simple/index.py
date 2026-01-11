@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
-    Простая админ функция - одна точка входа для всех операций
+    Админ-панель для управления заявками
     """
     
     headers = {
