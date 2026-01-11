@@ -1,7 +1,7 @@
 import func2url from '../../backend/func2url.json';
 
 const ADMIN_REQUESTS_URL = func2url['admin-requests'];
-const PAYMENT_SUBMIT_URL = func2url['payment-submit'];
+const PAYMENT_SUBMIT_URL = func2url['payment-submit-simple'] || func2url['payment-submit'];
 const ADMIN_APPROVE_URL = func2url['admin-approve'];
 const ACCESS_CHECK_URL = func2url['access-check'];
 const REPORT_URL = func2url.report;
@@ -80,8 +80,6 @@ export interface ReportResponse {
 export interface PaymentSubmitRequest {
   email: string;
   phone?: string;
-  screenshot: string;
-  filename: string;
   plan_type: string;
   amount: number;
 }
@@ -89,37 +87,23 @@ export interface PaymentSubmitRequest {
 export const submitPayment = async (data: PaymentSubmitRequest): Promise<any> => {
   if (!PAYMENT_SUBMIT_URL) {
     console.error('PAYMENT_SUBMIT_URL is not defined. func2url:', func2url);
-    throw new Error('Сервис временно недоступен. Обновите страницу (Ctrl+F5) и попробуйте снова');
+    throw new Error('Сервис временно недоступен');
   }
 
   console.log('Submitting payment to:', PAYMENT_SUBMIT_URL);
   
-  try {
-    const response = await fetch(PAYMENT_SUBMIT_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+  const response = await fetch(PAYMENT_SUBMIT_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
 
-    if (!response.ok) {
-      let errorMessage = 'Failed to submit payment';
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.error || errorMessage;
-      } catch {
-        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-      }
-      throw new Error(errorMessage);
-    }
-
-    return response.json();
-  } catch (error: any) {
-    console.error('submitPayment error:', error);
-    if (error.message.includes('Failed to fetch')) {
-      throw new Error('Не удалось подключиться к серверу. Обновите страницу (Ctrl+F5) и попробуйте снова');
-    }
-    throw new Error(error.message || 'Не удалось отправить заявку. Проверьте интернет-соединение');
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || 'Не удалось отправить заявку');
   }
+
+  return response.json();
 };

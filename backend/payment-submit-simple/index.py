@@ -1,14 +1,12 @@
 import json
 import os
 import psycopg2
-import boto3
-import base64
 import requests
 from typing import Dict, Any
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
-    Принимает заявку на оплату от пользователя
+    Простая функция приема заявок на оплату
     """
     method: str = event.get('httpMethod', 'POST')
     
@@ -37,8 +35,6 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         body_data = json.loads(event.get('body', '{}'))
         email = body_data.get('email')
         phone = body_data.get('phone', '')
-        screenshot_base64 = body_data.get('screenshot', '')
-        filename = body_data.get('filename', 'screenshot.jpg')
         plan_type = body_data.get('plan_type', 'single')
         amount = body_data.get('amount', 300)
         
@@ -50,39 +46,15 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 'isBase64Encoded': False
             }
         
-        screenshot_url = None
-        
-        if screenshot_base64:
-            s3 = boto3.client('s3',
-                endpoint_url='https://bucket.poehali.dev',
-                aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
-                aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
-            )
-            
-            if ',' in screenshot_base64:
-                screenshot_base64 = screenshot_base64.split(',')[1]
-            
-            screenshot_data = base64.b64decode(screenshot_base64)
-            
-            key = f'payment-screenshots/{email.replace("@", "_")}_{context.request_id}.jpg'
-            
-            s3.put_object(
-                Bucket='files',
-                Key=key,
-                Body=screenshot_data,
-                ContentType='image/jpeg'
-            )
-            
-            screenshot_url = f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{key}"
-        
+        schema = os.environ.get('MAIN_DB_SCHEMA', 'public')
         conn = psycopg2.connect(os.environ['DATABASE_URL'])
         cur = conn.cursor()
         
-        cur.execute("""
-            INSERT INTO payment_requests (email, phone, screenshot_url, status, plan_type, amount)
-            VALUES (%s, %s, %s, 'pending', %s, %s)
+        cur.execute(f"""
+            INSERT INTO {schema}.payment_requests (email, phone, status, plan_type, amount)
+            VALUES (%s, %s, 'pending', %s, %s)
             RETURNING id
-        """, (email, phone, screenshot_url, plan_type, amount))
+        """, (email, phone, plan_type, amount))
         
         request_id = cur.fetchone()[0]
         
@@ -102,9 +74,9 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'year': '12 месяцев безлимит'
                 }
                 
-                admin_url = f"https://preview--matrix-destiny-project.poehali.dev/admin"
+                admin_url = "https://preview--matrix-destiny-project.poehali.dev/admin"
                 
-                message = f"""🔔 *Новая заявка #{request_id} на оплату*
+                message = f"""🔔 *Новая заявка #{request_id}*
 
 📧 Email: {email}"""
                 
@@ -114,32 +86,22 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 message += f"""
 💳 Тариф: {plan_labels.get(plan_type, plan_type)}
 💰 Сумма: *{amount} ₽*
-🆔 ID заявки: #{request_id}
+
+[Открыть админ-панель]({admin_url})
 """
-                
-                if screenshot_url:
-                    message += f"\n📸 [Открыть скриншот оплаты]({screenshot_url})"
-                
-                message += f"\n\n[Открыть админ-панель]({admin_url})"
                 
                 telegram_url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
                 response = requests.post(telegram_url, json={
                     'chat_id': chat_id,
                     'text': message,
                     'parse_mode': 'Markdown',
-                    'disable_web_page_preview': False,
-                    'reply_markup': {
-                        'inline_keyboard': [[
-                            {'text': '✅ Одобрить', 'callback_data': f'approve_{request_id}'},
-                            {'text': '❌ Отклонить', 'callback_data': f'reject_{request_id}'}
-                        ]]
-                    }
+                    'disable_web_page_preview': True
                 })
                 
                 if response.status_code != 200:
-                    print(f"ERROR: Failed to send Telegram message: {response.text}")
+                    print(f"WARNING: Telegram notification failed: {response.text}")
         except Exception as telegram_error:
-            print(f"ERROR sending Telegram notification: {str(telegram_error)}")
+            print(f"WARNING: Telegram error (non-critical): {str(telegram_error)}")
         
         return {
             'statusCode': 200,
@@ -147,16 +109,16 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             'body': json.dumps({
                 'success': True,
                 'request_id': request_id,
-                'message': 'Заявка принята'
+                'message': 'Заявка принята и сохранена в админке'
             }),
             'isBase64Encoded': False
         }
     
     except Exception as e:
-        print(f"ERROR in handler: {str(e)}")
+        print(f"ERROR: {str(e)}")
         return {
             'statusCode': 500,
             'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-            'body': json.dumps({'error': str(e)}),
+            'body': json.dumps({'error': f'Ошибка сервера: {str(e)}'}),
             'isBase64Encoded': False
         }

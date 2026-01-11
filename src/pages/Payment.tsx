@@ -66,8 +66,26 @@ const Payment = () => {
       return;
     }
 
-    const subject = `Заявка на оплату - ${plans[selectedPlan].label}`;
-    const body = `
+    setLoading(true);
+
+    try {
+      await submitPayment({
+        email,
+        phone,
+        plan_type: selectedPlan,
+        amount: plans[selectedPlan].price,
+      });
+
+      toast({
+        title: '✅ Заявка отправлена',
+        description: 'Заявка сохранена в админке. Скриншот отправьте на cabinet-psyhologa@outlook.com. Доступ активируется в течение 1-3 часов',
+        duration: 8000,
+      });
+      
+      localStorage.setItem('userEmail', email);
+      
+      const subject = `Заявка #${Date.now()} - ${plans[selectedPlan].label}`;
+      const body = `
 Здравствуйте!
 
 Прошу активировать доступ к Матрице Судьбы.
@@ -80,16 +98,20 @@ ${phone ? `Телефон: ${phone}` : ''}
 Скриншот оплаты прикреплён к письму.
 `;
 
-    const mailtoLink = `mailto:cabinet-psyhologa@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoLink;
-
-    toast({
-      title: '✉️ Откроется почтовый клиент',
-      description: 'Отправьте письмо с прикрепленным скриншотом оплаты. Доступ активируется в течение 1-3 часов',
-      duration: 7000,
-    });
-    
-    localStorage.setItem('userEmail', email);
+      const mailtoLink = `mailto:cabinet-psyhologa@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoLink;
+      
+      setTimeout(() => navigate('/'), 3000);
+    } catch (error: any) {
+      console.error('Submit error:', error);
+      toast({
+        title: 'Ошибка',
+        description: error.message || 'Не удалось отправить заявку',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const openPaymentLink = () => {

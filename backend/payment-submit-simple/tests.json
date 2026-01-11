@@ -1,0 +1,35 @@
+{
+  "tests": [
+    {
+      "name": "Submit payment request",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "email": "test@example.com",
+        "phone": "+79001234567",
+        "plan_type": "single",
+        "amount": 300
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "request_id": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Missing email validation",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "plan_type": "month",
+        "amount": 1000
+      },
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
