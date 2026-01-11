@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { energyDescriptions, arcanaSimpleNames } from '@/data/arcana-descriptions';
@@ -217,6 +217,21 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
       spiritualSimple: arcanaSimpleNames[result.spiritual] || spiritual.title
     };
   }, [result, hasAccess]);
+
+  const [openSections, setOpenSections] = useState({
+    portrait: true,
+    psychologists: false,
+    hr: false,
+    nutritionists: false,
+    coaches: false
+  });
+
+  const toggleSection = (section: keyof typeof openSections) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
   if (!memoizedData) return null;
 
@@ -784,12 +799,19 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
 
         {/* ДЛЯ ПСИХОЛОГОВ */}
         <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-300">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-2xl">
-              <Icon name="Brain" className="text-indigo-600" size={28} />
-              🧠 Для Психологов и Коучей — Полная Диагностика
+          <CardHeader 
+            className="cursor-pointer hover:bg-indigo-100/50 transition-colors"
+            onClick={() => toggleSection('psychologists')}
+          >
+            <CardTitle className="flex items-center justify-between gap-2 text-2xl">
+              <div className="flex items-center gap-2">
+                <Icon name="Brain" className="text-indigo-600" size={28} />
+                🧠 Для Психологов и Коучей — Полная Диагностика
+              </div>
+              <Icon name={openSections.psychologists ? "ChevronUp" : "ChevronDown"} size={24} className="text-indigo-600" />
             </CardTitle>
           </CardHeader>
+          {openSections.psychologists && (
           <CardContent className="space-y-4">
             <div className="bg-indigo-100 p-4 rounded-lg border-l-4 border-indigo-600">
               <h3 className="font-bold text-indigo-900 mb-2">👤 Портрет личности клиента</h3>
@@ -1003,16 +1025,24 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
               </div>
             </div>
           </CardContent>
+          )}
         </Card>
 
         {/* ДЛЯ HR */}
         <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-2xl">
-              <Icon name="Users" className="text-blue-600" size={28} />
-              👨‍💼 Для HR и Рекрутеров — Полный Профиль Кандидата
+          <CardHeader 
+            className="cursor-pointer hover:bg-blue-100/50 transition-colors"
+            onClick={() => toggleSection('hr')}
+          >
+            <CardTitle className="flex items-center justify-between gap-2 text-2xl">
+              <div className="flex items-center gap-2">
+                <Icon name="Users" className="text-blue-600" size={28} />
+                👨‍💼 Для HR и Рекрутеров — Полный Профиль Кандидата
+              </div>
+              <Icon name={openSections.hr ? "ChevronUp" : "ChevronDown"} size={24} className="text-blue-600" />
             </CardTitle>
           </CardHeader>
+          {openSections.hr && (
           <CardContent className="space-y-4">
             <div className="bg-blue-100 p-4 rounded-lg border-l-4 border-blue-600">
               <h3 className="font-bold text-blue-900 mb-2">👤 Психологический портрет кандидата</h3>
@@ -1206,16 +1236,24 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
               </div>
             </div>
           </CardContent>
+          )}
         </Card>
 
         {/* ДЛЯ НУТРИЦИОЛОГОВ */}
         <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-2xl">
-              <Icon name="Apple" className="text-green-600" size={28} />
-              🍎 Для Нутрициологов — Полная Диагностика Клиента
+          <CardHeader 
+            className="cursor-pointer hover:bg-green-100/50 transition-colors"
+            onClick={() => toggleSection('nutritionists')}
+          >
+            <CardTitle className="flex items-center justify-between gap-2 text-2xl">
+              <div className="flex items-center gap-2">
+                <Icon name="Apple" className="text-green-600" size={28} />
+                🍎 Для Нутрициологов — Полная Диагностика Клиента
+              </div>
+              <Icon name={openSections.nutritionists ? "ChevronUp" : "ChevronDown"} size={24} className="text-green-600" />
             </CardTitle>
           </CardHeader>
+          {openSections.nutritionists && (
           <CardContent className="space-y-4">
             <div className="bg-green-100 p-4 rounded-lg border-l-4 border-green-600">
               <h3 className="font-bold text-green-900 mb-2">👤 Портрет клиента и пищевое поведение</h3>
@@ -1493,16 +1531,24 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
               </div>
             </div>
           </CardContent>
+          )}
         </Card>
 
         {/* ДЛЯ БИЗНЕС-КОУЧЕЙ */}
         <Card className="bg-gradient-to-br from-orange-50 to-yellow-50 border-2 border-orange-300">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-2xl">
-              <Icon name="TrendingUp" className="text-orange-600" size={28} />
-              📈 Для Бизнес-Коучей — Полный Финансовый Профиль
+          <CardHeader 
+            className="cursor-pointer hover:bg-orange-100/50 transition-colors"
+            onClick={() => toggleSection('coaches')}
+          >
+            <CardTitle className="flex items-center justify-between gap-2 text-2xl">
+              <div className="flex items-center gap-2">
+                <Icon name="TrendingUp" className="text-orange-600" size={28} />
+                📈 Для Бизнес-Коучей — Полный Финансовый Профиль
+              </div>
+              <Icon name={openSections.coaches ? "ChevronUp" : "ChevronDown"} size={24} className="text-orange-600" />
             </CardTitle>
           </CardHeader>
+          {openSections.coaches && (
           <CardContent className="space-y-4">
             <div className="bg-orange-100 p-4 rounded-lg border-l-4 border-orange-600">
               <h3 className="font-bold text-orange-900 mb-2">👤 Финансовый портрет клиента</h3>
@@ -1758,6 +1804,7 @@ export const UnifiedMatrixResult = ({ result, hasAccess, birthDate }: UnifiedMat
               </div>
             </div>
           </CardContent>
+          )}
         </Card>
       </div>
 
