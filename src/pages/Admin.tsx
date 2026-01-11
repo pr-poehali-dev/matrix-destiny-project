@@ -6,6 +6,12 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
 
+interface AccessInfo {
+  plan_type: string;
+  expires_at: string | null;
+  downloads_left: number | null;
+}
+
 interface Request {
   id: number;
   email: string;
@@ -15,6 +21,7 @@ interface Request {
   created_at: string;
   plan_type: string;
   amount: number;
+  access_info?: AccessInfo;
 }
 
 const Admin = () => {
@@ -176,6 +183,14 @@ const Admin = () => {
                         <div className="text-xs text-gray-500">
                           {new Date(r.created_at).toLocaleString('ru')} • {r.plan_type} • {r.amount}₽
                         </div>
+                        {r.access_info && (
+                          <div className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded mt-1 inline-block">
+                            {r.access_info.plan_type === 'single' 
+                              ? `Осталось: ${r.access_info.downloads_left} скачиваний`
+                              : `Активно до ${new Date(r.access_info.expires_at || '').toLocaleDateString('ru')}`
+                            }
+                          </div>
+                        )}
                       </div>
                       <div className="flex gap-2">
                         {r.screenshot_url && (
@@ -206,14 +221,24 @@ const Admin = () => {
             ) : (
               <div className="space-y-2">
                 {processed.map((r) => (
-                  <div key={r.id} className="flex justify-between items-center border rounded p-2 bg-gray-50">
-                    <div>
-                      <span className="font-medium">{r.email}</span>
-                      <span className="text-xs text-gray-500 ml-2">{new Date(r.created_at).toLocaleDateString('ru')}</span>
+                  <div key={r.id} className="border rounded p-2 bg-gray-50">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <span className="font-medium">{r.email}</span>
+                        <span className="text-xs text-gray-500 ml-2">{new Date(r.created_at).toLocaleDateString('ru')}</span>
+                        {r.access_info && (
+                          <div className="text-xs text-gray-600 mt-1">
+                            {r.access_info.plan_type === 'single' 
+                              ? `Осталось: ${r.access_info.downloads_left}`
+                              : `До ${new Date(r.access_info.expires_at || '').toLocaleDateString('ru')}`
+                            }
+                          </div>
+                        )}
+                      </div>
+                      <span className={`px-2 py-1 rounded text-xs ${r.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                        {r.status === 'approved' ? 'Одобрено' : 'Отклонено'}
+                      </span>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs ${r.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                      {r.status === 'approved' ? 'Одобрено' : 'Отклонено'}
-                    </span>
                   </div>
                 ))}
               </div>

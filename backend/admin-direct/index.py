@@ -33,14 +33,24 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         
         if action == 'list':
             cur.execute(f"""
-                SELECT id, email, phone, screenshot_url, status, created_at, plan_type, amount 
-                FROM {schema}.payment_requests 
-                ORDER BY created_at DESC
+                SELECT pr.id, pr.email, pr.phone, pr.screenshot_url, pr.status, pr.created_at, pr.plan_type, pr.amount,
+                       aa.plan_type, aa.expires_at, aa.downloads_left
+                FROM {schema}.payment_requests pr
+                LEFT JOIN {schema}.active_access aa ON pr.email = aa.email
+                ORDER BY pr.created_at DESC
             """)
             rows = cur.fetchall()
             
             result = []
             for r in rows:
+                access_info = None
+                if r[8]:  # has active_access
+                    access_info = {
+                        'plan_type': r[8],
+                        'expires_at': r[9].isoformat() if r[9] else None,
+                        'downloads_left': r[10]
+                    }
+                
                 result.append({
                     'id': r[0],
                     'email': r[1],
@@ -49,7 +59,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'status': r[4],
                     'created_at': r[5].isoformat() if r[5] else '',
                     'plan_type': r[6],
-                    'amount': r[7]
+                    'amount': r[7],
+                    'access_info': access_info
                 })
             
             cur.close()
