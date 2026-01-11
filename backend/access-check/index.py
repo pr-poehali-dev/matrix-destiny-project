@@ -10,6 +10,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     """
     Проверяет доступ пользователя к функционалу по email
     """
+    
     method: str = event.get('httpMethod', 'GET')
     
     if method == 'OPTIONS':
