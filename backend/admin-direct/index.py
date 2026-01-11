@@ -75,15 +75,29 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             elif plan == 'year':
                 exp = datetime.now() + timedelta(days=365)
             
-            cur.execute(f"""
-                INSERT INTO {schema}.active_access (email, plan_type, expires_at, downloads_left, granted_by)
-                VALUES (%s, %s, %s, %s, 'admin')
-                ON CONFLICT (email) DO UPDATE SET 
-                    plan_type = EXCLUDED.plan_type,
-                    expires_at = EXCLUDED.expires_at,
-                    downloads_left = EXCLUDED.downloads_left,
-                    granted_at = CURRENT_TIMESTAMP
-            """, (email, plan, exp, dl))
+            cur.execute(f"SELECT plan_type, downloads_left FROM {schema}.active_access WHERE email = %s", (email,))
+            existing = cur.fetchone()
+            
+            if existing and plan == 'single':
+                existing_downloads = existing[1] or 0
+                new_downloads = existing_downloads + 1
+                cur.execute(f"""
+                    UPDATE {schema}.active_access 
+                    SET downloads_left = %s, granted_at = CURRENT_TIMESTAMP
+                    WHERE email = %s
+                """, (new_downloads, email))
+            elif existing:
+                cur.execute(f"""
+                    UPDATE {schema}.active_access 
+                    SET plan_type = %s, expires_at = %s, downloads_left = %s, granted_at = CURRENT_TIMESTAMP
+                    WHERE email = %s
+                """, (plan, exp, dl, email))
+            else:
+                cur.execute(f"""
+                    INSERT INTO {schema}.active_access (email, plan_type, expires_at, downloads_left, granted_by)
+                    VALUES (%s, %s, %s, %s, 'admin')
+                """, (email, plan, exp, dl))
+            
             conn.commit()
             
             cur.close()
@@ -117,15 +131,30 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 exp = datetime.now() + timedelta(days=365)
             
             cur.execute(f"UPDATE {schema}.payment_requests SET status = 'approved', approved_at = %s WHERE id = %s", (datetime.now(), rid))
-            cur.execute(f"""
-                INSERT INTO {schema}.active_access (email, plan_type, expires_at, downloads_left, granted_by)
-                VALUES (%s, %s, %s, %s, 'admin')
-                ON CONFLICT (email) DO UPDATE SET 
-                    plan_type = EXCLUDED.plan_type,
-                    expires_at = EXCLUDED.expires_at,
-                    downloads_left = EXCLUDED.downloads_left,
-                    granted_at = CURRENT_TIMESTAMP
-            """, (email, plan, exp, dl))
+            
+            cur.execute(f"SELECT plan_type, downloads_left FROM {schema}.active_access WHERE email = %s", (email,))
+            existing = cur.fetchone()
+            
+            if existing and plan == 'single':
+                existing_downloads = existing[1] or 0
+                new_downloads = existing_downloads + 1
+                cur.execute(f"""
+                    UPDATE {schema}.active_access 
+                    SET downloads_left = %s, granted_at = CURRENT_TIMESTAMP
+                    WHERE email = %s
+                """, (new_downloads, email))
+            elif existing and plan != 'single':
+                cur.execute(f"""
+                    UPDATE {schema}.active_access 
+                    SET plan_type = %s, expires_at = %s, downloads_left = %s, granted_at = CURRENT_TIMESTAMP
+                    WHERE email = %s
+                """, (plan, exp, dl, email))
+            else:
+                cur.execute(f"""
+                    INSERT INTO {schema}.active_access (email, plan_type, expires_at, downloads_left, granted_by)
+                    VALUES (%s, %s, %s, %s, 'admin')
+                """, (email, plan, exp, dl))
+            
             conn.commit()
             
             cur.close()
