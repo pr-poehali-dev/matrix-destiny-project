@@ -87,6 +87,13 @@ export interface PaymentSubmitRequest {
 }
 
 export const submitPayment = async (data: PaymentSubmitRequest): Promise<any> => {
+  if (!PAYMENT_SUBMIT_URL) {
+    console.error('PAYMENT_SUBMIT_URL is not defined. func2url:', func2url);
+    throw new Error('Сервис временно недоступен. Обновите страницу (Ctrl+F5) и попробуйте снова');
+  }
+
+  console.log('Submitting payment to:', PAYMENT_SUBMIT_URL);
+  
   try {
     const response = await fetch(PAYMENT_SUBMIT_URL, {
       method: 'POST',
@@ -110,6 +117,9 @@ export const submitPayment = async (data: PaymentSubmitRequest): Promise<any> =>
     return response.json();
   } catch (error: any) {
     console.error('submitPayment error:', error);
+    if (error.message.includes('Failed to fetch')) {
+      throw new Error('Не удалось подключиться к серверу. Обновите страницу (Ctrl+F5) и попробуйте снова');
+    }
     throw new Error(error.message || 'Не удалось отправить заявку. Проверьте интернет-соединение');
   }
 };
