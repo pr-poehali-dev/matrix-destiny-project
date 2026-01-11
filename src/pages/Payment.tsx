@@ -74,6 +74,7 @@ const Payment = () => {
         phone,
         plan_type: selectedPlan,
         amount: plans[selectedPlan].price,
+        screenshot: screenshot || undefined,
       });
 
       toast({

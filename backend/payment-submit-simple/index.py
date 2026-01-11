@@ -2,6 +2,9 @@ import json
 import os
 import psycopg2
 import requests
+import boto3
+import base64
+import uuid
 from typing import Dict, Any
 
 def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
@@ -37,6 +40,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         phone = body_data.get('phone', '')
         plan_type = body_data.get('plan_type', 'single')
         amount = body_data.get('amount', 300)
+        screenshot_base64 = body_data.get('screenshot', '')
         
         if not email:
             return {
@@ -46,15 +50,45 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 'isBase64Encoded': False
             }
         
+        screenshot_url = ''
+        if screenshot_base64:
+            try:
+                if ',' in screenshot_base64:
+                    screenshot_base64 = screenshot_base64.split(',')[1]
+                
+                screenshot_data = base64.b64decode(screenshot_base64)
+                
+                s3 = boto3.client('s3',
+                    endpoint_url='https://bucket.poehali.dev',
+                    aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+                    aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
+                )
+                
+                file_ext = 'jpg'
+                safe_email = email.replace('@', '_').replace('.', '_')
+                file_key = f"payment-screenshots/{safe_email}_{uuid.uuid4()}.{file_ext}"
+                
+                s3.put_object(
+                    Bucket='files',
+                    Key=file_key,
+                    Body=screenshot_data,
+                    ContentType='image/jpeg'
+                )
+                
+                screenshot_url = f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{file_key}"
+                print(f"Screenshot uploaded: {screenshot_url}")
+            except Exception as upload_error:
+                print(f"WARNING: Screenshot upload failed: {str(upload_error)}")
+        
         schema = os.environ.get('MAIN_DB_SCHEMA', 'public')
         conn = psycopg2.connect(os.environ['DATABASE_URL'])
         cur = conn.cursor()
         
         cur.execute(f"""
-            INSERT INTO {schema}.payment_requests (email, phone, status, plan_type, amount)
-            VALUES (%s, %s, 'pending', %s, %s)
+            INSERT INTO {schema}.payment_requests (email, phone, status, plan_type, amount, screenshot_url)
+            VALUES (%s, %s, 'pending', %s, %s, %s)
             RETURNING id
-        """, (email, phone, plan_type, amount))
+        """, (email, phone, plan_type, amount, screenshot_url))
         
         request_id = cur.fetchone()[0]
         
@@ -86,9 +120,12 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 message += f"""
 💳 Тариф: {plan_labels.get(plan_type, plan_type)}
 💰 Сумма: *{amount} ₽*
-
-[Открыть админ-панель]({admin_url})
 """
+                
+                if screenshot_url:
+                    message += f"\n📸 [Скриншот оплаты]({screenshot_url})"
+                
+                message += f"\n\n[Открыть админ-панель]({admin_url})"
                 
                 telegram_url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
                 response = requests.post(telegram_url, json={

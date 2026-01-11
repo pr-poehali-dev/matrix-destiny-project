@@ -82,6 +82,7 @@ export interface PaymentSubmitRequest {
   phone?: string;
   plan_type: string;
   amount: number;
+  screenshot?: File;
 }
 
 export const submitPayment = async (data: PaymentSubmitRequest): Promise<any> => {
@@ -92,12 +93,28 @@ export const submitPayment = async (data: PaymentSubmitRequest): Promise<any> =>
 
   console.log('Submitting payment to:', PAYMENT_SUBMIT_URL);
   
+  let screenshotBase64 = '';
+  if (data.screenshot) {
+    const reader = new FileReader();
+    screenshotBase64 = await new Promise((resolve, reject) => {
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(data.screenshot!);
+    });
+  }
+  
   const response = await fetch(PAYMENT_SUBMIT_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      email: data.email,
+      phone: data.phone,
+      plan_type: data.plan_type,
+      amount: data.amount,
+      screenshot: screenshotBase64,
+    }),
   });
 
   if (!response.ok) {
