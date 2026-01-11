@@ -36,9 +36,9 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'id': r[0],
                     'email': r[1],
                     'phone': r[2] or '',
-                    'screenshot_url': r[3],
+                    'screenshot_url': r[3] or '',
                     'status': r[4],
-                    'created_at': r[5].isoformat(),
+                    'created_at': r[5].isoformat() if r[5] else '',
                     'plan_type': r[6],
                     'amount': r[7]
                 })
@@ -130,4 +130,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         return {'statusCode': 400, 'headers': headers, 'body': json.dumps({'error': 'bad request'}), 'isBase64Encoded': False}
     
     except Exception as e:
+        print(f"ERROR in admin-simple: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return {'statusCode': 500, 'headers': headers, 'body': json.dumps({'error': str(e)}), 'isBase64Encoded': False}
