@@ -66,32 +66,71 @@ const Payment = () => {
       return;
     }
 
-    const subject = `Заявка на оплату - ${plans[selectedPlan].label}`;
-    const body = `
+    setLoading(true);
+
+    try {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64 = reader.result as string;
+
+        try {
+          await submitPayment({
+            email,
+            phone,
+            screenshot: base64,
+            filename: screenshot.name,
+            plan_type: selectedPlan,
+            amount: plans[selectedPlan].price,
+          });
+
+          toast({
+            title: '✅ Заявка отправлена',
+            description: 'Уведомление отправлено в Telegram. Доступ активируется в течение 1-3 часов',
+          });
+          
+          localStorage.setItem('userEmail', email);
+          setTimeout(() => navigate('/'), 2000);
+        } catch (error: any) {
+          console.error('Backend error:', error);
+          
+          const subject = `Заявка на оплату - ${plans[selectedPlan].label}`;
+          const body = `
 Здравствуйте!
 
 Прошу активировать доступ к Матрице Судьбы.
 
-Мой email: ${email}
+Email: ${email}
 ${phone ? `Телефон: ${phone}` : ''}
 Тариф: ${plans[selectedPlan].label}
 Сумма: ${plans[selectedPlan].price} ₽
 
 Скриншот оплаты прикреплён к письму.
-
-С уважением
 `;
 
-    const mailtoLink = `mailto:romanysh@rambler.ru?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoLink;
+          const mailtoLink = `mailto:romanysh@rambler.ru?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+          window.location.href = mailtoLink;
 
-    toast({
-      title: '✉️ Откроется почта',
-      description: 'Прикрепите скриншот и отправьте письмо. Доступ активируется в течение 1-3 часов',
-      duration: 5000,
-    });
+          toast({
+            title: '✉️ Откроется почтовый клиент',
+            description: 'Автоматическая отправка недоступна. Прикрепите скриншот и отправьте письмо вручную',
+            duration: 7000,
+          });
+          
+          localStorage.setItem('userEmail', email);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    localStorage.setItem('userEmail', email);
+      reader.readAsDataURL(screenshot);
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Произошла ошибка при обработке файла',
+        variant: 'destructive',
+      });
+      setLoading(false);
+    }
   };
 
   const openPaymentLink = () => {
