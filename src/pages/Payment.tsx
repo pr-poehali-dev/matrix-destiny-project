@@ -66,35 +66,8 @@ const Payment = () => {
       return;
     }
 
-    setLoading(true);
-
-    try {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const base64 = reader.result as string;
-
-        try {
-          await submitPayment({
-            email,
-            phone,
-            screenshot: base64,
-            filename: screenshot.name,
-            plan_type: selectedPlan,
-            amount: plans[selectedPlan].price,
-          });
-
-          toast({
-            title: '✅ Заявка отправлена',
-            description: 'Уведомление отправлено в Telegram. Доступ активируется в течение 1-3 часов',
-          });
-          
-          localStorage.setItem('userEmail', email);
-          setTimeout(() => navigate('/'), 2000);
-        } catch (error: any) {
-          console.error('Backend error:', error);
-          
-          const subject = `Заявка на оплату - ${plans[selectedPlan].label}`;
-          const body = `
+    const subject = `Заявка на оплату - ${plans[selectedPlan].label}`;
+    const body = `
 Здравствуйте!
 
 Прошу активировать доступ к Матрице Судьбы.
@@ -107,30 +80,16 @@ ${phone ? `Телефон: ${phone}` : ''}
 Скриншот оплаты прикреплён к письму.
 `;
 
-          const mailtoLink = `mailto:romanysh@rambler.ru?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-          window.location.href = mailtoLink;
+    const mailtoLink = `mailto:cabinet-psyhologa@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoLink;
 
-          toast({
-            title: '✉️ Откроется почтовый клиент',
-            description: 'Автоматическая отправка недоступна. Прикрепите скриншот и отправьте письмо вручную',
-            duration: 7000,
-          });
-          
-          localStorage.setItem('userEmail', email);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      reader.readAsDataURL(screenshot);
-    } catch (error) {
-      toast({
-        title: 'Ошибка',
-        description: 'Произошла ошибка при обработке файла',
-        variant: 'destructive',
-      });
-      setLoading(false);
-    }
+    toast({
+      title: '✉️ Откроется почтовый клиент',
+      description: 'Отправьте письмо с прикрепленным скриншотом оплаты. Доступ активируется в течение 1-3 часов',
+      duration: 7000,
+    });
+    
+    localStorage.setItem('userEmail', email);
   };
 
   const openPaymentLink = () => {
