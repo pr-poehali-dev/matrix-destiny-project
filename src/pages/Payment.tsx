@@ -66,48 +66,32 @@ const Payment = () => {
       return;
     }
 
-    setLoading(true);
+    const subject = `Заявка на оплату - ${plans[selectedPlan].label}`;
+    const body = `
+Здравствуйте!
 
-    try {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const base64 = reader.result as string;
+Прошу активировать доступ к Матрице Судьбы.
 
-        try {
-          await submitPayment({
-            email,
-            phone,
-            screenshot: base64,
-            filename: screenshot.name,
-            plan_type: selectedPlan,
-            amount: plans[selectedPlan].price,
-          });
+Мой email: ${email}
+${phone ? `Телефон: ${phone}` : ''}
+Тариф: ${plans[selectedPlan].label}
+Сумма: ${plans[selectedPlan].price} ₽
 
-          toast({
-            title: '✅ Заявка отправлена',
-            description: 'Доступ активируется в течение 1-3 часов после проверки',
-          });
-          setTimeout(() => navigate('/'), 2000);
-        } catch (error: any) {
-          toast({
-            title: 'Ошибка',
-            description: error.message || 'Не удалось отправить заявку',
-            variant: 'destructive',
-          });
-        } finally {
-          setLoading(false);
-        }
-      };
+Скриншот оплаты прикреплён к письму.
 
-      reader.readAsDataURL(screenshot);
-    } catch (error) {
-      toast({
-        title: 'Ошибка',
-        description: 'Произошла ошибка при отправке',
-        variant: 'destructive',
-      });
-      setLoading(false);
-    }
+С уважением
+`;
+
+    const mailtoLink = `mailto:romanysh@rambler.ru?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoLink;
+
+    toast({
+      title: '✉️ Откроется почта',
+      description: 'Прикрепите скриншот и отправьте письмо. Доступ активируется в течение 1-3 часов',
+      duration: 5000,
+    });
+
+    localStorage.setItem('userEmail', email);
   };
 
   const openPaymentLink = () => {
