@@ -8,6 +8,7 @@ import Icon from '@/components/ui/icon';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { checkAccess } from '@/lib/api';
 
+
 const Login = () => {
   const [searchParams] = useSearchParams();
   const [email, setEmail] = useState('');
