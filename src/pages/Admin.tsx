@@ -51,6 +51,8 @@ const Admin = () => {
     try {
       const r = await fetch(`${API}?action=list`);
       const data = await r.json();
+      console.log('Admin loaded requests:', data);
+      console.log('Pending:', data.filter((req: Request) => req.status === 'pending'));
       setRequests(data);
     } catch (error) {
       console.error('Load error:', error);
